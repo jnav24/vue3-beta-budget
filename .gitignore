@@ -2,7 +2,7 @@
 node_modules
 /dist
 .idea/
-
+public/app.css
 
 # local env files
 .env.local
