@@ -70,7 +70,13 @@ export default defineComponent({
 
 <template>
 	<div class="mb-4">
-		<label :for="labelId" class="text-sm text-gray-600">{{ label }}</label>
+		<label
+			:for="labelId"
+			:class="{ 'text-gray-600': !error, 'text-red-600': error }"
+			class="text-sm"
+		>
+			{{ label }}
+		</label>
 		<input
 			:id="labelId"
 			class="w-full p-2 mt-2 border rounded outline-none"

@@ -32,7 +32,6 @@ export default defineComponent({
 </script>
 
 <template>
-	<pre>{{ valid }}</pre>
 	<Form v-model:valid="valid">
 		<Input
 			label="Email"
