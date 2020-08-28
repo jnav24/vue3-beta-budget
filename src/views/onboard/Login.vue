@@ -13,13 +13,13 @@ export default defineComponent({
 			required: 'Email is required',
 			email: 'Must be a valid email',
 		};
-		console.log(test);
+
 		const form = reactive({
 			email: {
-				rules: [
-					(v: any) => !!v || 'Email is required',
-					(v: any) => /.+@.+/.test(v) || 'E-mail must be valid',
-				],
+				rules: {
+					required: 'Email is required',
+					email: 'Must be a valid email',
+				},
 				value: '',
 			},
 			password: {

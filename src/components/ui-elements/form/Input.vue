@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent, computed, ref, inject } from 'vue';
 import { FormProvider } from '@/components/ui-elements/form/Form';
+import useFormValidation from '@/hooks/useFormValidation';
 
 export default defineComponent({
 	props: {
@@ -9,8 +10,9 @@ export default defineComponent({
 			type: String,
 		},
 		rules: {
-			default: () => [],
-			type: Array,
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			default: () => {},
+			type: Object,
 		},
 		type: {
 			default: 'text',
@@ -23,6 +25,7 @@ export default defineComponent({
 	},
 	setup(props, { emit }) {
 		const error = ref(null);
+		const { validateInput } = useFormValidation();
 
 		const updateForm = inject<(val: boolean) => void>(
 			FormProvider,
@@ -33,23 +36,28 @@ export default defineComponent({
 		);
 
 		const updateValue = (e: string) => {
+			if (!e) {
+				return;
+			}
+
 			let tempValid = true;
 
-			props.rules.forEach((func: any) => {
-				const result = func(props.value);
+			for (const [type, message] of Object.entries(props.rules)) {
+				const isValid = validateInput(type, props.value);
+
 				if (!tempValid) {
-					return;
+					continue;
 				}
 
-				if ((!result || typeof result !== 'boolean') && tempValid) {
-					error.value = result;
+				if ((!isValid || typeof isValid !== 'boolean') && tempValid) {
+					error.value = message;
 					tempValid = false;
-					return;
+					continue;
 				}
 
 				error.value = null;
 				tempValid = true;
-			});
+			}
 
 			updateForm(tempValid);
 			emit('update:value', e);
@@ -76,6 +84,7 @@ export default defineComponent({
 			}"
 			:type="type"
 			:value="value"
+			@blur="updateValue(value)"
 			@input="updateValue($event.target.value)"
 		/>
 		<span v-if="error" class="text-sm text-red-600">{{ error }}</span>
