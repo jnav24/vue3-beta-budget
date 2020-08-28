@@ -43,6 +43,7 @@ export default defineComponent({
 			label="Password"
 			type="password"
 			v-model:value="form.password.value"
+			:rules="form.password.rules"
 		/>
 		<button
 			type="button"

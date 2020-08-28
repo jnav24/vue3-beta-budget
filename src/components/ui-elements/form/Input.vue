@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, computed, ref, inject } from 'vue';
+import { defineComponent, computed, ref, inject, onMounted } from 'vue';
 import { FormProvider } from '@/components/ui-elements/form/Form';
 import useFormValidation from '@/hooks/useFormValidation';
 
@@ -25,20 +25,20 @@ export default defineComponent({
 	setup(props, { emit }) {
 		const error = ref(null);
 		const { validateInput } = useFormValidation();
-
-		const updateForm = inject<(val: boolean) => void>(
-			FormProvider,
-			() => false
-		);
+		const { isFormValid, setFormElement } = inject<any>(FormProvider);
 		const labelId = computed(() =>
 			props.label.toLowerCase().replace(/\s+/, '-')
 		);
+
+		onMounted(() => {
+			setFormElement(labelId.value, !props.rules);
+		});
 
 		const updateValue = (e: string) => {
 			let tempValid = true;
 
 			for (const [type, message] of Object.entries(props.rules)) {
-				const isValid = validateInput(type, props.value);
+				const isValid = validateInput(type, e);
 
 				if (!tempValid) {
 					continue;
@@ -54,7 +54,8 @@ export default defineComponent({
 				tempValid = true;
 			}
 
-			updateForm(tempValid);
+			setFormElement(labelId.value, tempValid);
+			isFormValid();
 			emit('update:value', e);
 		};
 
