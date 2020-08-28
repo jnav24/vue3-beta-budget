@@ -19,6 +19,7 @@ module.exports = {
 		'no-tabs': 0,
 		'@typescript-eslint/ban-ts-ignore': 'off',
 		'vue/no-parsing-error': [2, { 'x-invalid-end-tag': false }],
+		"@typescript-eslint/no-explicit-any": "off",
 	},
 	overrides: [
 		{

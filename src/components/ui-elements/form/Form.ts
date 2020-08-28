@@ -17,7 +17,6 @@ export default defineComponent({
 		provide(FormProvider, updateValid);
 	},
 	render() {
-		// console.log(this.get('$slots'));
 		return (this as any).$slots.default();
 	},
 });
