@@ -9,11 +9,6 @@ export default defineComponent({
 		Input,
 	},
 	setup() {
-		const test = {
-			required: 'Email is required',
-			email: 'Must be a valid email',
-		};
-
 		const form = reactive({
 			email: {
 				rules: {
@@ -23,6 +18,9 @@ export default defineComponent({
 				value: '',
 			},
 			password: {
+				rules: {
+					required: 'Password is required',
+				},
 				value: '',
 			},
 		});

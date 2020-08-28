@@ -10,8 +10,7 @@ export default defineComponent({
 			type: String,
 		},
 		rules: {
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
-			default: () => {},
+			default: () => ({}),
 			type: Object,
 		},
 		type: {
@@ -36,10 +35,6 @@ export default defineComponent({
 		);
 
 		const updateValue = (e: string) => {
-			if (!e) {
-				return;
-			}
-
 			let tempValid = true;
 
 			for (const [type, message] of Object.entries(props.rules)) {
@@ -84,7 +79,7 @@ export default defineComponent({
 			}"
 			:type="type"
 			:value="value"
-			@blur="updateValue(value)"
+			@blur="updateValue($event.target.value)"
 			@input="updateValue($event.target.value)"
 		/>
 		<span v-if="error" class="text-sm text-red-600">{{ error }}</span>
