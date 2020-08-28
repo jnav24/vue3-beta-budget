@@ -80,6 +80,7 @@ export default defineComponent({
 			}"
 			:type="type"
 			:value="value"
+			:autocomplete="type !== 'password' ? 'on' : 'off'"
 			@blur="updateValue($event.target.value)"
 			@input="updateValue($event.target.value)"
 		/>

@@ -21,7 +21,9 @@ export default defineComponent({
 
 		const isFormValid = () => {
 			const keys = Object.keys(formElements);
-			const valid = Object.values(formElements).filter((val: boolean) => val);
+			const valid = Object.values(formElements).filter(
+				(val: boolean) => val
+			);
 			updateValid(keys.length === valid.length);
 		};
 
