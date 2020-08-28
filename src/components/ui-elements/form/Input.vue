@@ -1,5 +1,6 @@
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, inject } from 'vue';
+import { FormProvider } from '@/components/ui-elements/form/Form';
 
 export default defineComponent({
 	props: {
@@ -21,11 +22,16 @@ export default defineComponent({
 		},
 	},
 	setup(props, { emit }) {
+		const updateForm = inject<(val: boolean) => void>(
+			FormProvider,
+			() => false
+		);
 		const labelId = computed(() =>
 			props.label.toLowerCase().replace(/\s+/, '-')
 		);
 
 		const updateValue = (e: string) => {
+			updateForm(true);
 			emit('update:value', e);
 		};
 
