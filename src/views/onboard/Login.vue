@@ -66,7 +66,7 @@ export default defineComponent({
 					type="button"
 					:disabled="!valid"
 					:class="{
-						'bg-secondary': valid,
+						'bg-secondary shadow-md': valid,
 						'bg-gray-300 text-gray-600': !valid,
 					}"
 				>
