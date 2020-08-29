@@ -19,6 +19,11 @@ const routes: Array<RouteRecordRaw> = [
 			},
 		],
 	},
+	{
+		path: '/:catchAll(.*)',
+		name: '404',
+		redirect: '/',
+	},
 ];
 
 const router = createRouter({
