@@ -23,3 +23,23 @@ function validateEmail(email: string): boolean {
 function validateRequired(val: string | number): boolean {
 	return !!val.toString().trim();
 }
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function isUppercasePresent(value: string): boolean {
+	return /[A-Z]/.test(value);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function isLowercasePresent(value: string): boolean {
+	return /[a-z]/.test(value);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function validateSame(value: string, confirm: string): boolean {
+	return value === confirm;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function validateNumeric(value: string): boolean {
+	return /\d/.test(value);
+}

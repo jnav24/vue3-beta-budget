@@ -1,6 +1,10 @@
 module.exports = {
 	purge: ['./src/**/*.vue'],
 	theme: {
+		fontFamily: {
+			body: ['Nunito', 'sans-serif'],
+			header: ['Avenir', 'Helvetica', 'Arial', 'sans-serif'],
+		},
 		extend: {
 			colors: {
 				primary: '#45ADA8',

@@ -11,11 +11,7 @@ export default defineComponent({});
 		></div>
 		<div class="bg-image"></div>
 
-		<div
-			class="relative z-30 w-1/4 mt-6 px-6 py-4 bg-white rounded-lg shadow-md overflow-hidden text-left"
-		>
-			<router-view />
-		</div>
+		<router-view />
 	</div>
 </template>
 
