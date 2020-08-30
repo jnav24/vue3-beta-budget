@@ -20,6 +20,28 @@ const routes: Array<RouteRecordRaw> = [
 		],
 	},
 	{
+		path: '/dashboard',
+		name: 'dashbaord',
+		component: () => import('@/views/dashboard/Dashboard.vue'),
+		children: [
+			{
+				path: '',
+				name: 'home',
+				component: () => import('@/views/dashboard/Home.vue'),
+			},
+			{
+				path: '',
+				name: 'budgets',
+				component: () => import('@/views/dashboard/Home.vue'),
+			},
+			{
+				path: '',
+				name: 'reports',
+				component: () => import('@/views/dashboard/Home.vue'),
+			},
+		],
+	},
+	{
 		path: '/:catchAll(.*)',
 		name: '404',
 		redirect: '/',
