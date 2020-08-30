@@ -13,6 +13,6 @@ export default defineComponent({
 	<Nav />
 
 	<div class="bg-gray-200 h-screen">
-		<router-view/>
+		<router-view />
 	</div>
 </template>
