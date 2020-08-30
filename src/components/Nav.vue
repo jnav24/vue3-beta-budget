@@ -20,7 +20,7 @@ export default defineComponent({
 </script>
 
 <template>
-	<nav>
+	<nav class="relative z-50">
 		<div class="bg-primary px-4 py-1 h-16 flex flex-row items-center">
 			<div
 				class="container mx-auto flex flex-row items-center justify-between"
@@ -46,7 +46,7 @@ export default defineComponent({
 			</div>
 		</div>
 
-		<div class="bg-white">
+		<div class="bg-white shadow-sm">
 			<div class="container mx-auto flex flex-row">
 				<Link :link-to="{ name: 'home' }">
 					<HomeIcon styles="w-4 h-4" />

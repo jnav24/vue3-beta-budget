@@ -12,7 +12,7 @@ export default defineComponent({
 <template>
 	<Nav />
 
-	<div class="bg-gray-200 h-screen">
+	<div class="bg-gray-200 h-screen overflow-y-auto pb-32">
 		<router-view />
 	</div>
 </template>
