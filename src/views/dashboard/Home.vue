@@ -2,13 +2,19 @@
 import { defineComponent } from 'vue';
 import Alert from '@/components/Alert.vue';
 import Card from '@/components/ui-elements/Card.vue';
+import DollarIcon from '@/components/ui-elements/icons/DollarIcon.vue';
 import LineChart from '@/components/charts/LineChart.vue';
+import TrendDownIcon from '@/components/ui-elements/icons/TrendDownIcon.vue';
+import TrendUpIcon from '@/components/ui-elements/icons/TrendUpIcon.vue';
 
 export default defineComponent({
 	components: {
 		Alert,
 		Card,
+		DollarIcon,
 		LineChart,
+		TrendDownIcon,
+		TrendUpIcon,
 	},
 });
 </script>
@@ -24,20 +30,7 @@ export default defineComponent({
 		<div class="grid grid-cols-3 gap-6">
 			<Card>
 				<div class="flex flex-row justify-between items-center">
-					<svg
-						viewBox="0 0 20 20"
-						fill="currentColor"
-						class="currency-dollar w-24 h-24 text-primary"
-					>
-						<path
-							d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"
-						></path>
-						<path
-							fill-rule="evenodd"
-							d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z"
-							clip-rule="evenodd"
-						></path>
-					</svg>
+					<DollarIcon styles="w-24 h-24 text-primary" />
 					<div class="text-right leading-tight">
 						<p class="text-lg text-gray-700">Total Saved 2020</p>
 						<p
@@ -54,17 +47,7 @@ export default defineComponent({
 
 			<Card>
 				<div class="flex flex-row justify-between items-center">
-					<svg
-						viewBox="0 0 20 20"
-						fill="currentColor"
-						class="trending-up w-24 h-24 text-secondary"
-					>
-						<path
-							fill-rule="evenodd"
-							d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z"
-							clip-rule="evenodd"
-						></path>
-					</svg>
+					<TrendUpIcon styles="w-24 h-24 text-secondary" />
 					<div class="text-right leading-tight">
 						<p class="text-lg text-gray-700">Total Earned 2020</p>
 						<p
@@ -81,17 +64,7 @@ export default defineComponent({
 
 			<Card>
 				<div class="flex flex-row justify-between items-center">
-					<svg
-						viewBox="0 0 20 20"
-						fill="currentColor"
-						class="trending-down w-24 h-24 text-danger"
-					>
-						<path
-							fill-rule="evenodd"
-							d="M12 13a1 1 0 100 2h5a1 1 0 001-1V9a1 1 0 10-2 0v2.586l-4.293-4.293a1 1 0 00-1.414 0L8 9.586 3.707 5.293a1 1 0 00-1.414 1.414l5 5a1 1 0 001.414 0L11 9.414 14.586 13H12z"
-							clip-rule="evenodd"
-						></path>
-					</svg>
+					<TrendDownIcon styles="w-24 h-24 text-danger" />
 					<div class="text-right leading-tight">
 						<p class="text-lg text-gray-700">Total Spent 2020</p>
 						<p

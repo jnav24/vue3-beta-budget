@@ -39,9 +39,16 @@ const routes: Array<RouteRecordRaw> = [
 				name: 'reports',
 				component: () => import('@/views/dashboard/Home.vue'),
 			},
+			{
+				// @todo create a dashboard 404 page
+				path: '/:catchAll(.*)',
+				name: 'dashboard-404',
+				redirect: '/dashboard',
+			},
 		],
 	},
 	{
+		// @todo add guard to see if the user is signed in
 		path: '/:catchAll(.*)',
 		name: '404',
 		redirect: '/',
