@@ -2,11 +2,13 @@
 import { defineComponent } from 'vue';
 import Alert from '@/components/Alert.vue';
 import Card from '@/components/ui-elements/Card.vue';
+import LineChart from '@/components/charts/LineChart.vue';
 
 export default defineComponent({
 	components: {
 		Alert,
 		Card,
+		LineChart,
 	},
 });
 </script>
@@ -14,6 +16,10 @@ export default defineComponent({
 <template>
 	<div class="container mx-auto py-6">
 		<Alert type="warn" message="You have 19 unpaid bills"></Alert>
+
+		<Card>
+			<LineChart />
+		</Card>
 
 		<div class="grid grid-cols-3 gap-6">
 			<Card>
