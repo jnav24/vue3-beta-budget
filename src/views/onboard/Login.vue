@@ -1,7 +1,6 @@
 <script lang="ts">
 import { defineComponent, ref, reactive } from 'vue';
-import Input from '@/components/ui-elements/form/Input.vue';
-import Form from '@/components/ui-elements/form/Form';
+import { Form, Input } from '@/components/ui-elements';
 
 export default defineComponent({
 	components: {
@@ -80,8 +79,9 @@ export default defineComponent({
 			<router-link
 				class="text-gray-700 underline text-sm hover:no-underline"
 				to="/"
-				>Forgot Password?</router-link
 			>
+				Forgot Password?
+			</router-link>
 		</div>
 	</div>
 </template>
