@@ -1,7 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Alert from '@/components/Alert.vue';
-import { Card, CardContent, CardHeader } from '@/components/ui-elements';
+import { Alert, Card, CardContent, CardHeader } from '@/components/ui-elements';
 import DollarIcon from '@/components/ui-elements/icons/DollarIcon.vue';
 import HorizontalBarChart from '@/components/charts/HorizontalBarChart.vue';
 import LineChart from '@/components/charts/LineChart.vue';
@@ -129,7 +128,7 @@ export default defineComponent({
 				</CardHeader>
 
 				<CardContent>
-					Data...
+					Percentage of amount earned/spent
 				</CardContent>
 			</Card>
 		</div>

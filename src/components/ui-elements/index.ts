@@ -1,3 +1,5 @@
+export { default as Alert } from './Alert.vue';
+
 export const CardProvider = Symbol('Card Provider');
 
 export { default as Card } from './card/Card.vue';
