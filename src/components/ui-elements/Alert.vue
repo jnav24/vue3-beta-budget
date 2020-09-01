@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import WarningIcon from '@/components/ui-elements/icons/WarningIcon.vue';
+import { WarningIcon } from '@/components/ui-elements/icons';
 
 export default defineComponent({
 	props: {

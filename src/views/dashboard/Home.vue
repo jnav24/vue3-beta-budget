@@ -1,11 +1,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Alert, Card, CardContent, CardHeader } from '@/components/ui-elements';
-import DollarIcon from '@/components/ui-elements/icons/DollarIcon.vue';
+import {
+	DollarIcon,
+	TrendDownIcon,
+	TrendUpIcon,
+} from '@/components/ui-elements/icons';
 import HorizontalBarChart from '@/components/charts/HorizontalBarChart.vue';
 import LineChart from '@/components/charts/LineChart.vue';
-import TrendDownIcon from '@/components/ui-elements/icons/TrendDownIcon.vue';
-import TrendUpIcon from '@/components/ui-elements/icons/TrendUpIcon.vue';
 
 export default defineComponent({
 	components: {
