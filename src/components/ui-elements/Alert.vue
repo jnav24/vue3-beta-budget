@@ -16,10 +16,18 @@ export default defineComponent({
 		WarningIcon,
 	},
 	setup() {
-		const allowedTypes = ['error', 'info', 'warn'];
+		const getTypeStyles = (type: string): string => {
+			const mapTypes: Record<string, string> = {
+				error: 'bg-red-200 border-red-600 text-red-700',
+				info: 'bg-blue-200 border-blue-600',
+				warn: 'bg-yellow-200 border-yellow-500',
+			};
+
+			return mapTypes[type] ?? 'bg-gray-100 border-gray-400';
+		};
 
 		return {
-			allowedTypes,
+			getTypeStyles,
 		};
 	},
 });
@@ -27,12 +35,7 @@ export default defineComponent({
 
 <template>
 	<div
-		:class="{
-			'bg-red-200 border-red-600 text-red-700': type === 'error',
-			'bg-blue-200 border-blue-600': type === 'info',
-			'bg-yellow-200 border-yellow-500': type === 'warn',
-			'bg-gray-100 border-gray-400': allowedTypes.indexOf(type) < 0,
-		}"
+		:class="getTypeStyles(type)"
 		class="rounded px-4 py-3 border mb-4 flex flex-row justify-center items-center"
 		role="alert"
 	>
