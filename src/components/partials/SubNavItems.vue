@@ -1,5 +1,11 @@
 <script lang="ts">
-import { defineComponent, onMounted, ref, watch } from 'vue';
+import {
+	defineComponent,
+	defineAsyncComponent,
+	onMounted,
+	ref,
+	watch,
+} from 'vue';
 
 export default defineComponent({
 	props: {
@@ -20,6 +26,12 @@ export default defineComponent({
 
 		onMounted(() => (subNav.value as any).classList.add('h-0', 'py-0'));
 
+		const getIcon = (icon: string) => {
+			return defineAsyncComponent(() =>
+				import(`@/components/ui-elements/icons/${icon}.vue`)
+			);
+		};
+
 		watch(
 			() => props.show,
 			n => {
@@ -35,7 +47,7 @@ export default defineComponent({
 			}
 		);
 
-		return { subNav };
+		return { getIcon, subNav };
 	},
 });
 </script>
@@ -53,8 +65,10 @@ export default defineComponent({
 			v-for="(link, i) in items"
 			:key="i"
 			:to="link.value"
-			class="px-2 py-1 block text-sm text-gray-700 hover:bg-gray-200"
-			>{{ link.label }}</router-link
+			class="px-2 py-3 flex flex-row justify-start items-center text-sm text-gray-600 hover:bg-gray-200"
 		>
+			<component :is="getIcon(link.icon)" styles="w-4 h-4" />
+			<span class="ml-2">{{ link.label }}</span>
+		</router-link>
 	</div>
 </template>
