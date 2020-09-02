@@ -1,10 +1,12 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import ChartIcon from '@/components/ui-elements/icons/ChartIcon.vue';
-import ChevronDownIcon from '@/components/ui-elements/icons/ChevronDownIcon.vue';
-import HomeIcon from '@/components/ui-elements/icons/HomeIcon.vue';
-import ReportsIcon from '@/components/ui-elements/icons/ReportsIcon.vue';
-import UserCircleIcon from '@/components/ui-elements/icons/UserCircleIcon.vue';
+import {
+	ChartIcon,
+	ChevronDownIcon,
+	HomeIcon,
+	ReportsIcon,
+	UserCircleIcon,
+} from '@/components/ui-elements';
 import Link from '@/components/ui-elements/Link.vue';
 import SubNav from '@/components/partials/SubNav.vue';
 import SubNavItems from '@/components/partials/SubNavItems.vue';
@@ -24,8 +26,8 @@ export default defineComponent({
 		const buttonSelected = ref(false);
 		const showSubNav = ref(false);
 		const profileLinks = [
-			{ value: '', label: 'Profile' },
-			{ value: '', label: 'Logout' },
+			{ value: '', label: 'Profile', icon: 'UserIcon' },
+			{ value: '', label: 'Logout', icon: 'LogoutIcon' },
 		];
 
 		const resetSelected = () => {
@@ -58,9 +60,10 @@ export default defineComponent({
 
 				<SubNav>
 					<button
-						class="flex text-sm border-2 border-transparent focus:outline-none transition duration-150 ease-in-out rounded-full p-2"
+						class="flex text-sm border-2 focus:outline-none transition duration-300 ease rounded-full p-2"
 						:class="{
 							'border-white': buttonSelected,
+							'border-primary': !buttonSelected,
 						}"
 						id="user-menu"
 						aria-label="User menu"
@@ -77,7 +80,7 @@ export default defineComponent({
 							>Bobby Sanchez</span
 						>
 						<ChevronDownIcon
-							class="transform"
+							class="transform transition duration-300"
 							:class="{
 								'rotate-180': buttonSelected,
 								'rotate-0': !buttonSelected,
