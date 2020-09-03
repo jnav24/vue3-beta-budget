@@ -72,19 +72,23 @@ export default defineComponent({
 						<span class="rounded-full bg-white">
 							<UserCircleIcon styles="h-6 w-6 text-primary" />
 						</span>
+
 						<span
-							class="text-white ml-4 mr-2 my-0 ellipsis"
-							style="max-width: 8rem"
-							>Bobby Sanchez</span
+							class="text-white ml-4 mr-2 my-0 ellipsis max-w-32 hidden sm:block"
 						>
-						<ChevronDownIcon
-							class="transform transition duration-300"
-							:class="{
-								'rotate-180': buttonSelected,
-								'rotate-0': !buttonSelected,
-							}"
-							styles="h-6 w-6 text-white"
-						/>
+							Bobby Sanchez
+						</span>
+
+						<span class="hidden sm:block">
+							<ChevronDownIcon
+								class="transform transition duration-300"
+								:class="{
+									'rotate-180': buttonSelected,
+									'rotate-0': !buttonSelected,
+								}"
+								styles="h-6 w-6 text-white"
+							/>
+						</span>
 					</button>
 
 					<SubNavItems :items="profileLinks" :show="showSubNav" />
@@ -92,7 +96,7 @@ export default defineComponent({
 			</div>
 		</div>
 
-		<div class="bg-white shadow-sm">
+		<div class="bg-white shadow-sm hidden sm:block">
 			<div class="container mx-auto flex flex-row">
 				<Link :link-to="{ name: 'home' }">
 					<HomeIcon styles="w-4 h-4" />

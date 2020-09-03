@@ -12,6 +12,9 @@ module.exports = {
 				'dark-primary': '#195956',
 				secondary: '#EFC958',
 			},
+			maxWidth: {
+				'32': '8rem',
+			},
 			width: {
 				'100': '25rem',
 			},

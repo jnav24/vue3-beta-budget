@@ -55,7 +55,7 @@ export default defineComponent({
 <template>
 	<div
 		ref="subNav"
-		class="absolute origin-top w-full overflow-hidden bg-white transition delay-100 duration-300 ease-out transform rounded-lg shadow-lg"
+		class="absolute right-0 sm:right-auto w-32 sm:w-full overflow-hidden bg-white transition delay-100 duration-300 ease-out transform rounded-lg shadow-lg"
 		:class="{
 			'translate-y-16 opacity-0': !show,
 			'translate-y-2 opacity-100': show,
