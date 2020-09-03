@@ -3,6 +3,7 @@ import { defineComponent, ref } from 'vue';
 import ChartIcon from '@/components/ui-elements/icons/ChartIcon.vue';
 import ChevronDownIcon from '@/components/ui-elements/icons/ChevronDownIcon.vue';
 import HomeIcon from '@/components/ui-elements/icons/HomeIcon.vue';
+import MenuIcon from '@/components/ui-elements/icons/MenuIcon.vue';
 import ReportsIcon from '@/components/ui-elements/icons/ReportsIcon.vue';
 import UserCircleIcon from '@/components/ui-elements/icons/UserCircleIcon.vue';
 import Link from '@/components/ui-elements/Link.vue';
@@ -15,6 +16,7 @@ export default defineComponent({
 		ChevronDownIcon,
 		HomeIcon,
 		Link,
+		MenuIcon,
 		ReportsIcon,
 		SubNav,
 		SubNavItems,
@@ -32,6 +34,11 @@ export default defineComponent({
 			showSubNav.value = false;
 			buttonSelected.value = false;
 		};
+
+		const showMobileNav = () => {
+			// ...
+		};
+
 		const toggleSelected = () => {
 			showSubNav.value = !showSubNav.value;
 			buttonSelected.value = !buttonSelected.value;
@@ -40,6 +47,7 @@ export default defineComponent({
 		return {
 			buttonSelected,
 			profileLinks,
+			showMobileNav,
 			showSubNav,
 			resetSelected,
 			toggleSelected,
@@ -54,7 +62,13 @@ export default defineComponent({
 			<div
 				class="container mx-auto flex flex-row items-center justify-between"
 			>
-				<img src="@/assets/logo.png" alt="" class="h-10 crisp" />
+				<div class="flex flex-row items-center">
+					<MenuIcon
+						@click="showMobileNav()"
+						class="block sm:hidden cursor-pointer h-8 mr-2 w-8 text-white active:bg-dark-primary rounded-full p-1 outline-none"
+					/>
+					<img src="@/assets/logo.png" alt="" class="h-10 crisp" />
+				</div>
 
 				<SubNav>
 					<button
