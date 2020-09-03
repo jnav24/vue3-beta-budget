@@ -1,6 +1,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Alert, Card, CardContent, CardHeader } from '@/components/ui-elements';
+import {
+	Alert,
+	Card,
+	CardContent,
+	CardHeader,
+	Select,
+} from '@/components/ui-elements';
 import {
 	DollarIcon,
 	TrendDownIcon,
@@ -18,8 +24,24 @@ export default defineComponent({
 		DollarIcon,
 		HorizontalBarChart,
 		LineChart,
+		Select,
 		TrendDownIcon,
 		TrendUpIcon,
+	},
+	setup() {
+		const form = {
+			year: {
+				rules: {},
+				value: '',
+			},
+		};
+
+		const items = [
+			{ value: '2020', label: '2020' },
+			{ value: '2019', label: '2019' },
+		];
+
+		return { form, items };
 	},
 });
 </script>
@@ -34,22 +56,7 @@ export default defineComponent({
 					<h1 class="font-header text-dark-primary text-2xl ml-2">
 						Yearly Overview
 					</h1>
-					<div
-						class="border-solid border border-dark-primary px-2 py-2 w-40 rounded-md flex items-center justify-between mr-3"
-					>
-						<span class="text-dark-primary flex-1">2020</span>
-						<svg
-							viewBox="0 0 20 20"
-							fill="currentColor"
-							class="chevron-down w-6 h-6 text-gray-700"
-						>
-							<path
-								fill-rule="evenodd"
-								d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-								clip-rule="evenodd"
-							></path>
-						</svg>
-					</div>
+					<Select v-model:value="form.year.value" :items="items" />
 				</div>
 			</CardHeader>
 
