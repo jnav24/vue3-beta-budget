@@ -1,6 +1,6 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref, watch } from 'vue';
-import { ChevronDownIcon } from '@/components/ui-elements';
+import { ChevronDownIcon } from '@/components/ui-elements/icons';
 
 export default defineComponent({
 	components: {
@@ -43,6 +43,17 @@ export default defineComponent({
 			() => currentValue.value && currentValue.value.length
 		);
 
+		const getPlaceholder = computed(() => {
+			const text: any = props.items.find(
+				(obj: any) => currentValue.value === obj.value
+			);
+			if (isValueSelected.value && text && text.label) {
+				return text.label;
+			}
+
+			return props.placeholder;
+		});
+
 		const setValue = (value: string) => {
 			currentValue.value = value;
 			emit('update:value', value);
@@ -67,7 +78,7 @@ export default defineComponent({
 			currentValue,
 			dropDownItems,
 			error,
-			isValueSelected,
+			getPlaceholder,
 			selected,
 			setValue,
 		};
@@ -86,9 +97,7 @@ export default defineComponent({
 		@blur="selected = false"
 		@click="selected = !selected"
 	>
-		<span class="flex-1">
-			{{ isValueSelected ? currentValue : placeholder }}
-		</span>
+		<span class="flex-1">{{ getPlaceholder }}</span>
 		<ChevronDownIcon
 			class="transform transition duration-300 h-6 w-6"
 			:class="{

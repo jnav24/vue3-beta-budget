@@ -32,13 +32,13 @@ export default defineComponent({
 		const form = {
 			year: {
 				rules: {},
-				value: '',
+				value: '19',
 			},
 		};
 
 		const items = [
-			{ value: '2020', label: '2020' },
-			{ value: '2019', label: '2019' },
+			{ value: '20', label: '2020' },
+			{ value: '19', label: '2019' },
 		];
 
 		return { form, items };
