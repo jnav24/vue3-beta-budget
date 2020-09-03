@@ -1,7 +1,7 @@
 <script lang="ts">
 import { computed, defineComponent, inject, onMounted, ref, watch } from 'vue';
 import ChevronDownIcon from '@/components/ui-elements/icons/ChevronDownIcon.vue';
-import { FormProvider } from '@/components/ui-elements/form/Form';
+import { FormProvider } from '@/components/ui-elements';
 
 export default defineComponent({
 	components: {
@@ -43,16 +43,14 @@ export default defineComponent({
 		const dropDownItems = ref(null);
 		const currentValue = ref('');
 		const labelId = ref(null);
-		const { isFormValid, setFormElement, setFormId } = inject<any>(
-			FormProvider
-		);
+		const FormContext = inject<any>(FormProvider);
 
 		onMounted(() => {
 			(dropDownItems.value as any).classList.add('h-0', 'py-0');
 			currentValue.value = props.value;
-			if (props.label) {
-				labelId.value = setFormId(props.label);
-				setFormElement(labelId.value, !props.rules);
+			if (props.label && !!FormContext) {
+				labelId.value = FormContext.setFormId(props.label);
+				FormContext.setFormElement(labelId.value, !props.rules);
 			}
 		});
 
@@ -72,8 +70,10 @@ export default defineComponent({
 		});
 
 		const setValue = (value: string) => {
+			if (FormContext) {
+				FormContext.isFormValid();
+			}
 			currentValue.value = value;
-			isFormValid();
 			emit('update:value', value);
 		};
 
