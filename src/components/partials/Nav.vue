@@ -65,7 +65,7 @@ export default defineComponent({
 				<div class="flex flex-row items-center">
 					<MenuIcon
 						@click="showMobileNav()"
-						class="block sm:hidden cursor-pointer h-8 mr-2 w-8 text-white active:bg-dark-primary rounded-full p-1 outline-none"
+						class="block sm:hidden cursor-pointer h-8 mr-2 w-8 text-white focus:bg-dark-primary active:bg-dark-primary rounded p-1 outline-none"
 					/>
 					<img src="@/assets/logo.png" alt="" class="h-10 crisp" />
 				</div>

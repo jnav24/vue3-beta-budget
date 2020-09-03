@@ -67,7 +67,7 @@ export default defineComponent({
 			:to="link.value"
 			class="px-2 py-3 flex flex-row justify-start items-center text-sm text-gray-600 hover:bg-gray-200"
 		>
-			<component :is="getIcon(link.icon)" styles="w-4 h-4" />
+			<component :is="getIcon(link.icon)" class="w-4 h-4" />
 			<span class="ml-2">{{ link.label }}</span>
 		</router-link>
 	</div>
