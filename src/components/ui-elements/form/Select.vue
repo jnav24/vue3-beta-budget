@@ -1,12 +1,21 @@
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref, watch } from 'vue';
+import { computed, defineComponent, inject, onMounted, ref, watch } from 'vue';
 import { ChevronDownIcon } from '@/components/ui-elements/icons';
+import { FormProvider } from '@/components/ui-elements/form/Form';
 
 export default defineComponent({
 	components: {
 		ChevronDownIcon,
 	},
 	props: {
+		label: {
+			default: null,
+			type: String,
+		},
+		rules: {
+			default: () => ({}),
+			type: Object,
+		},
 		items: {
 			required: true,
 			type: () => [],
@@ -33,10 +42,18 @@ export default defineComponent({
 		const selected = ref(false);
 		const dropDownItems = ref(null);
 		const currentValue = ref('');
+		const labelId = ref(null);
+		const { isFormValid, setFormElement, setFormId } = inject<any>(
+			FormProvider
+		);
 
 		onMounted(() => {
 			(dropDownItems.value as any).classList.add('h-0', 'py-0');
 			currentValue.value = props.value;
+			if (props.label) {
+				labelId.value = setFormId(props.label);
+				setFormElement(labelId.value, !props.rules);
+			}
 		});
 
 		const isValueSelected = computed(
@@ -56,6 +73,7 @@ export default defineComponent({
 
 		const setValue = (value: string) => {
 			currentValue.value = value;
+			isFormValid();
 			emit('update:value', value);
 		};
 

@@ -19,7 +19,8 @@ export default defineComponent({
 			formElements[name] = val;
 		};
 
-		const setFormId = (name: string): string => name.toLowerCase().replace(/\s+/, '-');
+		const setFormId = (name: string): string =>
+			name.toLowerCase().replace(/\s+/, '-');
 
 		const isFormValid = () => {
 			const keys = Object.keys(formElements);
