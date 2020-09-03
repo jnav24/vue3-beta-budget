@@ -49,7 +49,9 @@ export default defineComponent({
 		<Card class="mx-2 sm:mx-0">
 			<CardHeader>
 				<div class="flex flex-col sm:flex-row justify-between">
-					<h1 class="font-header text-dark-primary text-2xl mb-2 sm:mb-0 ml-2">
+					<h1
+						class="font-header text-dark-primary text-2xl mb-2 sm:mb-0 ml-2"
+					>
 						Yearly Overview
 					</h1>
 					<Select v-model:value="form.year.value" :items="items" />
@@ -64,7 +66,9 @@ export default defineComponent({
 		<div class="grid grid-cols-1 px-2 sm:grid-cols-3 sm:gap-6 sm:px-0">
 			<Card>
 				<div class="flex flex-row justify-between items-center">
-					<DollarIcon class="w-20 sm:w-24 h-20 sm:h-24 text-primary" />
+					<DollarIcon
+						class="w-20 sm:w-24 h-20 sm:h-24 text-primary"
+					/>
 					<div class="text-right leading-tight">
 						<p class="text-lg text-gray-700">
 							Total Saved 2020
@@ -83,7 +87,9 @@ export default defineComponent({
 
 			<Card>
 				<div class="flex flex-row justify-between items-center">
-					<TrendUpIcon class="w-20 sm:w-24 h-20 sm:h-24 text-secondary" />
+					<TrendUpIcon
+						class="w-20 sm:w-24 h-20 sm:h-24 text-secondary"
+					/>
 					<div class="text-right leading-tight">
 						<p class="text-lg text-gray-700">Total Earned 2020</p>
 						<p
@@ -100,7 +106,9 @@ export default defineComponent({
 
 			<Card>
 				<div class="flex flex-row justify-between items-center">
-					<TrendDownIcon class="w-20 sm:w-24 h-20 sm:h-24 text-danger" />
+					<TrendDownIcon
+						class="w-20 sm:w-24 h-20 sm:h-24 text-danger"
+					/>
 					<div class="text-right leading-tight">
 						<p class="text-lg text-gray-700">Total Spent 2020</p>
 						<p
