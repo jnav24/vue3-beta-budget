@@ -12,10 +12,13 @@ module.exports = {
 				'dark-primary': '#195956',
 				secondary: '#EFC958',
 			},
+			width: {
+				'100': '25rem',
+			},
 		},
 	},
 	variants: {
-		backgroundColor: ['hover', 'active'],
+		backgroundColor: ['hover', 'active', 'responsive'],
 		borderColor: ['hover', 'active', 'focus'],
 	},
 	plugins: [],

@@ -32,7 +32,7 @@ export default defineComponent({
 
 <template>
 	<div
-		class="relative z-30 md:w-1/4 lg:w-1/4 xl:w-1/6 mt-6 pt-4 bg-white rounded-lg shadow-md overflow-hidden text-left"
+		class="relative z-30 w-full sm:w-100 mt-6 px-4 sm:px-0 pt-4 sm:bg-white sm:rounded-lg sm:shadow-md overflow-hidden text-left"
 	>
 		<div class="flex flex-row justify-center mb-4">
 			<div class="overflow-hidden h-16 w-16">
@@ -44,8 +44,10 @@ export default defineComponent({
 				/>
 			</div>
 		</div>
-		<div class="pb-6 px-6 shadow-sm">
-			<h1 class="text-center text-2xl text-gray-600 font-header mb-8">
+		<div class="pb-6 px-0 sm:px-6 sm:shadow-sm">
+			<h1
+				class="text-center text-2xl text-gray-800 sm:text-gray-600 font-header mb-8"
+			>
 				Welcome Back
 			</h1>
 			<Form v-model:valid="valid">
@@ -74,7 +76,7 @@ export default defineComponent({
 			</Form>
 		</div>
 		<div
-			class="py-4 px-6 bg-gray-100 flex flex-row justify-end items-center"
+			class="py-4 px-6 sm:bg-gray-100 flex flex-row justify-center sm:justify-end items-center"
 		>
 			<router-link
 				class="text-gray-700 underline text-sm hover:no-underline"
