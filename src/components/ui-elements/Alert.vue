@@ -36,7 +36,7 @@ export default defineComponent({
 <template>
 	<div
 		:class="getTypeStyles(type)"
-		class="rounded px-4 py-3 border mb-4 flex flex-row justify-center items-center"
+		class="rounded mx-2 sm:mx-auto px-4 py-3 border mb-4 flex flex-row justify-center items-center"
 		role="alert"
 	>
 		<WarningIcon

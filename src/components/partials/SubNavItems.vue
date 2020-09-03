@@ -27,9 +27,10 @@ export default defineComponent({
 		onMounted(() => (subNav.value as any).classList.add('h-0', 'py-0'));
 
 		const getIcon = (icon: string) => {
-			return defineAsyncComponent(() =>
-				import(`@/components/ui-elements/icons/${icon}.vue`)
-			);
+			return defineAsyncComponent({
+				loader: () =>
+					import(`@/components/ui-elements/icons/${icon}.vue`),
+			});
 		};
 
 		watch(

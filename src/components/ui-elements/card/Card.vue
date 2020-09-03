@@ -30,7 +30,7 @@ export default defineComponent({
 
 <template>
 	<div
-		class="rounded-md shadow-sm hover:shadow-lg transition duration-150 my-4"
+		class="rounded-md shadow-sm hover:shadow-lg transition duration-150 my-2 sm:my-4"
 		:class="{
 			[`bg-${color}`]: true,
 			'px-4': !cardContents.content,

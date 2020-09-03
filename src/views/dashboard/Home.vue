@@ -46,10 +46,10 @@ export default defineComponent({
 	<div class="container mx-auto py-6">
 		<Alert type="warn" message="You have 19 unpaid bills"></Alert>
 
-		<Card>
+		<Card class="mx-2 sm:mx-0">
 			<CardHeader>
-				<div class="flex flex-row justify-between">
-					<h1 class="font-header text-dark-primary text-2xl ml-2">
+				<div class="flex flex-col sm:flex-row justify-between">
+					<h1 class="font-header text-dark-primary text-2xl mb-2 sm:mb-0 ml-2">
 						Yearly Overview
 					</h1>
 					<Select v-model:value="form.year.value" :items="items" />
@@ -61,20 +61,20 @@ export default defineComponent({
 			</CardContent>
 		</Card>
 
-		<div class="grid grid-cols-3 gap-6">
+		<div class="grid grid-cols-1 px-2 sm:grid-cols-3 sm:gap-6 sm:px-0">
 			<Card>
 				<div class="flex flex-row justify-between items-center">
-					<DollarIcon class="w-24 h-24 text-primary" />
+					<DollarIcon class="w-20 sm:w-24 h-20 sm:h-24 text-primary" />
 					<div class="text-right leading-tight">
 						<p class="text-lg text-gray-700">
 							Total Saved 2020
 						</p>
 						<p
-							class="text-primary text-4xl font-header tracking-tight"
+							class="text-primary text-3xl sm:text-4xl font-header tracking-tight"
 						>
 							$300,378.60
 						</p>
-						<p class="text-gray-600 text-sm">
+						<p class="text-gray-600 text-xs sm:text-sm">
 							Monthly average $12,547.32
 						</p>
 					</div>
@@ -83,15 +83,15 @@ export default defineComponent({
 
 			<Card>
 				<div class="flex flex-row justify-between items-center">
-					<TrendUpIcon class="w-24 h-24 text-secondary" />
+					<TrendUpIcon class="w-20 sm:w-24 h-20 sm:h-24 text-secondary" />
 					<div class="text-right leading-tight">
 						<p class="text-lg text-gray-700">Total Earned 2020</p>
 						<p
-							class="text-secondary text-4xl font-header tracking-tight"
+							class="text-secondary text-3xl sm:text-4xl font-header tracking-tight"
 						>
 							$376,530.63
 						</p>
-						<p class="text-gray-600 text-sm">
+						<p class="text-gray-600 text-xs sm:text-sm">
 							Monthly average $22,066.32
 						</p>
 					</div>
@@ -100,15 +100,15 @@ export default defineComponent({
 
 			<Card>
 				<div class="flex flex-row justify-between items-center">
-					<TrendDownIcon class="w-24 h-24 text-danger" />
+					<TrendDownIcon class="w-20 sm:w-24 h-20 sm:h-24 text-danger" />
 					<div class="text-right leading-tight">
 						<p class="text-lg text-gray-700">Total Spent 2020</p>
 						<p
-							class="text-danger text-4xl font-header tracking-tight"
+							class="text-danger text-3xl sm:text-4xl font-header tracking-tight"
 						>
 							$76,152.03
 						</p>
-						<p class="text-gray-600 text-sm">
+						<p class="text-gray-600 text-xs sm:text-sm">
 							Monthly average $9,519.00
 						</p>
 					</div>
@@ -116,7 +116,7 @@ export default defineComponent({
 			</Card>
 		</div>
 
-		<div class="grid grid-cols-3 gap-6">
+		<div class="grid grid-cols-1 px-2 sm:grid-cols-3 sm:gap-6 sm:px-0">
 			<Card class="col-span-2">
 				<CardHeader>
 					<h2 class="text-gray-700 text-lg">Spending Habits 2020</h2>
