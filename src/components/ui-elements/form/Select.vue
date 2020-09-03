@@ -1,6 +1,6 @@
 <script lang="ts">
 import { computed, defineComponent, inject, onMounted, ref, watch } from 'vue';
-import { ChevronDownIcon } from '@/components/ui-elements/icons';
+import ChevronDownIcon from '@/components/ui-elements/icons/ChevronDownIcon.vue';
 import { FormProvider } from '@/components/ui-elements/form/Form';
 
 export default defineComponent({

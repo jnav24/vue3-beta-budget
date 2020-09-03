@@ -2,7 +2,7 @@
 import { defineComponent, ref, inject, onMounted } from 'vue';
 import { FormProvider } from '@/components/ui-elements/form/Form';
 import useFormValidation from '@/hooks/useFormValidation';
-import { Label } from '@/components/ui-elements';
+import Label from '@/components/ui-elements/form/Label.vue';
 
 export default defineComponent({
 	components: {

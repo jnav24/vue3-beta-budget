@@ -1,12 +1,10 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import {
-	ChartIcon,
-	ChevronDownIcon,
-	HomeIcon,
-	ReportsIcon,
-	UserCircleIcon,
-} from '@/components/ui-elements';
+import ChartIcon from '@/components/ui-elements/icons/ChartIcon.vue';
+import ChevronDownIcon from '@/components/ui-elements/icons/ChevronDownIcon.vue';
+import HomeIcon from '@/components/ui-elements/icons/HomeIcon.vue';
+import ReportsIcon from '@/components/ui-elements/icons/ReportsIcon.vue';
+import UserCircleIcon from '@/components/ui-elements/icons/UserCircleIcon.vue';
 import Link from '@/components/ui-elements/Link.vue';
 import SubNav from '@/components/partials/SubNav.vue';
 import SubNavItems from '@/components/partials/SubNavItems.vue';

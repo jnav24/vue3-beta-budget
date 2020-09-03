@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent, ref, reactive } from 'vue';
-import { Form, Input } from '@/components/ui-elements';
+import { Form } from '@/components/ui-elements';
+import Input from '@/components/ui-elements/form/Input.vue';
 
 export default defineComponent({
 	components: {

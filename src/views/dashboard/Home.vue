@@ -1,17 +1,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import {
-	Alert,
-	Card,
-	CardContent,
-	CardHeader,
-	Select,
-} from '@/components/ui-elements';
-import {
-	DollarIcon,
-	TrendDownIcon,
-	TrendUpIcon,
-} from '@/components/ui-elements/icons';
+import Alert from '@/components/ui-elements/Alert.vue';
+import Card from '@/components/ui-elements/card/Card.vue';
+import CardContent from '@/components/ui-elements/card/CardContent.vue';
+import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
+import Select from '@/components/ui-elements/form/Select.vue';
+import DollarIcon from '@/components/ui-elements/icons/DollarIcon.vue';
+import TrendDownIcon from '@/components/ui-elements/icons/TrendDownIcon.vue';
+import TrendUpIcon from '@/components/ui-elements/icons/TrendUpIcon.vue';
 import HorizontalBarChart from '@/components/charts/HorizontalBarChart.vue';
 import LineChart from '@/components/charts/LineChart.vue';
 
