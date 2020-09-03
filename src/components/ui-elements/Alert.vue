@@ -41,7 +41,7 @@ export default defineComponent({
 	>
 		<WarningIcon
 			v-if="type === 'warn'"
-			styles="w-6 h-6 text-yellow-900 mr-4"
+			class="w-6 h-6 text-yellow-900 mr-4"
 		/>
 		<span>{{ message }}</span>
 	</div>

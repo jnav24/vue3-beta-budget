@@ -64,7 +64,7 @@ export default defineComponent({
 		<div class="grid grid-cols-3 gap-6">
 			<Card>
 				<div class="flex flex-row justify-between items-center">
-					<DollarIcon styles="w-24 h-24 text-primary" />
+					<DollarIcon class="w-24 h-24 text-primary" />
 					<div class="text-right leading-tight">
 						<p class="text-lg text-gray-700">
 							Total Saved 2020
@@ -83,7 +83,7 @@ export default defineComponent({
 
 			<Card>
 				<div class="flex flex-row justify-between items-center">
-					<TrendUpIcon styles="w-24 h-24 text-secondary" />
+					<TrendUpIcon class="w-24 h-24 text-secondary" />
 					<div class="text-right leading-tight">
 						<p class="text-lg text-gray-700">Total Earned 2020</p>
 						<p
@@ -100,7 +100,7 @@ export default defineComponent({
 
 			<Card>
 				<div class="flex flex-row justify-between items-center">
-					<TrendDownIcon styles="w-24 h-24 text-danger" />
+					<TrendDownIcon class="w-24 h-24 text-danger" />
 					<div class="text-right leading-tight">
 						<p class="text-lg text-gray-700">Total Spent 2020</p>
 						<p

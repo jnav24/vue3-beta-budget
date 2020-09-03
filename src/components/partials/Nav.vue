@@ -84,7 +84,7 @@ export default defineComponent({
 						@click="toggleSelected()"
 					>
 						<span class="rounded-full bg-white">
-							<UserCircleIcon styles="h-6 w-6 text-primary" />
+							<UserCircleIcon class="h-6 w-6 text-primary" />
 						</span>
 
 						<span
@@ -95,12 +95,11 @@ export default defineComponent({
 
 						<span class="hidden sm:block">
 							<ChevronDownIcon
-								class="transform transition duration-300"
+								class="transform transition duration-300 h-6 w-6 text-white"
 								:class="{
 									'rotate-180': buttonSelected,
 									'rotate-0': !buttonSelected,
 								}"
-								styles="h-6 w-6 text-white"
 							/>
 						</span>
 					</button>
@@ -113,17 +112,17 @@ export default defineComponent({
 		<div class="bg-white shadow-sm hidden sm:block">
 			<div class="container mx-auto flex flex-row">
 				<Link :link-to="{ name: 'home' }">
-					<HomeIcon styles="w-4 h-4" />
+					<HomeIcon class="w-4 h-4" />
 					<span class="ml-2">Home</span>
 				</Link>
 
 				<Link :link-to="{ name: 'budgets' }">
-					<ChartIcon styles="w-4 h-4" />
+					<ChartIcon class="w-4 h-4" />
 					<span class="ml-2">Budgets</span>
 				</Link>
 
 				<Link :link-to="{ name: 'reports' }">
-					<ReportsIcon styles="w-4 h-4" />
+					<ReportsIcon class="w-4 h-4" />
 					<span class="ml-2">Reports</span>
 				</Link>
 			</div>
