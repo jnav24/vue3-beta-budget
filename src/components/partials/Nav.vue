@@ -2,6 +2,7 @@
 import { defineComponent, ref } from 'vue';
 import ChartIcon from '@/components/ui-elements/icons/ChartIcon.vue';
 import ChevronDownIcon from '@/components/ui-elements/icons/ChevronDownIcon.vue';
+import CloseIcon from '@/components/ui-elements/icons/CloseIcon.vue';
 import HomeIcon from '@/components/ui-elements/icons/HomeIcon.vue';
 import MenuIcon from '@/components/ui-elements/icons/MenuIcon.vue';
 import ReportsIcon from '@/components/ui-elements/icons/ReportsIcon.vue';
@@ -14,6 +15,7 @@ export default defineComponent({
 	components: {
 		ChartIcon,
 		ChevronDownIcon,
+		CloseIcon,
 		HomeIcon,
 		Link,
 		MenuIcon,
@@ -67,6 +69,9 @@ export default defineComponent({
 						@click="showMobileNav()"
 						class="block sm:hidden cursor-pointer h-8 mr-2 w-8 text-white focus:bg-dark-primary active:bg-dark-primary rounded p-1 outline-none"
 					/>
+					<CloseIcon
+						class="block sm:hidden cursor-pointer h-8 mr-2 w-8 text-white focus:bg-dark-primary active:bg-dark-primary rounded p-1 outline-none"
+					/>
 					<img src="@/assets/logo.png" alt="" class="h-10 crisp" />
 				</div>
 
@@ -107,6 +112,23 @@ export default defineComponent({
 					<SubNavItems :items="profileLinks" :show="showSubNav" />
 				</SubNav>
 			</div>
+		</div>
+
+		<div class="bg-primary block sm:hidden px-4 py-2">
+			<Link link-type="inverted" :link-to="{ name: 'home' }">
+				<HomeIcon class="w-4 h-4" />
+				<span class="ml-2">Home</span>
+			</Link>
+
+			<Link link-type="inverted" :link-to="{ name: 'budgets' }">
+				<ChartIcon class="w-4 h-4" />
+				<span class="ml-2">Budgets</span>
+			</Link>
+
+			<Link link-type="inverted" :link-to="{ name: 'reports' }">
+				<ReportsIcon class="w-4 h-4" />
+				<span class="ml-2">Reports</span>
+			</Link>
 		</div>
 
 		<div class="bg-white shadow-sm hidden sm:block">
