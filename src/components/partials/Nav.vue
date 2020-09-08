@@ -26,6 +26,7 @@ export default defineComponent({
 	},
 	setup() {
 		const buttonSelected = ref(false);
+		const showMobileNav = ref(false);
 		const showSubNav = ref(false);
 		const profileLinks = [
 			{ value: '', label: 'Profile', icon: 'UserIcon' },
@@ -34,16 +35,16 @@ export default defineComponent({
 		const menu = [
 			{ link: { name: 'home' }, label: 'Home', icon: 'HomeIcon' },
 			{ link: { name: 'budgets' }, label: 'Budgets', icon: 'ChartIcon' },
-			{ link: { name: 'reports' }, label: 'Reports', icon: 'ReportsIcon' },
+			{
+				link: { name: 'reports' },
+				label: 'Reports',
+				icon: 'ReportsIcon',
+			},
 		];
 
 		const resetSelected = () => {
 			showSubNav.value = false;
 			buttonSelected.value = false;
-		};
-
-		const showMobileNav = () => {
-			// ...
 		};
 
 		const toggleSelected = () => {
@@ -72,10 +73,13 @@ export default defineComponent({
 			>
 				<div class="flex flex-row items-center">
 					<MenuIcon
-						@click="showMobileNav()"
+						v-if="!showMobileNav"
+						@click="showMobileNav = true"
 						class="block sm:hidden cursor-pointer h-8 mr-2 w-8 text-white focus:bg-dark-primary active:bg-dark-primary rounded p-1 outline-none"
 					/>
 					<CloseIcon
+						v-if="showMobileNav"
+						@click="showMobileNav = false"
 						class="block sm:hidden cursor-pointer h-8 mr-2 w-8 text-white focus:bg-dark-primary active:bg-dark-primary rounded p-1 outline-none"
 					/>
 					<img src="@/assets/logo.png" alt="" class="h-10 crisp" />
@@ -120,8 +124,13 @@ export default defineComponent({
 			</div>
 		</div>
 
-		<div class="bg-primary block sm:hidden px-4 py-2">
-			<Link v-for="(item, index) in menu" :key="index" link-type="inverted" :link-to="item.link">
+		<div v-if="showMobileNav" class="bg-primary block sm:hidden px-4 py-2">
+			<Link
+				v-for="(item, index) in menu"
+				:key="index"
+				link-type="inverted"
+				:link-to="item.link"
+			>
 				<component :is="item.icon" class="w-4 h-4"></component>
 				<span class="ml-2">{{ item.label }}</span>
 			</Link>
@@ -129,7 +138,11 @@ export default defineComponent({
 
 		<div class="bg-white shadow-sm hidden sm:block">
 			<div class="container mx-auto flex flex-row">
-				<Link v-for="(item, index) in menu" :key="index" :link-to="item.link">
+				<Link
+					v-for="(item, index) in menu"
+					:key="index"
+					:link-to="item.link"
+				>
 					<component :is="item.icon" class="w-4 h-4"></component>
 					<span class="ml-2">{{ item.label }}</span>
 				</Link>
