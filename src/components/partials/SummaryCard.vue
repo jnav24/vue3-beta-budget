@@ -28,18 +28,20 @@ export default defineComponent({
 
 <template>
 	<Card>
-		<div class="flex flex-row justify-between items-center">
+		<div
+			class="flex flex-row justify-between items-center sm:flex-col lg:flex-row"
+		>
 			<component
 				:is="getIcon()"
-				class="w-20 sm:w-24 h-20 sm:h-24"
+				class="w-20 sm:w-24 h-20 sm:h-24 mb-0 sm:mb-2 lg:mb-0"
 				:class="color"
 			/>
-			<div class="text-right leading-tight">
-				<p class="text-lg text-gray-700">
+			<div class="text-right sm:text-center leading-tight">
+				<p class="text-lg sm:text-base lg:text-lg text-gray-700">
 					{{ title }}
 				</p>
 				<p
-					class="text-3xl sm:text-4xl font-header tracking-tight"
+					class="text-3xl sm:text-2xl md:text-3xl lg:text-4xl font-header tracking-tight my-0 sm:mt-1 lg:my-0"
 					:class="color"
 				>
 					{{ amount }}
