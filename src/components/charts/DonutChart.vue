@@ -66,6 +66,7 @@ export default defineComponent({
 			},
 			options: {
 				legend: {
+					// display: false,
 					fullWidth: false,
 					position: 'bottom',
 				},

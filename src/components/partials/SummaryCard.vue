@@ -29,7 +29,7 @@ export default defineComponent({
 <template>
 	<Card>
 		<div
-			class="flex flex-row justify-between items-center sm:flex-col lg:flex-row"
+			class="flex flex-row justify-evenly sm:justify-between items-center sm:flex-col lg:flex-row"
 		>
 			<component
 				:is="getIcon()"

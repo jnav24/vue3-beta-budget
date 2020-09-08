@@ -112,11 +112,11 @@ export default defineComponent({
 				</CardHeader>
 
 				<CardContent>
-					<div class="hidden sm:block">
+					<div class="hidden md:block">
 						<HorizontalBarChart />
 					</div>
 
-					<div class="block sm:hidden">
+					<div class="block md:hidden">
 						<DonutChart />
 					</div>
 				</CardContent>
