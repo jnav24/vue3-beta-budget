@@ -31,6 +31,11 @@ export default defineComponent({
 			{ value: '', label: 'Profile', icon: 'UserIcon' },
 			{ value: '', label: 'Logout', icon: 'LogoutIcon' },
 		];
+		const menu = [
+			{ link: { name: 'home' }, label: 'Home', icon: 'HomeIcon' },
+			{ link: { name: 'budgets' }, label: 'Budgets', icon: 'ChartIcon' },
+			{ link: { name: 'reports' }, label: 'Reports', icon: 'ReportsIcon' },
+		];
 
 		const resetSelected = () => {
 			showSubNav.value = false;
@@ -53,6 +58,7 @@ export default defineComponent({
 			showSubNav,
 			resetSelected,
 			toggleSelected,
+			menu,
 		};
 	},
 });
@@ -115,37 +121,17 @@ export default defineComponent({
 		</div>
 
 		<div class="bg-primary block sm:hidden px-4 py-2">
-			<Link link-type="inverted" :link-to="{ name: 'home' }">
-				<HomeIcon class="w-4 h-4" />
-				<span class="ml-2">Home</span>
-			</Link>
-
-			<Link link-type="inverted" :link-to="{ name: 'budgets' }">
-				<ChartIcon class="w-4 h-4" />
-				<span class="ml-2">Budgets</span>
-			</Link>
-
-			<Link link-type="inverted" :link-to="{ name: 'reports' }">
-				<ReportsIcon class="w-4 h-4" />
-				<span class="ml-2">Reports</span>
+			<Link v-for="(item, index) in menu" :key="index" link-type="inverted" :link-to="item.link">
+				<component :is="item.icon" class="w-4 h-4"></component>
+				<span class="ml-2">{{ item.label }}</span>
 			</Link>
 		</div>
 
 		<div class="bg-white shadow-sm hidden sm:block">
 			<div class="container mx-auto flex flex-row">
-				<Link :link-to="{ name: 'home' }">
-					<HomeIcon class="w-4 h-4" />
-					<span class="ml-2">Home</span>
-				</Link>
-
-				<Link :link-to="{ name: 'budgets' }">
-					<ChartIcon class="w-4 h-4" />
-					<span class="ml-2">Budgets</span>
-				</Link>
-
-				<Link :link-to="{ name: 'reports' }">
-					<ReportsIcon class="w-4 h-4" />
-					<span class="ml-2">Reports</span>
+				<Link v-for="(item, index) in menu" :key="index" :link-to="item.link">
+					<component :is="item.icon" class="w-4 h-4"></component>
+					<span class="ml-2">{{ item.label }}</span>
 				</Link>
 			</div>
 		</div>
