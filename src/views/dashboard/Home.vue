@@ -8,8 +8,10 @@ import Select from '@/components/ui-elements/form/Select.vue';
 import DollarIcon from '@/components/ui-elements/icons/DollarIcon.vue';
 import TrendDownIcon from '@/components/ui-elements/icons/TrendDownIcon.vue';
 import TrendUpIcon from '@/components/ui-elements/icons/TrendUpIcon.vue';
+import DonutChart from '@/components/charts/DonutChart.vue';
 import HorizontalBarChart from '@/components/charts/HorizontalBarChart.vue';
 import LineChart from '@/components/charts/LineChart.vue';
+import BarChart from '@/components/charts/BarChart.vue';
 
 export default defineComponent({
 	components: {
@@ -18,8 +20,10 @@ export default defineComponent({
 		CardContent,
 		CardHeader,
 		DollarIcon,
+		DonutChart,
 		HorizontalBarChart,
 		LineChart,
+		BarChart,
 		Select,
 		TrendDownIcon,
 		TrendUpIcon,
@@ -50,7 +54,7 @@ export default defineComponent({
 			<CardHeader>
 				<div class="flex flex-col sm:flex-row justify-between">
 					<h1
-						class="font-header text-dark-primary text-2xl mb-2 sm:mb-0 ml-2"
+						class="font-header text-dark-primary text-xl sm:text-2xl mb-2 sm:mb-0 ml-2"
 					>
 						Yearly Overview
 					</h1>
@@ -59,7 +63,13 @@ export default defineComponent({
 			</CardHeader>
 
 			<CardContent>
-				<LineChart />
+				<div class="hidden sm:block">
+					<LineChart />
+				</div>
+
+				<div class="block sm:hidden">
+					<BarChart />
+				</div>
 			</CardContent>
 		</Card>
 
@@ -131,7 +141,13 @@ export default defineComponent({
 				</CardHeader>
 
 				<CardContent>
-					<HorizontalBarChart />
+					<div class="hidden sm:block">
+						<HorizontalBarChart />
+					</div>
+
+					<div class="block sm:hidden">
+						<DonutChart />
+					</div>
 				</CardContent>
 			</Card>
 
