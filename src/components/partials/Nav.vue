@@ -67,7 +67,9 @@ export default defineComponent({
 
 <template>
 	<nav class="relative z-50">
-		<div class="bg-primary px-4 py-1 h-16 flex flex-row items-center relative">
+		<div
+			class="bg-primary px-4 py-1 h-16 flex flex-row items-center relative"
+		>
 			<div
 				class="container mx-auto flex flex-row items-center justify-between"
 			>
@@ -124,7 +126,10 @@ export default defineComponent({
 			</div>
 		</div>
 
-		<div v-if="showMobileNav" class="bg-primary block sm:hidden px-4 py-2 absolute w-full z-10">
+		<div
+			v-if="showMobileNav"
+			class="bg-primary block sm:hidden px-4 py-2 absolute w-full z-10"
+		>
 			<Link
 				v-for="(item, index) in menu"
 				:key="index"
