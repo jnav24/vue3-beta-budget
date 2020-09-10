@@ -10,6 +10,7 @@ import HorizontalBarChart from '@/components/charts/HorizontalBarChart.vue';
 import LineChart from '@/components/charts/LineChart.vue';
 import BarChart from '@/components/charts/BarChart.vue';
 import SummaryCard from '@/components/partials/SummaryCard.vue';
+import YTDSummary from '@/components/partials/YTDSummary.vue';
 
 export default defineComponent({
 	components: {
@@ -23,6 +24,7 @@ export default defineComponent({
 		BarChart,
 		Select,
 		SummaryCard,
+		YTDSummary,
 	},
 	setup() {
 		const form = {
@@ -32,7 +34,7 @@ export default defineComponent({
 			},
 		};
 
-		const donutData = {
+		const yearlyExpenseData = {
 			labels: [
 				'Childcare',
 				'Educational',
@@ -120,7 +122,12 @@ export default defineComponent({
 			},
 		];
 
-		return { donutData, form, items, summary };
+		return {
+			form,
+			items,
+			summary,
+			yearlyExpenseData,
+		};
 	},
 });
 </script>
@@ -176,7 +183,7 @@ export default defineComponent({
 					</div>
 
 					<div class="block md:hidden">
-						<DonutChart :data="donutData" />
+						<DonutChart :data="yearlyExpenseData" />
 					</div>
 				</CardContent>
 			</Card>
@@ -187,7 +194,10 @@ export default defineComponent({
 				</CardHeader>
 
 				<CardContent>
-					Percentage of amount earned/spent
+					<div class="flex flex-col justify-center items-center">
+						<YTDSummary color="#45ADA8" percentage="40" />
+						<YTDSummary color="#45ADA8" percentage="65" />
+					</div>
 				</CardContent>
 			</Card>
 		</div>
