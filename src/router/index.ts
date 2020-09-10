@@ -32,12 +32,12 @@ const routes: Array<RouteRecordRaw> = [
 			{
 				path: '',
 				name: 'budgets',
-				component: () => import('@/views/dashboard/Home.vue'),
+				component: () => import('@/views/dashboard/Budget.vue'),
 			},
 			{
 				path: '',
 				name: 'reports',
-				component: () => import('@/views/dashboard/Home.vue'),
+				component: () => import('@/views/dashboard/Report.vue'),
 			},
 			{
 				// @todo create a dashboard 404 page
