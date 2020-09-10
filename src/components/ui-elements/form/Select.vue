@@ -3,6 +3,8 @@ import { computed, defineComponent, inject, onMounted, ref, watch } from 'vue';
 import ChevronDownIcon from '@/components/ui-elements/icons/ChevronDownIcon.vue';
 import { FormProvider } from '@/components/ui-elements';
 
+type SelectItems = Array<{ label: string; value: string }>;
+
 export default defineComponent({
 	components: {
 		ChevronDownIcon,
@@ -18,7 +20,7 @@ export default defineComponent({
 		},
 		items: {
 			required: true,
-			type: () => [],
+			type: Array as () => SelectItems,
 		},
 		itemLabel: {
 			default: 'label',
@@ -43,7 +45,7 @@ export default defineComponent({
 		const dropDownItems = ref(null);
 		const currentValue = ref('');
 		const labelId = ref(null);
-		const FormContext = inject<any>(FormProvider);
+		const FormContext = inject<any>(FormProvider, undefined);
 
 		onMounted(() => {
 			(dropDownItems.value as any).classList.add('h-0', 'py-0');

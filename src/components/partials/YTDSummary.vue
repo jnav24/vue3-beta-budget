@@ -14,10 +14,11 @@ export default defineComponent({
 		},
 		percentage: {
 			required: true,
-			type: Number,
+			type: String,
 		},
 	},
 	setup(props) {
+		const percent = Number(props.percentage);
 		const chartData: ChartData = {
 			labels: [],
 			datasets: [
@@ -25,7 +26,7 @@ export default defineComponent({
 					label: '',
 					backgroundColor: [props.color, '#edf2f7'],
 					borderWidth: 1,
-					data: [props.percentage, 100 - props.percentage],
+					data: [percent, 100 - percent],
 					weight: 0.5,
 				},
 			],
