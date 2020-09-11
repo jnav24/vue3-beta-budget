@@ -19,6 +19,9 @@ export default defineComponent({
 			formElements[name] = val;
 		};
 
+		const setFormId = (name: string): string =>
+			name.toLowerCase().replace(/\s+/, '-');
+
 		const isFormValid = () => {
 			const keys = Object.keys(formElements);
 			const valid = Object.values(formElements).filter(
@@ -27,7 +30,7 @@ export default defineComponent({
 			updateValid(keys.length === valid.length);
 		};
 
-		provide(FormProvider, { isFormValid, setFormElement });
+		provide(FormProvider, { isFormValid, setFormElement, setFormId });
 	},
 	render() {
 		return (this as any).$slots.default();

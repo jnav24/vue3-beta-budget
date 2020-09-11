@@ -7,7 +7,7 @@ export default defineComponent({});
 <template>
 	<div class="min-h-screen flex flex-col justify-center items-center">
 		<div
-			class="absolute top-0 left-0 w-full h-full bg-primary bg-opacity-75 z-20"
+			class="absolute top-0 left-0 w-full h-full bg-gray-100 sm:bg-primary sm:bg-opacity-75 z-20"
 		></div>
 		<div class="bg-image"></div>
 

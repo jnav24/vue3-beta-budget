@@ -1,9 +1,13 @@
 <script lang="ts">
-import { defineComponent, computed, ref, inject, onMounted } from 'vue';
+import { defineComponent, ref, inject, onMounted } from 'vue';
 import { FormProvider } from '@/components/ui-elements/form/Form';
 import useFormValidation from '@/hooks/useFormValidation';
+import Label from '@/components/ui-elements/form/Label.vue';
 
 export default defineComponent({
+	components: {
+		Label,
+	},
 	props: {
 		label: {
 			required: true,
@@ -24,19 +28,21 @@ export default defineComponent({
 	},
 	setup(props, { emit }) {
 		const error = ref(null);
+		const labelId = ref(null);
 		const { validateInput } = useFormValidation();
-		const { isFormValid, setFormElement } = inject<any>(FormProvider);
-		const labelId = computed(() =>
-			props.label.toLowerCase().replace(/\s+/, '-')
+		const { isFormValid, setFormElement, setFormId } = inject<any>(
+			FormProvider
 		);
 
 		onMounted(() => {
+			labelId.value = setFormId(props.label);
 			setFormElement(labelId.value, !props.rules);
 		});
 
 		const updateValue = (e: string) => {
 			let tempValid = true;
 
+			// @todo update this
 			for (const [type, message] of Object.entries(props.rules)) {
 				const isValid = validateInput(type, e);
 
@@ -70,13 +76,7 @@ export default defineComponent({
 
 <template>
 	<div class="mb-4">
-		<label
-			:for="labelId"
-			:class="{ 'text-gray-600': !error, 'text-red-600': error }"
-			class="text-sm"
-		>
-			{{ label }}
-		</label>
+		<Label :error="error" :labelId="labelId" :label="label" />
 		<input
 			:id="labelId"
 			class="w-full p-2 mt-2 border rounded outline-none"
