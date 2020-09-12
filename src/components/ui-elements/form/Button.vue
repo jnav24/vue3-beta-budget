@@ -2,21 +2,18 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-	props: {
-		title: {
-			type: String,
-			required: true,
-		},
-	},
+	props: {},
 });
 </script>
 
 <template>
 	<button
 		@click="$emit('on-click')"
-		class="bg-blue hover:bg-dark-blue active:bg-blue focus:outline-none focus:shadow-outline transition duration-150 py-2 px-4 text-white rounded-md"
+		class="bg-primary hover:bg-opacity-85 active:bg-dark-primary focus:outline-none focus:shadow-outline transition duration-150 py-3 px-6 text-white rounded-md text-sm mr-2"
 		type="button"
 	>
-		{{ title }}
+		<span class="flex flex-row items-center justify-center">
+			<slot></slot>
+		</span>
 	</button>
 </template>
