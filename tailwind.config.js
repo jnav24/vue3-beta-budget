@@ -11,6 +11,7 @@ module.exports = {
 				danger: '#C62828',
 				'dark-primary': '#195956',
 				secondary: '#EFC958',
+				'dark-secondary': '#A88D3E',
 			},
 			maxWidth: {
 				'32': '8rem',

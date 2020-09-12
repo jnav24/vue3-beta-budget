@@ -1,6 +1,5 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import AddIcon from '@/components/ui-elements/icons/AddIcon.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import Card from '@/components/ui-elements/card/Card.vue';
 import ChevronDownIcon from '@/components/ui-elements/icons/ChevronDownIcon.vue';
@@ -10,7 +9,6 @@ import SubNavItems from '@/components/partials/SubNavItems.vue';
 
 export default defineComponent({
 	components: {
-		AddIcon,
 		Button,
 		Card,
 		ChevronDownIcon,
@@ -33,7 +31,7 @@ export default defineComponent({
 <template>
 	<div class="container mx-auto py-6">
 		<div class="flex flex-row items-center justify-end">
-			<Button>
+			<Button color="secondary">
 				<EditIcon class="w-4 h-4 mr-2" />
 				<span>Edit Template</span>
 			</Button>
@@ -43,7 +41,6 @@ export default defineComponent({
 					@on-click="showAddBudgetNav = !showAddBudgetNav"
 					@blur="showAddBudgetNav = false"
 				>
-					<AddIcon class="w-5 h-5 mr-2" />
 					<span>Add Budget</span>
 					<span
 						class="border-l border-dark-primary border-opacity-25 ml-4 pl-4"
@@ -57,8 +54,23 @@ export default defineComponent({
 		</div>
 
 		<div class="grid grid-cols-4 gap-3">
+			<div class="py-4">
+				<p class="mb-6 text-lg text-gray-700 font-body">Years</p>
+
+				<ul>
+					<li
+						class="text-gray-700 text-sm cursor-pointer px-2 py-2 bg-gray-300 rounded"
+					>
+						2020
+					</li>
+					<li
+						class="text-gray-500 text-sm hover:text-gray-700 cursor-pointer px-2 py-2"
+					>
+						2019
+					</li>
+				</ul>
+			</div>
 			<Card class="col-span-3">Hello</Card>
-			<div>Motto</div>
 		</div>
 	</div>
 </template>
