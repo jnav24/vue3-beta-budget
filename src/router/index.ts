@@ -30,12 +30,12 @@ const routes: Array<RouteRecordRaw> = [
 				component: () => import('@/views/dashboard/Home.vue'),
 			},
 			{
-				path: '',
+				path: 'budgets',
 				name: 'budgets',
 				component: () => import('@/views/dashboard/Budget.vue'),
 			},
 			{
-				path: '',
+				path: 'reports',
 				name: 'reports',
 				component: () => import('@/views/dashboard/Report.vue'),
 			},
