@@ -1,20 +1,32 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import BanIcon from '@/components/ui-elements/icons/BanIcon.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import Card from '@/components/ui-elements/card/Card.vue';
+import CardContent from '@/components/ui-elements/card/CardContent.vue';
+import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
 import ChevronDownIcon from '@/components/ui-elements/icons/ChevronDownIcon.vue';
 import EditIcon from '@/components/ui-elements/icons/EditIcon.vue';
+import FireIcon from '@/components/ui-elements/icons/FireIcon.vue';
 import SubNav from '@/components/partials/SubNav.vue';
 import SubNavItems from '@/components/partials/SubNavItems.vue';
+import TrendDownIcon from '@/components/ui-elements/icons/TrendDownIcon.vue';
+import TrendUpIcon from '@/components/ui-elements/icons/TrendUpIcon.vue';
 
 export default defineComponent({
 	components: {
+		BanIcon,
 		Button,
 		Card,
+		CardContent,
+		CardHeader,
 		ChevronDownIcon,
 		EditIcon,
+		FireIcon,
 		SubNav,
 		SubNavItems,
+		TrendDownIcon,
+		TrendUpIcon,
 	},
 	setup() {
 		const addBudgetItems = [
@@ -22,8 +34,22 @@ export default defineComponent({
 			{ value: '', label: 'Blank Budget', icon: 'ArchiveIcon' },
 		];
 		const showAddBudgetNav = ref(false);
+		const budgets = [
+			{ id: '1', name: 'January', saved: '13023.55' },
+			{ id: '1', name: 'February', saved: '86512.12' },
+			{ id: '1', name: 'March', saved: '12224.03' },
+			{ id: '1', name: 'April', saved: '16032.13' },
+			{ id: '1', name: 'May', saved: '60217.00' },
+			{ id: '1', name: 'June', saved: '60217.00' },
+			{ id: '1', name: 'July', saved: '60217.00' },
+			{ id: '1', name: 'August', saved: '60217.00' },
+			{ id: '1', name: 'September', saved: '60217.00' },
+			{ id: '1', name: 'October', saved: '60217.00' },
+			{ id: '1', name: 'November', saved: '60217.00' },
+			{ id: '1', name: 'December', saved: '60217.00' },
+		];
 
-		return { addBudgetItems, showAddBudgetNav };
+		return { addBudgetItems, showAddBudgetNav, budgets };
 	},
 });
 </script>
@@ -70,7 +96,44 @@ export default defineComponent({
 					</li>
 				</ul>
 			</div>
-			<Card class="col-span-3">Hello</Card>
+			<Card class="col-span-3">
+				<CardHeader class="bg-gray-100">
+					<div class="grid grid-cols-4 gap-2 text-gray-900">
+						<div />
+						<div>Name</div>
+						<div>Saved</div>
+						<div>Actions</div>
+					</div>
+				</CardHeader>
+				<CardContent class="px-0">
+					<div
+						v-for="item in budgets"
+						:key="item.id"
+						class="grid grid-cols-4 gap-2 text-gray-700 py-4 even:bg-gray-100"
+					>
+						<div class="flex flex-row justify-center">
+							<TrendDownIcon class="text-danger w-8 h-8" />
+							<TrendUpIcon class="text-primary w-8 h-8" />
+							<FireIcon class="text-orange-400 w-8 h-8" />
+						</div>
+						<div>{{ item.name }}</div>
+						<div>${{ item.saved }}</div>
+						<div>
+							<button
+								class="bg-secondary hover:bg-opacity-85 active:bg-dark-primary focus:outline-none focus:shadow-outline rounded-full p-2 mr-2"
+							>
+								<EditIcon class="text-white w-5 h-5" />
+							</button>
+
+							<button
+								class="bg-danger hover:bg-opacity-85 active:bg-dark-danger focus:outline-none focus:shadow-outline rounded-full p-2"
+							>
+								<BanIcon class="text-white w-5 h-5" />
+							</button>
+						</div>
+					</div>
+				</CardContent>
+			</Card>
 		</div>
 	</div>
 </template>
