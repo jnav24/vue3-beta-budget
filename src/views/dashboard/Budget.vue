@@ -162,7 +162,7 @@ export default defineComponent({
 			</SubNav>
 
 			<Select
-				class="block sm:hidden"
+				class="block sm:hidden w-full"
 				placeholder="Select a year"
 				:value="selectedYear"
 				:items="years"
@@ -188,12 +188,14 @@ export default defineComponent({
 					</li>
 				</ul>
 			</div>
-			<Card class="col-span-3">
+			<Card class="col-span-4 sm:col-span-3 ml-3 mr-4 sm:mx-0">
 				<CardHeader class="bg-gray-100">
-					<div class="grid grid-cols-4 gap-2 text-gray-900">
-						<div />
+					<div
+						class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-gray-900"
+					>
+						<div class="hidden sm:block" />
 						<div>Name</div>
-						<div>Saved</div>
+						<div class="hidden sm:block">Saved</div>
 						<div>Actions</div>
 					</div>
 				</CardHeader>
@@ -201,9 +203,11 @@ export default defineComponent({
 					<div
 						v-for="item in budgets"
 						:key="item.id"
-						class="grid grid-cols-4 gap-2 text-gray-700 py-4 even:bg-gray-100"
+						class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-gray-700 py-4 even:bg-gray-100"
 					>
-						<div class="flex flex-row justify-start pl-16">
+						<div
+							class="hidden sm:flex flex-row justify-start pl-16"
+						>
 							<TrendDownIcon
 								class="text-danger w-8 h-8"
 								v-if="item.saved < 0"
@@ -217,8 +221,10 @@ export default defineComponent({
 								v-if="item.saved === maxSaved"
 							/>
 						</div>
-						<div>{{ item.name }}</div>
-						<div>${{ item.saved.replace('-', '') }}</div>
+						<div class="pl-4 sm:pl-0">{{ item.name }}</div>
+						<div class="hidden sm:block">
+							${{ item.saved.replace('-', '') }}
+						</div>
 						<div>
 							<button
 								class="bg-secondary hover:bg-opacity-85 active:bg-dark-primary focus:outline-none focus:shadow-outline rounded-full p-2 mr-2"
