@@ -84,8 +84,8 @@ export default defineComponent({
 
 <template>
 	<div class="container mx-auto py-6">
-		<div class="grid grid-cols-2 gap-4 mb-8 hidden md:grid">
-			<Card>
+		<div class="grid grid-cols-2 gap-4 mb-8 hidden sm:block md:grid">
+			<Card class="hidden sm:block">
 				<CardHeader class="text-gray-700">
 					1 Year Performance
 				</CardHeader>
@@ -110,7 +110,7 @@ export default defineComponent({
 				</CardContent>
 			</Card>
 
-			<Card>
+			<Card class="hidden md:block">
 				<CardHeader class="text-gray-700">
 					5 Year Performance
 				</CardHeader>
@@ -162,15 +162,15 @@ export default defineComponent({
 			</SubNav>
 
 			<Select
-				class="block sm:hidden w-full"
+				class="block md:hidden w-full sm:w-40"
 				placeholder="Select a year"
-				:value="selectedYear"
+				v-model:value="selectedYear"
 				:items="years"
 			/>
 		</div>
 
 		<div class="grid grid-cols-4 gap-3">
-			<div class="py-4 hidden sm:block">
+			<div class="py-4 hidden md:block">
 				<p class="mb-6 text-lg text-gray-700 font-body">Years</p>
 
 				<ul>
@@ -188,7 +188,7 @@ export default defineComponent({
 					</li>
 				</ul>
 			</div>
-			<Card class="col-span-4 sm:col-span-3 ml-3 mr-4 sm:mx-0">
+			<Card class="col-span-4 md:col-span-3 ml-3 mr-4 sm:mx-0">
 				<CardHeader class="bg-gray-100">
 					<div
 						class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-gray-900"
