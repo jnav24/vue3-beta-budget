@@ -144,7 +144,11 @@ export default defineComponent({
 					>
 						Yearly Overview
 					</h1>
-					<Select v-model:value="form.year.value" :items="items" />
+					<Select
+						class="w-40"
+						v-model:value="form.year.value"
+						:items="items"
+					/>
 				</div>
 			</CardHeader>
 
