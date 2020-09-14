@@ -203,7 +203,7 @@ export default defineComponent({
 					<div
 						v-for="item in budgets"
 						:key="item.id"
-						class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-gray-700 py-4 even:bg-gray-100"
+						class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-gray-700 py-4 even:bg-gray-100 items-center"
 					>
 						<div
 							class="hidden sm:flex flex-row justify-start pl-16"
