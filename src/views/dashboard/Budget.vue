@@ -12,6 +12,8 @@ import SubNav from '@/components/partials/SubNav.vue';
 import SubNavItems from '@/components/partials/SubNavItems.vue';
 import TrendDownIcon from '@/components/ui-elements/icons/TrendDownIcon.vue';
 import TrendUpIcon from '@/components/ui-elements/icons/TrendUpIcon.vue';
+import useUtils from '@/hooks/useUtils';
+import YTDSummary from '@/components/partials/YTDSummary.vue';
 
 export default defineComponent({
 	components: {
@@ -27,8 +29,10 @@ export default defineComponent({
 		SubNavItems,
 		TrendDownIcon,
 		TrendUpIcon,
+		YTDSummary,
 	},
 	setup() {
+		const { arrayColumn } = useUtils();
 		const addBudgetItems = [
 			{ value: '', label: 'Monthly Budget', icon: 'CalendarIcon' },
 			{ value: '', label: 'Blank Budget', icon: 'ArchiveIcon' },
@@ -39,7 +43,7 @@ export default defineComponent({
 			{ id: '1', name: 'February', saved: '86512.12' },
 			{ id: '1', name: 'March', saved: '12224.03' },
 			{ id: '1', name: 'April', saved: '16032.13' },
-			{ id: '1', name: 'May', saved: '60217.00' },
+			{ id: '1', name: 'May', saved: '-217.00' },
 			{ id: '1', name: 'June', saved: '60217.00' },
 			{ id: '1', name: 'July', saved: '60217.00' },
 			{ id: '1', name: 'August', saved: '60217.00' },
@@ -48,14 +52,53 @@ export default defineComponent({
 			{ id: '1', name: 'November', saved: '60217.00' },
 			{ id: '1', name: 'December', saved: '60217.00' },
 		];
+		const maxSaved = Math.max(
+			...arrayColumn('saved', budgets).map(val => Number(val))
+		).toString();
 
-		return { addBudgetItems, showAddBudgetNav, budgets };
+		return { addBudgetItems, showAddBudgetNav, budgets, maxSaved };
 	},
 });
 </script>
 
 <template>
 	<div class="container mx-auto py-6">
+		<div class="grid grid-cols-2 gap-4 mb-8">
+			<Card>
+				<CardHeader class="text-gray-700">
+					1 Year Performance
+				</CardHeader>
+				<CardContent>
+					<div class="flex flex-row items-center">
+						<div class="flex-1 flex flex-row justify-center">
+							<YTDSummary color="#45ADA8" percentage="65" text="Saved since last year." />
+						</div>
+						<div class="bg-gray-300 w-px h-32 rounded" />
+						<div class="flex-1 flex flex-row justify-center">
+							<YTDSummary color="#C62828" percentage="3" text="Spent since last year." />
+						</div>
+					</div>
+				</CardContent>
+			</Card>
+
+			<Card>
+				<CardHeader class="text-gray-700">
+					5 Year Performance
+				</CardHeader>
+				<CardContent>
+					<div class="flex flex-row items-center">
+						<div class="flex-1 flex flex-row justify-center">
+							<YTDSummary color="#45ADA8" percentage="93" text="Saved over 5 years." />
+						</div>
+						<div class="bg-gray-300 w-px h-32 rounded" />
+						<div class="flex-1 flex flex-row justify-center">
+							<YTDSummary color="#C62828" percentage="1" text="Spent over 5 years." />
+						</div>
+					</div>
+				</CardContent>
+			</Card>
+		</div>
+
 		<div class="flex flex-row items-center justify-end">
 			<Button color="secondary">
 				<EditIcon class="w-4 h-4 mr-2" />
@@ -111,13 +154,22 @@ export default defineComponent({
 						:key="item.id"
 						class="grid grid-cols-4 gap-2 text-gray-700 py-4 even:bg-gray-100"
 					>
-						<div class="flex flex-row justify-center">
-							<TrendDownIcon class="text-danger w-8 h-8" />
-							<TrendUpIcon class="text-primary w-8 h-8" />
-							<FireIcon class="text-orange-400 w-8 h-8" />
+						<div class="flex flex-row justify-start pl-16">
+							<TrendDownIcon
+								class="text-danger w-8 h-8"
+								v-if="item.saved < 0"
+							/>
+							<TrendUpIcon
+								class="text-primary w-8 h-8"
+								v-if="item.saved >= 0"
+							/>
+							<FireIcon
+								class="text-orange-400 w-8 h-8"
+								v-if="item.saved === maxSaved"
+							/>
 						</div>
 						<div>{{ item.name }}</div>
-						<div>${{ item.saved }}</div>
+						<div>${{ item.saved.replace('-', '') }}</div>
 						<div>
 							<button
 								class="bg-secondary hover:bg-opacity-85 active:bg-dark-primary focus:outline-none focus:shadow-outline rounded-full p-2 mr-2"
