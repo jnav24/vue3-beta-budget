@@ -8,6 +8,7 @@ import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
 import ChevronDownIcon from '@/components/ui-elements/icons/ChevronDownIcon.vue';
 import EditIcon from '@/components/ui-elements/icons/EditIcon.vue';
 import FireIcon from '@/components/ui-elements/icons/FireIcon.vue';
+import Select from '@/components/ui-elements/form/Select.vue';
 import SubNav from '@/components/partials/SubNav.vue';
 import SubNavItems from '@/components/partials/SubNavItems.vue';
 import TrendDownIcon from '@/components/ui-elements/icons/TrendDownIcon.vue';
@@ -26,6 +27,7 @@ export default defineComponent({
 		ChevronDownIcon,
 		EditIcon,
 		FireIcon,
+		Select,
 		SubNav,
 		SubNavItems,
 		TrendDownIcon,
@@ -58,6 +60,12 @@ export default defineComponent({
 			...arrayColumn('saved', budgets).map(val => Number(val))
 		).toString();
 
+		const years = [
+			{ label: '2020', value: '2020' },
+			{ label: '2019', value: '2019' },
+		];
+		const selectedYear = ref('2020');
+
 		const goToEditPage = (id: string) =>
 			push({ name: 'budget-edit', params: { id } });
 
@@ -67,6 +75,8 @@ export default defineComponent({
 			budgets,
 			goToEditPage,
 			maxSaved,
+			selectedYear,
+			years,
 		};
 	},
 });
@@ -74,7 +84,7 @@ export default defineComponent({
 
 <template>
 	<div class="container mx-auto py-6">
-		<div class="grid grid-cols-2 gap-4 mb-8">
+		<div class="grid grid-cols-2 gap-4 mb-8 hidden md:grid">
 			<Card>
 				<CardHeader class="text-gray-700">
 					1 Year Performance
@@ -126,20 +136,23 @@ export default defineComponent({
 			</Card>
 		</div>
 
-		<div class="flex flex-row items-center justify-end">
-			<Button color="secondary">
+		<div
+			class="flex flex-col sm:flex-row items-center justify-end pl-4 pr-2 sm:px-0"
+		>
+			<Button color="secondary" class="mb-4 sm:mb-0 w-full sm:w-auto">
 				<EditIcon class="w-4 h-4 mr-2" />
 				<span>Edit Template</span>
 			</Button>
 
-			<SubNav>
+			<SubNav class="w-full sm:w-auto mr-2 sm:mr-0">
 				<Button
+					class="mb-4 sm:mb-0 w-full sm:w-auto pr-2"
 					@on-click="showAddBudgetNav = !showAddBudgetNav"
 					@blur="showAddBudgetNav = false"
 				>
-					<span>Add Budget</span>
+					<span class="flex-1">Add Budget</span>
 					<span
-						class="border-l border-dark-primary border-opacity-25 ml-4 pl-4"
+						class="border-l border-dark-primary border-opacity-25 ml-4 pl-2"
 					>
 						<ChevronDownIcon class="w-5 h-5" />
 					</span>
@@ -147,22 +160,31 @@ export default defineComponent({
 
 				<SubNavItems :items="addBudgetItems" :show="showAddBudgetNav" />
 			</SubNav>
+
+			<Select
+				class="block sm:hidden"
+				placeholder="Select a year"
+				:value="selectedYear"
+				:items="years"
+			/>
 		</div>
 
 		<div class="grid grid-cols-4 gap-3">
-			<div class="py-4">
+			<div class="py-4 hidden sm:block">
 				<p class="mb-6 text-lg text-gray-700 font-body">Years</p>
 
 				<ul>
 					<li
-						class="text-gray-700 text-sm cursor-pointer px-2 py-2 bg-gray-300 rounded"
+						v-for="(year, int) in years"
+						:key="int"
+						:class="{
+							'text-gray-500 text-sm hover:text-gray-700 cursor-pointer px-2 py-2':
+								year.value !== selectedYear,
+							'text-gray-700 text-sm cursor-pointer px-2 py-2 bg-gray-300 rounded':
+								year.value === selectedYear,
+						}"
 					>
-						2020
-					</li>
-					<li
-						class="text-gray-500 text-sm hover:text-gray-700 cursor-pointer px-2 py-2"
-					>
-						2019
+						{{ year.label }}
 					</li>
 				</ul>
 			</div>
