@@ -16,6 +16,10 @@ export default defineComponent({
 			required: true,
 			type: String,
 		},
+		text: {
+			required: true,
+			type: String,
+		},
 	},
 	setup(props) {
 		const percent = Number(props.percentage);
@@ -75,7 +79,7 @@ export default defineComponent({
 				{{ percentage }}%
 			</p>
 			<p class="text-gray-700 text-center text-sm">
-				Saved since the beginning of the year.
+				{{ text }}
 			</p>
 		</div>
 	</div>
