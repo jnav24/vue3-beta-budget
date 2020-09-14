@@ -12,6 +12,7 @@ import SubNav from '@/components/partials/SubNav.vue';
 import SubNavItems from '@/components/partials/SubNavItems.vue';
 import TrendDownIcon from '@/components/ui-elements/icons/TrendDownIcon.vue';
 import TrendUpIcon from '@/components/ui-elements/icons/TrendUpIcon.vue';
+import { useRouter } from 'vue-router';
 import useUtils from '@/hooks/useUtils';
 import YTDSummary from '@/components/partials/YTDSummary.vue';
 
@@ -33,6 +34,7 @@ export default defineComponent({
 	},
 	setup() {
 		const { arrayColumn } = useUtils();
+		const { push } = useRouter();
 		const addBudgetItems = [
 			{ value: '', label: 'Monthly Budget', icon: 'CalendarIcon' },
 			{ value: '', label: 'Blank Budget', icon: 'ArchiveIcon' },
@@ -40,23 +42,32 @@ export default defineComponent({
 		const showAddBudgetNav = ref(false);
 		const budgets = [
 			{ id: '1', name: 'January', saved: '13023.55' },
-			{ id: '1', name: 'February', saved: '86512.12' },
-			{ id: '1', name: 'March', saved: '12224.03' },
-			{ id: '1', name: 'April', saved: '16032.13' },
-			{ id: '1', name: 'May', saved: '-217.00' },
-			{ id: '1', name: 'June', saved: '60217.00' },
-			{ id: '1', name: 'July', saved: '60217.00' },
-			{ id: '1', name: 'August', saved: '60217.00' },
-			{ id: '1', name: 'September', saved: '60217.00' },
-			{ id: '1', name: 'October', saved: '60217.00' },
-			{ id: '1', name: 'November', saved: '60217.00' },
-			{ id: '1', name: 'December', saved: '60217.00' },
+			{ id: '2', name: 'February', saved: '86512.12' },
+			{ id: '3', name: 'March', saved: '12224.03' },
+			{ id: '4', name: 'April', saved: '16032.13' },
+			{ id: '5', name: 'May', saved: '-217.00' },
+			{ id: '6', name: 'June', saved: '60217.00' },
+			{ id: '7', name: 'July', saved: '60217.00' },
+			{ id: '8', name: 'August', saved: '60217.00' },
+			{ id: '9', name: 'September', saved: '60217.00' },
+			{ id: '10', name: 'October', saved: '60217.00' },
+			{ id: '11', name: 'November', saved: '60217.00' },
+			{ id: '12', name: 'December', saved: '60217.00' },
 		];
 		const maxSaved = Math.max(
 			...arrayColumn('saved', budgets).map(val => Number(val))
 		).toString();
 
-		return { addBudgetItems, showAddBudgetNav, budgets, maxSaved };
+		const goToEditPage = (id: string) =>
+			push({ name: 'budget-edit', params: { id } });
+
+		return {
+			addBudgetItems,
+			showAddBudgetNav,
+			budgets,
+			goToEditPage,
+			maxSaved,
+		};
 	},
 });
 </script>
@@ -71,11 +82,19 @@ export default defineComponent({
 				<CardContent>
 					<div class="flex flex-row items-center">
 						<div class="flex-1 flex flex-row justify-center">
-							<YTDSummary color="#45ADA8" percentage="65" text="Saved since last year." />
+							<YTDSummary
+								color="#45ADA8"
+								percentage="65"
+								text="Saved since last year."
+							/>
 						</div>
 						<div class="bg-gray-300 w-px h-32 rounded" />
 						<div class="flex-1 flex flex-row justify-center">
-							<YTDSummary color="#C62828" percentage="3" text="Spent since last year." />
+							<YTDSummary
+								color="#C62828"
+								percentage="3"
+								text="Spent since last year."
+							/>
 						</div>
 					</div>
 				</CardContent>
@@ -88,11 +107,19 @@ export default defineComponent({
 				<CardContent>
 					<div class="flex flex-row items-center">
 						<div class="flex-1 flex flex-row justify-center">
-							<YTDSummary color="#45ADA8" percentage="93" text="Saved over 5 years." />
+							<YTDSummary
+								color="#45ADA8"
+								percentage="93"
+								text="Saved over 5 years."
+							/>
 						</div>
 						<div class="bg-gray-300 w-px h-32 rounded" />
 						<div class="flex-1 flex flex-row justify-center">
-							<YTDSummary color="#C62828" percentage="1" text="Spent over 5 years." />
+							<YTDSummary
+								color="#C62828"
+								percentage="1"
+								text="Spent over 5 years."
+							/>
 						</div>
 					</div>
 				</CardContent>
@@ -173,6 +200,7 @@ export default defineComponent({
 						<div>
 							<button
 								class="bg-secondary hover:bg-opacity-85 active:bg-dark-primary focus:outline-none focus:shadow-outline rounded-full p-2 mr-2"
+								@click="goToEditPage(item.id)"
 							>
 								<EditIcon class="text-white w-5 h-5" />
 							</button>

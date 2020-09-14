@@ -195,8 +195,16 @@ export default defineComponent({
 
 				<CardContent>
 					<div class="flex flex-col justify-center items-center">
-						<YTDSummary color="#45ADA8" percentage="40" text="Saved since the beginning of the year." />
-						<YTDSummary color="#45ADA8" percentage="65" text="Spent since the beginning of the year." />
+						<YTDSummary
+							color="#45ADA8"
+							percentage="40"
+							text="Saved since the beginning of the year."
+						/>
+						<YTDSummary
+							color="#45ADA8"
+							percentage="65"
+							text="Spent since the beginning of the year."
+						/>
 					</div>
 				</CardContent>
 			</Card>
