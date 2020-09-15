@@ -7,13 +7,19 @@ module.exports = {
 		},
 		extend: {
 			colors: {
-				primary: '#45ADA8',
 				danger: '#C62828',
+				'dark-danger': '#4B0F0F',
 				'dark-primary': '#195956',
+				'dark-secondary': '#A88D3E',
+				primary: '#45ADA8',
 				secondary: '#EFC958',
 			},
 			maxWidth: {
 				'32': '8rem',
+			},
+			opacity: {
+				'85': '0.85',
+				'95': '0.95',
 			},
 			width: {
 				'100': '25rem',
@@ -21,7 +27,7 @@ module.exports = {
 		},
 	},
 	variants: {
-		backgroundColor: ['hover', 'active', 'responsive'],
+		backgroundColor: ['hover', 'active', 'responsive', 'even'],
 		borderColor: ['hover', 'active', 'focus'],
 	},
 	plugins: [],

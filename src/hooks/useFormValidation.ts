@@ -1,8 +1,8 @@
-import useGlobal from './useGlobal';
+import useUtils from './useUtils';
 
 export default function useFormValidation() {
 	const validateInput = (type: string, value: string): string | boolean => {
-		const func: any = `validate${useGlobal().ucFirst(type)}`;
+		const func: any = `validate${useUtils().ucFirst(type)}`;
 
 		if (typeof eval(func) === 'function') {
 			return eval(func)(value);

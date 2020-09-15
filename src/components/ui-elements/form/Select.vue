@@ -108,7 +108,7 @@ export default defineComponent({
 
 <template>
 	<div
-		class="border-solid border cursor-pointer px-2 py-2 w-40 rounded-md flex items-center justify-between mr-3 outline-none transform relative"
+		class="border-solid border cursor-pointer px-2 py-2 rounded-md flex items-center justify-between mr-3 outline-none transform relative bg-white"
 		:class="{
 			'border-gray-300 hover:border-gray-600 text-gray-600 hover:text-gray-700 focus:border-primary transition duration-300': !error,
 			'border-red-600': error,
