@@ -28,6 +28,7 @@ export default defineComponent({
 </script>
 
 <template>
+	<!-- @todo add disabled to button -->
 	<button
 		@click="$emit('on-click')"
 		class="focus:outline-none focus:shadow-outline transition duration-150 py-3 px-6 rounded-md text-sm mr-2"
