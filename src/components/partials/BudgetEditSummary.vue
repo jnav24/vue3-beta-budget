@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import AddIcon from '@/components/ui-elements/icons/AddIcon.vue';
 import BudgetEditTotal from '@/components/partials/BudgetEditTotal.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
@@ -13,6 +13,7 @@ export default defineComponent({
 		SaveIcon,
 	},
 	setup() {
+		const disableSave = ref(true);
 		const totals = [
 			{ title: 'Total Earned', amount: '19,546.24', icon: 'CashIcon' },
 			{ title: 'Total Spent', amount: '456.14', icon: 'ShoppingBagIcon' },
@@ -24,7 +25,7 @@ export default defineComponent({
 			{ title: 'Total Banked', amount: '13,956.07', icon: 'LibraryIcon' },
 		];
 
-		return { totals };
+		return { disableSave, totals };
 	},
 });
 </script>
@@ -51,7 +52,7 @@ export default defineComponent({
 						<span class="ml-2">Add Expense</span>
 					</Button>
 
-					<Button color="primary">
+					<Button color="primary" :is-disabled="disableSave">
 						<SaveIcon class="w-5 h-5" />
 						<span class="ml-2">Save</span>
 					</Button>
