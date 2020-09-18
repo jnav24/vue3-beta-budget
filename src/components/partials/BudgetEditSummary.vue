@@ -8,10 +8,14 @@ export default defineComponent({
 	},
 	setup() {
 		const totals = [
-			{ title: 'Total Earned', amount: '19,546.24', icon: '' },
-			{ title: 'Total Spent', amount: '456.14', icon: '' },
-			{ title: 'Total Invested', amount: '419,423.77', icon: '' },
-			{ title: 'Total Banked', amount: '13,956.07', icon: '' },
+			{ title: 'Total Earned', amount: '19,546.24', icon: 'CashIcon' },
+			{ title: 'Total Spent', amount: '456.14', icon: 'ShoppingBagIcon' },
+			{
+				title: 'Total Invested',
+				amount: '419,423.77',
+				icon: 'ReceiptTaxIcon',
+			},
+			{ title: 'Total Banked', amount: '13,956.07', icon: 'LibraryIcon' },
 		];
 
 		return { totals };

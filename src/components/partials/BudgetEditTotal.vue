@@ -30,11 +30,13 @@ export default defineComponent({
 </script>
 <template>
 	<div class="flex flex-row items-center">
-		<component :is="getComponent()" />
+		<div class="bg-primary rounded-full p-2 mr-2">
+			<component :is="getComponent()" class="w-6 h-6 text-white" />
+		</div>
 
-		<div>
+		<div class="space-y-0">
 			<p class="text-gray-500 uppercase text-sm">{{ title }}</p>
-			<p class="text-xl text-gray-400">${{ amount }}</p>
+			<p class="font-body text-xl text-gray-700">${{ amount }}</p>
 		</div>
 	</div>
 </template>
