@@ -1,4 +1,4 @@
-# vue3-beta-budget
+# Vue 3 Budget
 
 ## Project setup
 ```
