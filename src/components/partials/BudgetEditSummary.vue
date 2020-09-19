@@ -62,8 +62,11 @@ export default defineComponent({
 	</div>
 
 	<div class="container mx-auto hidden sm:block">
-		<div class="flex flex-row justify-between items-center mt-8">
+		<div
+			class="grid grid-cols-2 gap-6 md:flex md:flex-row md:justify-between items-center mt-8"
+		>
 			<BudgetEditTotal
+				class="justify-center md:justify-start"
 				v-for="(total, index) in totals"
 				:key="index"
 				:amount="total.amount"

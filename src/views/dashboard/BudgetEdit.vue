@@ -65,10 +65,9 @@ export default defineComponent({
 	<BudgetEditSummary />
 
 	<div class="container mx-auto py-6 px-4 sm:px-0">
-		<Select class="block sm:hidden" :items="categories" v-model:value="selectedCategory" />
-		<div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
+		<Select class="block md:hidden" :items="categories" v-model:value="selectedCategory" />
+		<div class="grid grid-cols-1 md:grid-cols-5 gap-3">
 			<SideBar
-				class="hidden sm:grid"
 				title="Categories"
 				:items="categories"
 				v-model:selected-item="selectedCategory"
