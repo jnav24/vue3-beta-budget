@@ -1,17 +1,13 @@
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import BudgetEditSummary from '@/components/partials/BudgetEditSummary.vue';
-import Card from '@/components/ui-elements/card/Card.vue';
-import CardContent from '@/components/ui-elements/card/CardContent.vue';
-import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
+import BudgetEditTable from '@/components/tables/BudgetEditTable.vue';
 import SideBar from '@/components/partials/SideBar.vue';
 
 export default defineComponent({
 	components: {
 		BudgetEditSummary,
-		Card,
-		CardContent,
-		CardHeader,
+		BudgetEditTable,
 		SideBar,
 	},
 	setup() {
@@ -21,66 +17,44 @@ export default defineComponent({
 			{ label: 'Credit Cards', value: 'credit-cards' },
 			{ label: 'Investments', value: 'investments' },
 		];
-		const headers: Record<string, Array<string>> = {
-			common: [
-				'',
-				'name',
-				'type',
-				'amount',
-				'due date/paid date',
-				'actions',
+		const expenses = {
+			banks: [
+				{
+					id: 150,
+					name: 'Wells Fargo',
+					amount: '5250.35',
+					'bank_type_id': 1,
+					'bank_template_id': 31
+				},
+				{
+					id: 150,
+					name: 'Wells Fargo',
+					amount: '5250.35',
+					'bank_type_id': 1,
+					'bank_template_id': 31
+				},
 			],
 			'credit-cards': [
-				'',
-				'name',
-				'type',
-				'amount',
-				'balance',
-				'limit',
-				'due date/paid date',
-				'actions',
+				{
+					id: 141,
+					name: 'Delta',
+					limit: '30400',
+					'last_4': '',
+					'exp_month': '0',
+					'exp_year': '0',
+					apr: '19.49',
+					'due_date': 9,
+					'credit_card_type_id': 4,
+					'paid_date': '2020-02-08 00:00:00',
+					confirmation: 'W7068',
+					amount: '200',
+					balance: '2136.05',
+				},
 			],
-			income: ['name', 'type', 'amount', 'paid date', 'actions'],
-			miscellaneous: [
-				'',
-				'name',
-				'amount',
-				'due date/paid date',
-				'actions',
-			],
-			savings: ['name', 'type', 'amount', 'actions'],
-			vehicles: [
-				'',
-				'name',
-				'type',
-				'amount',
-				'balance',
-				'due date/paid date',
-				'actions',
-			],
+			investments: [],
 		};
 
-		const categoryHeader = computed(() => {
-			const categoryMap: Record<string, string> = {
-				banks: 'savings',
-				investments: 'savings',
-			};
-
-			if (headers[selectedCategory.value]) {
-				return headers[selectedCategory.value];
-			}
-
-			if (
-				!headers[selectedCategory.value] &&
-				categoryMap[selectedCategory.value]
-			) {
-				return headers[categoryMap[selectedCategory.value]];
-			}
-
-			return headers.common;
-		});
-
-		return { categories, categoryHeader, selectedCategory };
+		return { categories, expenses, selectedCategory };
 	},
 });
 </script>
@@ -89,31 +63,19 @@ export default defineComponent({
 	<BudgetEditSummary />
 
 	<div class="container mx-auto py-6">
-		<div class="grid grid-cols-4 gap-3">
+		<div class="grid grid-cols-5 gap-3">
 			<SideBar
 				title="Categories"
 				:items="categories"
 				v-model:selected-item="selectedCategory"
 			/>
 
-			<Card class="col-span-3">
-				<CardHeader class="bg-gray-100">
-					<div
-						:class="`grid gap-2 grid-cols-${categoryHeader.length}`"
-					>
-						<div
-							v-for="(header, index) in categoryHeader"
-							:key="index"
-						>
-							{{ header }}
-						</div>
-					</div>
-				</CardHeader>
-
-				<CardContent>
-					content...
-				</CardContent>
-			</Card>
+			<div class="col-span-4">
+				<BudgetEditTable
+					:category="selectedCategory"
+					:data="expenses"
+				/>
+			</div>
 		</div>
 	</div>
 </template>
