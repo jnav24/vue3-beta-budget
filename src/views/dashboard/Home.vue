@@ -145,7 +145,7 @@ export default defineComponent({
 						Yearly Overview
 					</h1>
 					<Select
-						class="w-40"
+						class="w-40 mr-3"
 						v-model:value="form.year.value"
 						:items="items"
 					/>
