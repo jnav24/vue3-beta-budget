@@ -6,6 +6,7 @@ import CardContent from '@/components/ui-elements/card/CardContent.vue';
 import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
 import CheckIcon from '@/components/ui-elements/icons/CheckIcon.vue';
 import EditIcon from '@/components/ui-elements/icons/EditIcon.vue';
+import WarningIcon from '@/components/ui-elements/icons/WarningIcon.vue';
 import useUtils from '@/hooks/useUtils';
 
 type ExpenseType = {
@@ -24,6 +25,7 @@ export default defineComponent({
 		CardContent,
 		CheckIcon,
 		EditIcon,
+		WarningIcon,
 	},
 	props: {
 		category: {
@@ -145,7 +147,13 @@ export default defineComponent({
 		</CardHeader>
 
 		<CardContent>
-			<div v-if="!data[category].length">Empty</div>
+			<div
+				v-if="!data[category].length"
+				class="py-32 text-gray-500 flex flex-col items-center justify-center"
+			>
+				<WarningIcon class="w-8 h-8" />
+				<span>{{ ucFirst(category) }} is empty.</span>
+			</div>
 
 			<div
 				:class="
