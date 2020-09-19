@@ -9,6 +9,7 @@ import ChevronDownIcon from '@/components/ui-elements/icons/ChevronDownIcon.vue'
 import EditIcon from '@/components/ui-elements/icons/EditIcon.vue';
 import FireIcon from '@/components/ui-elements/icons/FireIcon.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
+import SideBar from '@/components/partials/SideBar.vue';
 import SubNav from '@/components/partials/SubNav.vue';
 import SubNavItems from '@/components/partials/SubNavItems.vue';
 import TrendDownIcon from '@/components/ui-elements/icons/TrendDownIcon.vue';
@@ -28,6 +29,7 @@ export default defineComponent({
 		EditIcon,
 		FireIcon,
 		Select,
+		SideBar,
 		SubNav,
 		SubNavItems,
 		TrendDownIcon,
@@ -170,24 +172,11 @@ export default defineComponent({
 		</div>
 
 		<div class="grid grid-cols-4 gap-3">
-			<div class="py-4 hidden md:block">
-				<p class="mb-6 text-lg text-gray-700 font-body">Years</p>
-
-				<ul>
-					<li
-						v-for="(year, int) in years"
-						:key="int"
-						:class="{
-							'text-gray-500 text-sm hover:text-gray-700 cursor-pointer px-2 py-2':
-								year.value !== selectedYear,
-							'text-gray-700 text-sm cursor-pointer px-2 py-2 bg-gray-300 rounded':
-								year.value === selectedYear,
-						}"
-					>
-						{{ year.label }}
-					</li>
-				</ul>
-			</div>
+			<SideBar
+				title="Years"
+				:items="years"
+				v-model:selected-item="selectedYear"
+			/>
 			<Card class="col-span-4 md:col-span-3 ml-3 mr-4 sm:mx-0">
 				<CardHeader class="bg-gray-100">
 					<div
