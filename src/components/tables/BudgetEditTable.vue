@@ -135,11 +135,14 @@ export default defineComponent({
 <template>
 	<Card>
 		<CardHeader class="bg-gray-100">
-			<div :class="`grid gap-2 grid-cols-${categoryHeader.length}`">
+			<div :class="`grid gap-2 grid-cols-2 sm:grid-cols-${categoryHeader.length}`">
 				<div
 					v-for="(header, index) in categoryHeader"
 					:key="index"
-					:class="{ 'pl-2': index === 0 }"
+					:class="{
+						'pl-2': index === 0,
+						'hidden sm:block': !['name','actions'].includes(header)
+					}"
 				>
 					{{ ucFirst(header) }}
 				</div>
@@ -157,14 +160,17 @@ export default defineComponent({
 
 			<div
 				:class="
-					`grid grid-cols-${categoryHeader.length} gap-2 text-gray-700 py-4 even:bg-gray-100 items-center`
+					`grid grid-cols-2 sm:grid-cols-${categoryHeader.length} gap-2 text-gray-700 py-4 even:bg-gray-100 items-center`
 				"
 				v-for="item in data[category]"
 				:key="item.id"
 			>
 				<div
 					class="col-span-1"
-					:class="{ 'pl-2': index === 0 }"
+					:class="{
+						'pl-2': index === 0,
+						'hidden sm:block': !['name','actions'].includes(header)
+					}"
 					v-for="(header, index) in categoryHeader"
 					:key="index"
 				>

@@ -2,6 +2,7 @@
 import { defineComponent, ref } from 'vue';
 import BudgetEditSummary from '@/components/partials/BudgetEditSummary.vue';
 import BudgetEditTable from '@/components/tables/BudgetEditTable.vue';
+import Select from '@/components/ui-elements/form/Select.vue';
 import SideBar from '@/components/partials/SideBar.vue';
 
 export default defineComponent({
@@ -9,6 +10,7 @@ export default defineComponent({
 		BudgetEditSummary,
 		BudgetEditTable,
 		SideBar,
+		Select,
 	},
 	setup() {
 		const selectedCategory = ref('banks');
@@ -62,9 +64,11 @@ export default defineComponent({
 <template>
 	<BudgetEditSummary />
 
-	<div class="container mx-auto py-6">
-		<div class="grid grid-cols-5 gap-3">
+	<div class="container mx-auto py-6 px-4 sm:px-0">
+		<Select class="block sm:hidden" :items="categories" v-model:value="selectedCategory" />
+		<div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
 			<SideBar
+				class="hidden sm:grid"
 				title="Categories"
 				:items="categories"
 				v-model:selected-item="selectedCategory"
