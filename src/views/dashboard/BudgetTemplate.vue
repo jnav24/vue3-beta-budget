@@ -1,0 +1,3 @@
+<template>
+	Budget Template
+</template>

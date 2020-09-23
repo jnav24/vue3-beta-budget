@@ -40,6 +40,11 @@ const routes: Array<RouteRecordRaw> = [
 				component: () => import('@/views/dashboard/BudgetEdit.vue'),
 			},
 			{
+				path: 'budgets/template',
+				name: 'budget-template',
+				component: () => import('@/views/dashboard/BudgetTemplate.vue'),
+			},
+			{
 				path: 'reports',
 				name: 'reports',
 				component: () => import('@/views/dashboard/Report.vue'),

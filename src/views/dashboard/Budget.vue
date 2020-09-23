@@ -71,11 +71,14 @@ export default defineComponent({
 		const goToEditPage = (id: string) =>
 			push({ name: 'budget-edit', params: { id } });
 
+		const goToTemplatePage = () => push({ name: 'budget-template' });
+
 		return {
 			addBudgetItems,
 			showAddBudgetNav,
 			budgets,
 			goToEditPage,
+			goToTemplatePage,
 			maxSaved,
 			selectedYear,
 			years,
@@ -141,7 +144,11 @@ export default defineComponent({
 		<div
 			class="flex flex-col sm:flex-row items-center justify-end pl-4 pr-2 sm:px-0"
 		>
-			<Button color="secondary" class="mb-4 sm:mb-0 w-full sm:w-auto">
+			<Button
+				color="secondary"
+				class="mb-4 sm:mb-0 w-full sm:w-auto"
+				@click="goToTemplatePage()"
+			>
 				<EditIcon class="w-4 h-4 mr-2" />
 				<span>Edit Template</span>
 			</Button>
