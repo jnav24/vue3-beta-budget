@@ -11,5 +11,12 @@ export default function useUtils() {
 			.filter((value: R[S]) => value);
 	};
 
-	return { arrayColumn, ucFirst };
+	const toTitleCase = (value: string, casing = '-'): string => {
+		return value
+			.split(casing)
+			.map(word => ucFirst(word))
+			.join(' ');
+	};
+
+	return { arrayColumn, toTitleCase, ucFirst };
 }

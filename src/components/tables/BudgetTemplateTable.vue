@@ -36,7 +36,7 @@ export default defineComponent({
 	},
 	setup(props) {
 		const { getHeaders } = useBudgetTable();
-		const { ucFirst } = useUtils();
+		const { toTitleCase } = useUtils();
 		const headers: Record<string, Array<string>> = {
 			common: ['name', 'amount', 'type', 'due_date', 'actions'],
 			'credit-cards': [
@@ -79,11 +79,11 @@ export default defineComponent({
 		};
 
 		return {
+			toTitleCase,
 			getExpenseValue,
 			headers,
 			setHeaderName,
 			tableHeaders,
-			ucFirst,
 		};
 	},
 });
@@ -92,8 +92,8 @@ export default defineComponent({
 <template>
 	<section class="mb-16">
 		<div class="mt-4 flex flex-row items-center justify-between">
-			<h2 class="text-3xl text-gray-600 font-body">
-				{{ ucFirst(category) }}
+			<h2 class="text-2xl text-gray-600 font-body">
+				{{ toTitleCase(category) }}
 			</h2>
 			<Button>Add</Button>
 		</div>
@@ -125,7 +125,7 @@ export default defineComponent({
 					class="py-32 text-gray-500 flex flex-col items-center justify-center"
 				>
 					<WarningIcon class="w-8 h-8" />
-					<span>{{ ucFirst(category) }} is empty.</span>
+					<span>{{ toTitleCase(category) }} is empty.</span>
 				</div>
 			</CardContent>
 		</Card>
