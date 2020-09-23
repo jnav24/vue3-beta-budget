@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
+import BudgetTableHeaders from '@/components/partials/BudgetTableHeaders.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import Card from '@/components/ui-elements/card/Card.vue';
 import CardContent from '@/components/ui-elements/card/CardContent.vue';
@@ -28,6 +29,7 @@ export default defineComponent({
 		},
 	},
 	components: {
+		BudgetTableHeaders,
 		Button,
 		Card,
 		CardContent,
@@ -100,24 +102,7 @@ export default defineComponent({
 
 		<Card>
 			<CardHeader class="bg-gray-100">
-				<div
-					:class="
-						`grid gap-2 grid-cols-2 sm:grid-cols-${tableHeaders.length}`
-					"
-				>
-					<div
-						v-for="(header, index) in tableHeaders"
-						:key="index"
-						:class="{
-							'pl-2': index === 0,
-							'hidden sm:block': !['name', 'actions'].includes(
-								header
-							),
-						}"
-					>
-						{{ header }}
-					</div>
-				</div>
+				<BudgetTableHeaders :headers="tableHeaders" />
 			</CardHeader>
 
 			<CardContent>

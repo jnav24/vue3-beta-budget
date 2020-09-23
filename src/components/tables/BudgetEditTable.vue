@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import BanIcon from '@/components/ui-elements/icons/BanIcon.vue';
+import BudgetTableHeaders from '@/components/partials/BudgetTableHeaders.vue';
 import Card from '@/components/ui-elements/card/Card.vue';
 import CardContent from '@/components/ui-elements/card/CardContent.vue';
 import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
@@ -21,6 +22,7 @@ type ExpenseType = {
 export default defineComponent({
 	components: {
 		BanIcon,
+		BudgetTableHeaders,
 		Card,
 		CardHeader,
 		CardContent,
@@ -122,24 +124,7 @@ export default defineComponent({
 <template>
 	<Card>
 		<CardHeader class="bg-gray-100">
-			<div
-				:class="
-					`grid gap-2 grid-cols-2 sm:grid-cols-${categoryHeader.length}`
-				"
-			>
-				<div
-					v-for="(header, index) in categoryHeader"
-					:key="index"
-					:class="{
-						'pl-2': index === 0,
-						'hidden sm:block': !['name', 'actions'].includes(
-							header
-						),
-					}"
-				>
-					{{ ucFirst(header) }}
-				</div>
-			</div>
+			<BudgetTableHeaders :headers="categoryHeader" />
 		</CardHeader>
 
 		<CardContent>
