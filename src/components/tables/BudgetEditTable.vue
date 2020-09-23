@@ -14,7 +14,7 @@ type ExpenseType = {
 	type: string;
 	amount: string;
 	balance: string;
-    'paid_date': string;
+	paid_date: string;
 };
 
 export default defineComponent({
@@ -135,13 +135,19 @@ export default defineComponent({
 <template>
 	<Card>
 		<CardHeader class="bg-gray-100">
-			<div :class="`grid gap-2 grid-cols-2 sm:grid-cols-${categoryHeader.length}`">
+			<div
+				:class="
+					`grid gap-2 grid-cols-2 sm:grid-cols-${categoryHeader.length}`
+				"
+			>
 				<div
 					v-for="(header, index) in categoryHeader"
 					:key="index"
 					:class="{
 						'pl-2': index === 0,
-						'hidden sm:block': !['name','actions'].includes(header)
+						'hidden sm:block': !['name', 'actions'].includes(
+							header
+						),
 					}"
 				>
 					{{ ucFirst(header) }}
@@ -169,7 +175,9 @@ export default defineComponent({
 					class="col-span-1"
 					:class="{
 						'pl-2': index === 0,
-						'hidden sm:block': !['name','actions'].includes(header)
+						'hidden sm:block': !['name', 'actions'].includes(
+							header
+						),
 					}"
 					v-for="(header, index) in categoryHeader"
 					:key="index"
