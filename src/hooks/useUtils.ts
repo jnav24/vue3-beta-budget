@@ -18,5 +18,12 @@ export default function useUtils() {
 			.join(' ');
 	};
 
-	return { arrayColumn, toTitleCase, ucFirst };
+	const sortObject = <T extends Record<string, any>>(obj: T) => {
+		const result = {} as T;
+		const keys: Array<keyof T> = Object.keys(obj);
+		keys.sort().forEach(key => (result[key] = obj[key]));
+		return result;
+	};
+
+	return { arrayColumn, toTitleCase, sortObject, ucFirst };
 }
