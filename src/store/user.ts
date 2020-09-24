@@ -1,4 +1,4 @@
-import { createStore } from "pinia";
+import { createStore } from 'pinia';
 
 type UserState = {
 	login: any;

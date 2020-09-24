@@ -22,6 +22,7 @@ export const useBudgetStore = createStore({
 		},
 
 		async getBudget(id: string) {
+			console.log(id);
 			const expenses = {
 				banks: [
 					{

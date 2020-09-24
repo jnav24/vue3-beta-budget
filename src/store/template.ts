@@ -36,7 +36,7 @@ export const useTemplateStore = createStore({
 				utilities: [],
 				vehicles: [],
 			},
-		}
+		},
 	}),
 
 	getters: {
@@ -48,104 +48,104 @@ export const useTemplateStore = createStore({
 	actions: {
 		async getTemplates() {
 			this.templates = {
-				"id": 3,
-				"expenses": {
-					"credit-cards": [
+				id: 3,
+				expenses: {
+					'credit-cards': [
 						{
-							"id": 1,
-							"name": "Visa Black Card",
-							"limit": "300000",
-							"last_4": "",
-							"exp_month": "0",
-							"exp_year": "0",
-							"apr": "19.49",
-							"due_date": 9,
-							"credit_card_type_id": 1,
-							"amount": "0",
-							"balance": "0"
+							id: 1,
+							name: 'Visa Black Card',
+							limit: '300000',
+							last_4: '',
+							exp_month: '0',
+							exp_year: '0',
+							apr: '19.49',
+							due_date: 9,
+							credit_card_type_id: 1,
+							amount: '0',
+							balance: '0',
 						},
 					],
-					"utilities": [
+					utilities: [
 						{
-							"id": 1,
-							"name": "At&t",
-							"amount": "115.06",
-							"due_date": 2,
-							"utility_type_id": 14
+							id: 1,
+							name: 'At&t',
+							amount: '115.06',
+							due_date: 2,
+							utility_type_id: 14,
 						},
 					],
-					"miscellaneous": [],
-					"banks": [
+					miscellaneous: [],
+					banks: [
 						{
-							"id": 31,
-							"name": "Wells Fargo",
-							"amount": "245250.35",
-							"bank_type_id": 1
+							id: 31,
+							name: 'Wells Fargo',
+							amount: '245250.35',
+							bank_type_id: 1,
 						},
 					],
-					"medical": [],
-					"investments": [
+					medical: [],
+					investments: [
 						{
-							"id": 4,
-							"name": "RobinHood",
-							"amount": "1240940.49",
-							"investment_type_id": 1
+							id: 4,
+							name: 'RobinHood',
+							amount: '1240940.49',
+							investment_type_id: 1,
 						},
 					],
-					"incomes": [
+					incomes: [
 						{
-							"id": 6,
-							"name": "Pimpin",
-							"amount": "12423.13",
-							"income_type_id": 1,
-							"initial_pay_date": "2019-01-11 00:00:00"
+							id: 6,
+							name: 'Pimpin',
+							amount: '12423.13',
+							income_type_id: 1,
+							initial_pay_date: '2019-01-11 00:00:00',
 						},
 						{
-							"id": 7,
-							"name": "Pimpin",
-							"amount": "12423.13",
-							"income_type_id": 1,
-							"initial_pay_date": "2019-01-11 00:00:00"
-						}
+							id: 7,
+							name: 'Pimpin',
+							amount: '12423.13',
+							income_type_id: 1,
+							initial_pay_date: '2019-01-11 00:00:00',
+						},
 					],
-					"vehicles": [],
-					"childcare": [],
-					"education": [],
-					"entertainment": [
+					vehicles: [],
+					childcare: [],
+					education: [],
+					entertainment: [
 						{
-							"id": 1,
-							"entertainment_type_id": 4,
-							"name": "iPic",
-							"amount": "24",
-							"due_date": 13
-						}
+							id: 1,
+							entertainment_type_id: 4,
+							name: 'iPic',
+							amount: '24',
+							due_date: 13,
+						},
 					],
-					"food": [],
-					"gift": [],
-					"housing": [],
-					"loan": [],
-					"personal": [],
-					"shopping": [],
-					"subscription": [
+					food: [],
+					gift: [],
+					housing: [],
+					loan: [],
+					personal: [],
+					shopping: [],
+					subscription: [
 						{
-							"id": 1,
-							"subscription_type_id": 3,
-							"name": "Netflix",
-							"amount": "8.00",
-							"due_date": 4
+							id: 1,
+							subscription_type_id: 3,
+							name: 'Netflix',
+							amount: '8.00',
+							due_date: 4,
 						},
 						{
-							"id": 2,
-							"subscription_type_id": 3,
-							"name": "Hulu",
-							"amount": "13.99",
-							"due_date": 3
-						}
+							id: 2,
+							subscription_type_id: 3,
+							name: 'Hulu',
+							amount: '13.99',
+							due_date: 3,
+						},
 					],
-					"tax": [],
-					"travel": []
-				}
+					tax: [],
+					travel: [],
+				},
 			};
-		}
+		},
 	},
 });
