@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import { useTemplateStore } from '@/store/template';
 
 const routes: Array<RouteRecordRaw> = [
 	{
@@ -23,6 +24,11 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/dashboard',
 		name: 'dashbaord',
 		component: () => import('@/views/dashboard/Dashboard.vue'),
+		beforeEnter: (to, from, next) => {
+			const templateStore = useTemplateStore();
+			templateStore.getTemplates();
+			next();
+		},
 		children: [
 			{
 				path: '',
