@@ -1,9 +1,11 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import BudgetEditSummary from '@/components/partials/BudgetEditSummary.vue';
 import BudgetEditTable from '@/components/tables/BudgetEditTable.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
 import SideBar from '@/components/partials/SideBar.vue';
+import { useBudgetStore } from '@/store/budget';
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
 	components: {
@@ -13,50 +15,27 @@ export default defineComponent({
 		Select,
 	},
 	setup() {
+		const budgetStore = useBudgetStore();
+		const {
+			params: { id },
+		} = useRoute();
+
+		const budget = ref({});
+		const loading = ref(true);
+
+		onMounted(async () => {
+			budget.value = await budgetStore.getBudget(id.toString());
+			loading.value = false;
+		});
+
 		const selectedCategory = ref('banks');
 		const categories = [
 			{ label: 'Banks', value: 'banks' },
 			{ label: 'Credit Cards', value: 'credit-cards' },
 			{ label: 'Investments', value: 'investments' },
 		];
-		const expenses = {
-			banks: [
-				{
-					id: 150,
-					name: 'Wells Fargo',
-					amount: '5250.35',
-					'bank_type_id': 1,
-					'bank_template_id': 31
-				},
-				{
-					id: 150,
-					name: 'Wells Fargo',
-					amount: '5250.35',
-					'bank_type_id': 1,
-					'bank_template_id': 31
-				},
-			],
-			'credit-cards': [
-				{
-					id: 141,
-					name: 'Delta',
-					limit: '30400',
-					'last_4': '',
-					'exp_month': '0',
-					'exp_year': '0',
-					apr: '19.49',
-					'due_date': 9,
-					'credit_card_type_id': 4,
-					'paid_date': '2020-02-08 00:00:00',
-					confirmation: 'W7068',
-					amount: '200',
-					balance: '2136.05',
-				},
-			],
-			investments: [],
-		};
 
-		return { categories, expenses, selectedCategory };
+		return { categories, budget, selectedCategory, loading };
 	},
 });
 </script>
@@ -65,7 +44,11 @@ export default defineComponent({
 	<BudgetEditSummary />
 
 	<div class="container mx-auto py-6 px-4 sm:px-0">
-		<Select class="block md:hidden" :items="categories" v-model:value="selectedCategory" />
+		<Select
+			class="block md:hidden"
+			:items="categories"
+			v-model:value="selectedCategory"
+		/>
 		<div class="grid grid-cols-1 md:grid-cols-5 gap-3">
 			<SideBar
 				title="Categories"
@@ -73,10 +56,10 @@ export default defineComponent({
 				v-model:selected-item="selectedCategory"
 			/>
 
-			<div class="col-span-4">
+			<div class="col-span-4" v-if="!loading">
 				<BudgetEditTable
 					:category="selectedCategory"
-					:data="expenses"
+					:data="budget.expenses"
 				/>
 			</div>
 		</div>
