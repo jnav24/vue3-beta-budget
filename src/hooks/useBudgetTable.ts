@@ -19,5 +19,38 @@ export default function useBudgetTable() {
 		return headers.common;
 	};
 
-	return { getHeaders };
+	const getExpenseValue = (
+		header: string,
+		item: Record<string, string>
+	): string => {
+		if (['amount', 'balance'].includes(header)) {
+			return `$${item[header]}`;
+		}
+
+		if (item[header]) {
+			return item[header];
+		}
+
+		if (header === 'type') {
+			return (
+				Object.keys(item)
+					.filter((key: string) => /[a-z]*_type_[a-z]*/.exec(key))
+					.shift() ?? ''
+			);
+		}
+
+		if (header === 'due date') {
+			if (item['paid_date']) {
+				return item['paid_date'];
+			}
+
+			if (item['initial_pay_date']) {
+				return item['initial_pay_date'];
+			}
+		}
+
+		return '';
+	};
+
+	return { getExpenseValue, getHeaders };
 }

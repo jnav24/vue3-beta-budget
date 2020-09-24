@@ -1,10 +1,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
+import BanIcon from '@/components/ui-elements/icons/BanIcon.vue';
 import BudgetTableHeaders from '@/components/partials/BudgetTableHeaders.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import Card from '@/components/ui-elements/card/Card.vue';
 import CardContent from '@/components/ui-elements/card/CardContent.vue';
 import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
+import EditIcon from '@/components/ui-elements/icons/EditIcon.vue';
 import WarningIcon from '@/components/ui-elements/icons/WarningIcon.vue';
 import useBudgetTable from '@/hooks/useBudgetTable';
 import useUtils from '@/hooks/useUtils';
@@ -29,15 +31,17 @@ export default defineComponent({
 		},
 	},
 	components: {
+		BanIcon,
 		BudgetTableHeaders,
 		Button,
 		Card,
 		CardContent,
 		CardHeader,
+		EditIcon,
 		WarningIcon,
 	},
 	setup(props) {
-		const { getHeaders } = useBudgetTable();
+		const { getExpenseValue, getHeaders } = useBudgetTable();
 		const { toTitleCase } = useUtils();
 		const headers: Record<string, Array<string>> = {
 			common: ['name', 'amount', 'type', 'due_date', 'actions'],
@@ -72,14 +76,6 @@ export default defineComponent({
 			return name;
 		};
 
-		const getExpenseValue = (
-			header: string,
-			item: Record<string, string>
-		): string => {
-			console.log(item);
-			return header;
-		};
-
 		return {
 			toTitleCase,
 			getExpenseValue,
@@ -107,10 +103,42 @@ export default defineComponent({
 
 			<CardContent>
 				<div
-					class="py-32 text-gray-500 flex flex-col items-center justify-center"
+					v-if="!data.length"
+					class="py-16 text-gray-500 flex flex-col items-center justify-center"
 				>
 					<WarningIcon class="w-8 h-8" />
 					<span>{{ toTitleCase(category) }} is empty.</span>
+				</div>
+
+				<div
+					v-for="item in data"
+					:key="item.id"
+					:class="
+						`grid grid-cols-2 sm:grid-cols-${tableHeaders.length} gap-2 text-gray-700 py-4 even:bg-gray-100 items-center`
+					"
+				>
+					<div
+						class="col-span-1"
+						:class="{ 'pl-2': index === 0 }"
+						v-for="(header, index) in tableHeaders"
+						:key="index"
+					>
+						<div v-if="header !== 'actions'">
+							{{ getExpenseValue(header, item) }}
+						</div>
+
+						<div
+							class="flex flex-row items-center"
+							v-if="header === 'actions'"
+						>
+							<div class="rounded-full p-2 bg-secondary w-8 mr-2">
+								<EditIcon class="w-4 h-4" />
+							</div>
+							<div class="rounded-full p-2 bg-danger w-8">
+								<BanIcon class="w-4 h-4 text-white" />
+							</div>
+						</div>
+					</div>
 				</div>
 			</CardContent>
 		</Card>
