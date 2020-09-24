@@ -24,7 +24,9 @@ export default defineComponent({
 			:key="index"
 			:class="{
 				'pl-2': index === 0,
-				'hidden sm:block': !['name', 'actions'].includes(header),
+				'hidden sm:block': !['name', 'actions', 'vehicle'].includes(
+					header
+				),
 			}"
 		>
 			{{ toTitleCase(header, '_') }}

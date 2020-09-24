@@ -21,9 +21,9 @@ export default defineComponent({
 <template>
 	<div class="container mx-auto">
 		<div
-			class="flex flex-row justify-between items-center text-3xl border-b border-gray-400 mb-20 py-12"
+			class="flex flex-col sm:flex-row justify-between items-center text-3xl border-b border-gray-400 mb-20 py-12 px-4 sm:px-0"
 		>
-			<div class="space-y-2 mr-64">
+			<div class="space-y-2 mr-0 sm:mr-64 mb-8 sm:mb-0">
 				<h1 class="font-body text-gray-700">Budget Template</h1>
 				<p class="text-base font-header text-gray-600">
 					Add all your monthly expenses here! Whenever you create a
@@ -41,7 +41,7 @@ export default defineComponent({
 					existing budgets will be unaffected.
 				</p>
 			</div>
-			<Button :is-disabled="true">
+			<Button class="w-full sm:w-auto" :is-disabled="true">
 				<SaveIcon class="w-5 h-5 mr-2" />
 				<span>Save</span>
 			</Button>

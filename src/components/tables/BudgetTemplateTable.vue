@@ -58,7 +58,7 @@ export default defineComponent({
 				'due_date',
 				'actions',
 			],
-			incomes: ['name', 'amount', 'type', 'initial_pay_date'],
+			incomes: ['name', 'amount', 'type', 'initial_pay_date', 'actions'],
 			miscellaneous: ['name', 'amount', 'due_date', 'actions'],
 			savings: ['name', 'amount', 'type', 'actions'],
 			vehicles: [
@@ -90,7 +90,7 @@ export default defineComponent({
 </script>
 
 <template>
-	<section class="mb-24">
+	<section class="mb-24 px-4 sm:px-0">
 		<div class="mt-4 flex flex-row items-center justify-between">
 			<h2 class="text-2xl text-gray-600 font-body">
 				{{ toTitleCase(category) }}
@@ -124,7 +124,14 @@ export default defineComponent({
 				>
 					<div
 						class="col-span-1"
-						:class="{ 'pl-2': index === 0 }"
+						:class="{
+							'pl-2': index === 0,
+							'hidden sm:block': ![
+								'name',
+								'actions',
+								'vehicle',
+							].includes(header),
+						}"
 						v-for="(header, index) in tableHeaders"
 						:key="index"
 					>
