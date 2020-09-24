@@ -1,17 +1,17 @@
 <script lang="ts">
-    import { defineComponent } from 'vue';
-    import BudgetTemplateTable from '@/components/tables/BudgetTemplateTable.vue';
-    import { useTemplateStore } from '@/store/template';
+import { defineComponent } from 'vue';
+import BudgetTemplateTable from '@/components/tables/BudgetTemplateTable.vue';
+import { useTemplateStore } from '@/store/template';
 
-    export default defineComponent({
-        components: {
-            BudgetTemplateTable,
-        },
-        setup() {
-            const templateStore = useTemplateStore();
-            return { expenses: templateStore.expenses };
-        },
-    });
+export default defineComponent({
+	components: {
+		BudgetTemplateTable,
+	},
+	setup() {
+		const templateStore = useTemplateStore();
+		return { expenses: templateStore.expenses };
+	},
+});
 </script>
 
 <template>
