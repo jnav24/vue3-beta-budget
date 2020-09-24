@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
+import AddIcon from '@/components/ui-elements/icons/AddIcon.vue';
 import BanIcon from '@/components/ui-elements/icons/BanIcon.vue';
 import BudgetTableHeaders from '@/components/partials/BudgetTableHeaders.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
@@ -31,6 +32,7 @@ export default defineComponent({
 		},
 	},
 	components: {
+		AddIcon,
 		BanIcon,
 		BudgetTableHeaders,
 		Button,
@@ -88,12 +90,15 @@ export default defineComponent({
 </script>
 
 <template>
-	<section class="mb-16">
+	<section class="mb-24">
 		<div class="mt-4 flex flex-row items-center justify-between">
 			<h2 class="text-2xl text-gray-600 font-body">
 				{{ toTitleCase(category) }}
 			</h2>
-			<Button>Add</Button>
+			<Button color="secondary">
+				<AddIcon class="w-5 h-5 mr-2" />
+				<span>Add</span>
+			</Button>
 		</div>
 
 		<Card>
