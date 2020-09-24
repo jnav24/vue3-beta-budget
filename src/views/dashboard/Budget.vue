@@ -1,90 +1,79 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import BanIcon from '@/components/ui-elements/icons/BanIcon.vue';
-import Button from '@/components/ui-elements/form/Button.vue';
-import Card from '@/components/ui-elements/card/Card.vue';
-import CardContent from '@/components/ui-elements/card/CardContent.vue';
-import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
-import ChevronDownIcon from '@/components/ui-elements/icons/ChevronDownIcon.vue';
-import EditIcon from '@/components/ui-elements/icons/EditIcon.vue';
-import FireIcon from '@/components/ui-elements/icons/FireIcon.vue';
-import Select from '@/components/ui-elements/form/Select.vue';
-import SideBar from '@/components/partials/SideBar.vue';
-import SubNav from '@/components/partials/SubNav.vue';
-import SubNavItems from '@/components/partials/SubNavItems.vue';
-import TrendDownIcon from '@/components/ui-elements/icons/TrendDownIcon.vue';
-import TrendUpIcon from '@/components/ui-elements/icons/TrendUpIcon.vue';
-import { useRouter } from 'vue-router';
-import useUtils from '@/hooks/useUtils';
-import YTDSummary from '@/components/partials/YTDSummary.vue';
+    import { defineComponent, ref } from 'vue';
+    import BanIcon from '@/components/ui-elements/icons/BanIcon.vue';
+    import Button from '@/components/ui-elements/form/Button.vue';
+    import Card from '@/components/ui-elements/card/Card.vue';
+    import CardContent from '@/components/ui-elements/card/CardContent.vue';
+    import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
+    import ChevronDownIcon from '@/components/ui-elements/icons/ChevronDownIcon.vue';
+    import EditIcon from '@/components/ui-elements/icons/EditIcon.vue';
+    import FireIcon from '@/components/ui-elements/icons/FireIcon.vue';
+    import Select from '@/components/ui-elements/form/Select.vue';
+    import SideBar from '@/components/partials/SideBar.vue';
+    import SubNav from '@/components/partials/SubNav.vue';
+    import SubNavItems from '@/components/partials/SubNavItems.vue';
+    import TrendDownIcon from '@/components/ui-elements/icons/TrendDownIcon.vue';
+    import TrendUpIcon from '@/components/ui-elements/icons/TrendUpIcon.vue';
+    import { useBudgetStore } from '@/store/budget';
+    import { useRouter } from 'vue-router';
+    import useUtils from '@/hooks/useUtils';
+    import YTDSummary from '@/components/partials/YTDSummary.vue';
 
-export default defineComponent({
-	components: {
-		BanIcon,
-		Button,
-		Card,
-		CardContent,
-		CardHeader,
-		ChevronDownIcon,
-		EditIcon,
-		FireIcon,
-		Select,
-		SideBar,
-		SubNav,
-		SubNavItems,
-		TrendDownIcon,
-		TrendUpIcon,
-		YTDSummary,
-	},
-	setup() {
-		const { arrayColumn } = useUtils();
-		const { push } = useRouter();
-		const addBudgetItems = [
-			{ value: '', label: 'Monthly Budget', icon: 'CalendarIcon' },
-			{ value: '', label: 'Blank Budget', icon: 'ArchiveIcon' },
-		];
-		const showAddBudgetNav = ref(false);
-		const budgets = [
-			{ id: '1', name: 'January', saved: '13023.55' },
-			{ id: '2', name: 'February', saved: '86512.12' },
-			{ id: '3', name: 'March', saved: '12224.03' },
-			{ id: '4', name: 'April', saved: '16032.13' },
-			{ id: '5', name: 'May', saved: '-217.00' },
-			{ id: '6', name: 'June', saved: '60217.00' },
-			{ id: '7', name: 'July', saved: '60217.00' },
-			{ id: '8', name: 'August', saved: '60217.00' },
-			{ id: '9', name: 'September', saved: '60217.00' },
-			{ id: '10', name: 'October', saved: '60217.00' },
-			{ id: '11', name: 'November', saved: '60217.00' },
-			{ id: '12', name: 'December', saved: '60217.00' },
-		];
-		const maxSaved = Math.max(
-			...arrayColumn('saved', budgets).map(val => Number(val))
-		).toString();
+    export default defineComponent({
+        components: {
+            BanIcon,
+            Button,
+            Card,
+            CardContent,
+            CardHeader,
+            ChevronDownIcon,
+            EditIcon,
+            FireIcon,
+            Select,
+            SideBar,
+            SubNav,
+            SubNavItems,
+            TrendDownIcon,
+            TrendUpIcon,
+            YTDSummary,
+        },
+        setup() {
+            const { arrayColumn } = useUtils();
+            const budgetStore = useBudgetStore();
+            const { push } = useRouter();
+            const addBudgetItems = [
+                { value: '', label: 'Monthly Budget', icon: 'CalendarIcon' },
+                { value: '', label: 'Blank Budget', icon: 'ArchiveIcon' },
+            ];
+            const showAddBudgetNav = ref(false);
+            const budgets = budgetStore.list;
+            const maxSaved = Math.max(
+                ...arrayColumn('saved', budgets as any).map(val => Number(val))
+            ).toString();
 
-		const years = [
-			{ label: '2020', value: '2020' },
-			{ label: '2019', value: '2019' },
-		];
-		const selectedYear = ref('2020');
+            const years = [
+                { label: '2020', value: '2020' },
+                { label: '2019', value: '2019' },
+            ];
+            const selectedYear = ref('2020');
 
-		const goToEditPage = (id: string) =>
-			push({ name: 'budget-edit', params: { id } });
+            const goToEditPage = (id: string) =>
+                push({ name: 'budget-edit', params: { id } });
 
-		const goToTemplatePage = () => push({ name: 'budget-template' });
+            const goToTemplatePage = () => push({ name: 'budget-template' });
 
-		return {
-			addBudgetItems,
-			showAddBudgetNav,
-			budgets,
-			goToEditPage,
-			goToTemplatePage,
-			maxSaved,
-			selectedYear,
-			years,
-		};
-	},
-});
+            return {
+                addBudgetItems,
+                showAddBudgetNav,
+                budgets,
+                goToEditPage,
+                goToTemplatePage,
+                maxSaved,
+                selectedYear,
+                years,
+            };
+        },
+    });
 </script>
 
 <template>
