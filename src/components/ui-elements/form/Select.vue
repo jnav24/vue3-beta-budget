@@ -138,9 +138,9 @@ export default defineComponent({
 				v-for="(item, index) in items"
 				:key="index"
 				class="hover:bg-gray-200 p-2"
-				@click="setValue(item.value)"
+				@click="setValue(item[itemValue])"
 			>
-				{{ item.label }}
+				{{ item[itemLabel] }}
 			</div>
 		</div>
 	</div>
