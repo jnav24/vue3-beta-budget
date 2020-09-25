@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import { useBudgetStore } from '@/store/budget';
+import { useTemplateStore } from '@/store/template';
 
 const routes: Array<RouteRecordRaw> = [
 	{
@@ -23,6 +25,13 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/dashboard',
 		name: 'dashbaord',
 		component: () => import('@/views/dashboard/Dashboard.vue'),
+		beforeEnter: (to, from, next) => {
+			const budgetStore = useBudgetStore();
+			const templateStore = useTemplateStore();
+			budgetStore.getBudgets();
+			templateStore.getTemplates();
+			next();
+		},
 		children: [
 			{
 				path: '',
@@ -38,6 +47,11 @@ const routes: Array<RouteRecordRaw> = [
 				path: 'budgets/:id',
 				name: 'budget-edit',
 				component: () => import('@/views/dashboard/BudgetEdit.vue'),
+			},
+			{
+				path: 'budgets/template',
+				name: 'budget-template',
+				component: () => import('@/views/dashboard/BudgetTemplate.vue'),
 			},
 			{
 				path: 'reports',

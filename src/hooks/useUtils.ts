@@ -11,5 +11,19 @@ export default function useUtils() {
 			.filter((value: R[S]) => value);
 	};
 
-	return { arrayColumn, ucFirst };
+	const toTitleCase = (value: string, casing = '-'): string => {
+		return value
+			.split(casing)
+			.map(word => ucFirst(word))
+			.join(' ');
+	};
+
+	const sortObject = <T extends Record<string, any>>(obj: T) => {
+		const result = {} as T;
+		const keys: Array<keyof T> = Object.keys(obj);
+		keys.sort().forEach(key => (result[key] = obj[key]));
+		return result;
+	};
+
+	return { arrayColumn, toTitleCase, sortObject, ucFirst };
 }

@@ -1,12 +1,14 @@
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { defineComponent } from 'vue';
 import BanIcon from '@/components/ui-elements/icons/BanIcon.vue';
+import BudgetTableHeaders from '@/components/partials/BudgetTableHeaders.vue';
 import Card from '@/components/ui-elements/card/Card.vue';
 import CardContent from '@/components/ui-elements/card/CardContent.vue';
 import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
 import CheckIcon from '@/components/ui-elements/icons/CheckIcon.vue';
 import EditIcon from '@/components/ui-elements/icons/EditIcon.vue';
 import WarningIcon from '@/components/ui-elements/icons/WarningIcon.vue';
+import useBudgetTable from '@/hooks/useBudgetTable';
 import useUtils from '@/hooks/useUtils';
 
 type ExpenseType = {
@@ -14,12 +16,13 @@ type ExpenseType = {
 	type: string;
 	amount: string;
 	balance: string;
-    'paid_date': string;
+	paid_date: string;
 };
 
 export default defineComponent({
 	components: {
 		BanIcon,
+		BudgetTableHeaders,
 		Card,
 		CardHeader,
 		CardContent,
@@ -38,6 +41,7 @@ export default defineComponent({
 		},
 	},
 	setup(props) {
+		const { getHeaders } = useBudgetTable();
 		const { ucFirst } = useUtils();
 		const headers: Record<string, Array<string>> = {
 			common: [
@@ -77,22 +81,7 @@ export default defineComponent({
 			],
 		};
 
-		const categoryHeader = computed(() => {
-			const categoryMap: Record<string, string> = {
-				banks: 'savings',
-				investments: 'savings',
-			};
-
-			if (headers[props.category]) {
-				return headers[props.category];
-			}
-
-			if (!headers[props.category] && categoryMap[props.category]) {
-				return headers[categoryMap[props.category]];
-			}
-
-			return headers.common;
-		});
+		const categoryHeader = getHeaders(props.category, headers);
 
 		const getExpenseValue = (
 			header: string,
@@ -135,18 +124,7 @@ export default defineComponent({
 <template>
 	<Card>
 		<CardHeader class="bg-gray-100">
-			<div :class="`grid gap-2 grid-cols-2 sm:grid-cols-${categoryHeader.length}`">
-				<div
-					v-for="(header, index) in categoryHeader"
-					:key="index"
-					:class="{
-						'pl-2': index === 0,
-						'hidden sm:block': !['name','actions'].includes(header)
-					}"
-				>
-					{{ ucFirst(header) }}
-				</div>
-			</div>
+			<BudgetTableHeaders :headers="categoryHeader" />
 		</CardHeader>
 
 		<CardContent>
@@ -169,7 +147,9 @@ export default defineComponent({
 					class="col-span-1"
 					:class="{
 						'pl-2': index === 0,
-						'hidden sm:block': !['name','actions'].includes(header)
+						'hidden sm:block': !['name', 'actions'].includes(
+							header
+						),
 					}"
 					v-for="(header, index) in categoryHeader"
 					:key="index"
