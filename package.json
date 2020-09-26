@@ -12,7 +12,8 @@
     "@types/chart.js": "^2.9.24",
     "chart.js": "^2.9.3",
     "core-js": "^3.6.5",
-	"pinia": "^2.0.0-alpha.1",
+    "date-fns": "^2.16.1",
+    "pinia": "^2.0.0-alpha.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-beta.10",
     "vuex": "^4.0.0-beta.4"
