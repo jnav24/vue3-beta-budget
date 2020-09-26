@@ -62,10 +62,11 @@ export default defineComponent({
 
 		const getPlaceholder = computed(() => {
 			const text: any = props.items.find(
-				(obj: any) => currentValue.value === obj.value
+				(obj: any) => currentValue.value === obj[props.itemValue]
 			);
-			if (isValueSelected.value && text && text.label) {
-				return text.label;
+
+			if (isValueSelected.value && text && text[props.itemLabel]) {
+				return text[props.itemLabel];
 			}
 
 			return props.placeholder;
