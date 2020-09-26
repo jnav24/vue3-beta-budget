@@ -14,7 +14,7 @@ import SubNav from '@/components/partials/SubNav.vue';
 import SubNavItems from '@/components/partials/SubNavItems.vue';
 import TrendDownIcon from '@/components/ui-elements/icons/TrendDownIcon.vue';
 import TrendUpIcon from '@/components/ui-elements/icons/TrendUpIcon.vue';
-import { useBudgetStore } from '@/store/budget';
+import { useBudgetStore } from '@/store';
 import { useRouter } from 'vue-router';
 import useUtils from '@/hooks/useUtils';
 import YTDSummary from '@/components/partials/YTDSummary.vue';

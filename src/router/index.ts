@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import { useBudgetStore } from '@/store/budget';
-import { useTemplateStore } from '@/store/template';
-import { useTypesStore } from '@/store/types';
+import { useBudgetStore, useTemplateStore, useTypesStore } from '@/store';
 
 const routes: Array<RouteRecordRaw> = [
 	{

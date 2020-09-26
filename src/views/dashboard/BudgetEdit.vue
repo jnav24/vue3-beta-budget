@@ -4,7 +4,7 @@ import BudgetEditSummary from '@/components/partials/BudgetEditSummary.vue';
 import BudgetEditTable from '@/components/tables/BudgetEditTable.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
 import SideBar from '@/components/partials/SideBar.vue';
-import { useBudgetStore } from '@/store/budget';
+import { useBudgetStore } from '@/store';
 import { useRoute } from 'vue-router';
 
 export default defineComponent({

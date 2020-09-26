@@ -3,7 +3,7 @@ import { defineComponent } from 'vue';
 import BudgetTemplateTable from '@/components/tables/BudgetTemplateTable.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import SaveIcon from '@/components/ui-elements/icons/SaveIcon.vue';
-import { useTemplateStore } from '@/store/template';
+import { useTemplateStore } from '@/store';
 
 export default defineComponent({
 	components: {
