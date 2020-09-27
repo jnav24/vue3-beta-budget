@@ -1,17 +1,37 @@
+// import { DateTime } from 'luxon';
+import {
+	format,
+	addMonths,
+	endOfMonth,
+	startOfMonth,
+	addYears,
+	getUnixTime,
+} from 'date-fns';
+import { utcToZonedTime } from 'date-fns-tz';
+
 export default function useTimestamp() {
-	const format = (format = 'yyyy-MM-dd hh:mm A', timestamp = ''): string => {
+	const getDateObject = (timestamp = '') =>
+		timestamp.length ? new Date(timestamp) : new Date();
+
+	const formatDate = (
+		pattern = 'yyyy-MM-dd hh:mm A',
+		timestamp = ''
+	): string => {
 		// date-fns
-		// format(new Date(2017, 10, 6), 'MMM')
+		return format(getDateObject(timestamp), pattern);
 
 		// luxon
 		// DateTime.local().toFormat('ff');
-		return 'howdy';
 	};
 
-	const formatTimeZone = () => {
-		// date-fns
-		// const zonedDate = utcToZonedTime(new Date(), 'Europe/Berlin')
-		// return format(zonedDate, 'yyyy-MM-dd', { timeZone: 'Europe/Berlin' });
+	const formatTimeZone = (
+		pattern = 'yyyy-MM-dd hh:mm',
+		zone = 'UTC',
+		timestamp = ''
+	) => {
+		// date-fns; need date-fns-tz
+		const zonedDate = utcToZonedTime(getDateObject(timestamp), zone);
+		return formatDate(pattern, zonedDate.toLocaleString());
 
 		// luxon
 		// DateTime.local().setZone('America/Los_Angeles').toFormat('yyyy-MM-dd')
@@ -19,15 +39,15 @@ export default function useTimestamp() {
 
 	const addMonth = (addition: number, timestamp = '') => {
 		// date-fns
-		// addMonths(new Date(), 1)
+		return addMonths(getDateObject(timestamp), addition);
 
 		// luxon
 		// DateTime.local().plus({ months: 1 })
 	};
 
-	const addYear = () => {
+	const addYear = (addition: number, timestamp = '') => {
 		// date-fns
-		// addYears(date, amount)
+		return addYears(getDateObject(timestamp), addition);
 
 		// luxon
 		// DateTime.local().plus({ years: 1 })
@@ -41,30 +61,28 @@ export default function useTimestamp() {
 		return int.toString();
 	};
 
-	const getEndDayOfMonth = () => {
+	const getEndDayOfMonth = (timestamp = '') => {
 		// date-fns
-		// endOfMonth(date)
+		return endOfMonth(getDateObject(timestamp));
 
 		// luxon
 		// DateTime.local().endOf('month').
 	};
 
-	const getStartDayOfMonth = () => {
+	const getStartDayOfMonth = (timestamp = '') => {
 		// date-fns
-		// startOfMonth(date)
+		return startOfMonth(getDateObject(timestamp));
 
 		// luxon
 		// DateTime.local().startOf('month')
 	};
 
-	const unix = (): number => {
+	const unix = (timestamp = ''): number => {
 		// date-fns
-		// getUnixTime(new Date());
+		return getUnixTime(getDateObject(timestamp));
 
 		// luxon
 		// dt.toMillis()
-
-		return 0;
 	};
 
 	const generateUnixId = (): number => {
@@ -75,21 +93,23 @@ export default function useTimestamp() {
 		return 'temp_' + generateUnixId();
 	};
 
-	const getAllMonths = (formatType: string): Array<Record<'value' | 'label', string>> => {
+	const getAllMonths = (
+		formatType: 'abbr' | 'full' | 'num' | string
+	): Array<Record<'value' | 'label', string>> => {
 		return Array.from(Array(12).keys()).map(int => {
 			let label = '';
 			const month =
 				int + 1 < 10
 					? '0' + (int + 1).toString()
 					: (int + 1).toString();
-			const year = format('YYYY');
+			const year = formatDate('yyyy');
 
 			switch (formatType) {
 				case 'abbr':
-					label = format('MMM', `${year}-${month}-01`);
+					label = formatDate('MMM', `${year}-${month}-01 00:00:00`);
 					break;
 				case 'full':
-					label = format('MMMM', `${year}-${month}-01`);
+					label = formatDate('MMMM', `${year}-${month}-01 00:00:00`);
 					break;
 				case 'num':
 				default:
@@ -104,5 +124,16 @@ export default function useTimestamp() {
 		});
 	};
 
-	return { addMonth, generateTempId, setDoubleDigits, unix };
+	return {
+		addMonth,
+		addYear,
+		formatDate,
+		formatTimeZone,
+		generateTempId,
+		getEndDayOfMonth,
+		getAllMonths,
+		setDoubleDigits,
+		unix,
+		getStartDayOfMonth,
+	};
 }
