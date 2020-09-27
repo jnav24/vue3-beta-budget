@@ -1,4 +1,4 @@
-import { createStore } from "pinia";
+import { createStore } from 'pinia';
 
 export const useAggregationStore = createStore({
 	id: 'aggregation',
