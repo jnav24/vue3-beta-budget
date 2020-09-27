@@ -3,7 +3,6 @@ import { defineComponent, ref } from 'vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import Card from '@/components/ui-elements/card/Card.vue';
 import Form from '@/components/ui-elements/form/Form';
-import Label from '@/components/ui-elements/form/Label.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
 import useTimestamp from '@/hooks/useTimestamp';
 import { useTypesStore } from '@/store';
@@ -13,7 +12,6 @@ export default defineComponent({
 		Button,
 		Card,
 		Form,
-		Label,
 		Select,
 	},
 	setup() {
@@ -21,9 +19,7 @@ export default defineComponent({
 		const typesStore = useTypesStore();
 		const form = {
 			end_month: {
-				rules: {
-					required: 'this is required yo',
-				},
+				rules: [],
 				value: '',
 			},
 			start_month: {
@@ -31,7 +27,7 @@ export default defineComponent({
 				value: '',
 			},
 			type: {
-				rules: [],
+				rules: ['required'],
 				value: '',
 			},
 			year: {
@@ -58,7 +54,6 @@ export default defineComponent({
 	<Card>
 		<Form v-model:valid="isFormValid">
 			<div class="mb-6">
-				<Label label="Expense Type" />
 				<Select
 					class="z-40"
 					:rules="form.type.rules"
@@ -71,7 +66,6 @@ export default defineComponent({
 			</div>
 
 			<div class="mb-6">
-				<Label label="Year" />
 				<Select
 					class="z-30"
 					:rules="form.year.rules"
@@ -82,7 +76,6 @@ export default defineComponent({
 			</div>
 
 			<div class="mb-6">
-				<Label label="Start Month" />
 				<Select
 					class="z-20"
 					:rules="form.start_month.rules"
@@ -93,7 +86,6 @@ export default defineComponent({
 			</div>
 
 			<div class="mb-6">
-				<Label label="End Month" />
 				<Select
 					class="z-10"
 					:rules="form.end_month.rules"

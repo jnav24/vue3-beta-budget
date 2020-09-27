@@ -2,12 +2,14 @@
 import { computed, defineComponent, inject, onMounted, ref, watch } from 'vue';
 import ChevronDownIcon from '@/components/ui-elements/icons/ChevronDownIcon.vue';
 import { FormProvider } from '@/components/ui-elements/form/Form';
+import Label from '@/components/ui-elements/form/Label.vue';
 
 type SelectItems = Array<{ label: string; value: string }>;
 
 export default defineComponent({
 	components: {
 		ChevronDownIcon,
+		Label,
 	},
 	props: {
 		label: {
@@ -74,10 +76,15 @@ export default defineComponent({
 
 		const setValue = (value: string) => {
 			if (FormContext) {
-				FormContext.isFormValid();
+				error.value = FormContext.validateField(labelId.value, value);
 			}
 			currentValue.value = value;
 			emit('update:value', value);
+		};
+
+		const blurEvent = () => {
+			selected.value = false;
+			setValue(currentValue.value);
 		};
 
 		watch(selected, n => {
@@ -96,6 +103,7 @@ export default defineComponent({
 		});
 
 		return {
+			blurEvent,
 			currentValue,
 			dropDownItems,
 			error,
@@ -108,14 +116,15 @@ export default defineComponent({
 </script>
 
 <template>
+	<Label :error="error" :labelId="labelId" :label="label" />
 	<div
-		class="border-solid border cursor-pointer px-2 py-2 rounded-md flex items-center justify-between outline-none transform relative bg-white"
+		class="border-solid border cursor-pointer px-2 py-2 mt-2 rounded-md flex items-center justify-between outline-none transform relative bg-white"
 		:class="{
 			'border-gray-300 hover:border-gray-600 text-gray-600 hover:text-gray-700 focus:border-primary transition duration-300': !error,
-			'border-red-600': error,
+			'border-red-600 text-red-600': error,
 		}"
 		tabindex="0"
-		@blur="selected = false"
+		@blur="blurEvent()"
 		@click="selected = !selected"
 	>
 		<span class="flex-1">{{ getPlaceholder }}</span>
