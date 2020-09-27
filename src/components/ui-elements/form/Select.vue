@@ -122,6 +122,8 @@ export default defineComponent({
 		:class="{
 			'border-gray-300 hover:border-gray-600 text-gray-600 hover:text-gray-700 focus:border-primary transition duration-300': !error,
 			'border-red-600 text-red-600': error,
+			'z-50': selected,
+			'z-0': !selected,
 		}"
 		tabindex="0"
 		@blur="blurEvent()"

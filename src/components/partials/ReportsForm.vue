@@ -55,7 +55,6 @@ export default defineComponent({
 		<Form v-model:valid="isFormValid">
 			<div class="mb-6">
 				<Select
-					class="z-40"
 					:rules="form.type.rules"
 					:items="types"
 					item-value="slug"
@@ -67,7 +66,6 @@ export default defineComponent({
 
 			<div class="mb-6">
 				<Select
-					class="z-30"
 					:rules="form.year.rules"
 					:items="years"
 					label="Year"
@@ -77,7 +75,6 @@ export default defineComponent({
 
 			<div class="mb-6">
 				<Select
-					class="z-20"
 					:rules="form.start_month.rules"
 					:items="months"
 					label="Start Month"
@@ -87,7 +84,6 @@ export default defineComponent({
 
 			<div class="mb-6">
 				<Select
-					class="z-10"
 					:rules="form.end_month.rules"
 					:items="months"
 					label="End Month"
