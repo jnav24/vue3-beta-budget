@@ -30,18 +30,39 @@ function validateNumeric(value: string): boolean {
 	return /^\d+$/.test(value);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function validateMax(value: string, characters: string) {
+	return value.length < Number(characters);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function validateMin(value: string, characters: string) {
+	return value.length > Number(characters);
+}
+
 export default function useFormValidation() {
 	const defaultErrorMessages: Record<string, string> = {
 		required: 'Field is required',
+		email: 'Email not valid',
+		max: 'Field can not exceed ##REPLACE## characters',
+		min: 'Field should be ##REPLACE## or more characters',
 	};
 
+	const setMessage = (message: string, rep: string) =>
+		message.replace('##REPLACE##', rep);
+
+	const getTypeAndParam = (type: string): string[] => type.split(':');
+
 	const validateInput = (type: string, value: string): boolean => {
-		const func: any = `validate${useUtils().ucFirst(type)}`;
+		const [validationType, validationParam] = getTypeAndParam(type);
+		const func: any = `validate${useUtils().ucFirst(validationType)}`;
 
 		try {
-			return eval(func)(value);
+			return validationParam
+				? eval(func)(value, validationParam)
+				: eval(func)(value);
 		} catch (err) {
-			throw `Function for type '${type}', does not exist`;
+			throw `Function for type '${validationType}', does not exist`;
 		}
 	};
 
@@ -55,8 +76,13 @@ export default function useFormValidation() {
 		for (const [key, value] of Object.entries(rules)) {
 			const isNumeric = validateNumeric(key);
 			const type = isNumeric ? value : key;
+			const [validationType, validationParams] = getTypeAndParam(type);
 			const message = isNumeric
-				? defaultErrorMessages[value] ?? defaultErrorMessages.required
+				? setMessage(
+						defaultErrorMessages[validationType] ??
+							defaultErrorMessages.required,
+						validationParams ?? ''
+				  )
 				: value;
 			const isValid = validateInput(type, inputValue);
 

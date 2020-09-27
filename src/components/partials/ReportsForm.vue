@@ -20,18 +20,18 @@ export default defineComponent({
 		const form = {
 			end_month: {
 				rules: [],
-				value: '',
+				value: '12',
 			},
 			start_month: {
 				rules: {},
-				value: '',
+				value: '01',
 			},
 			type: {
 				rules: ['required'],
 				value: '',
 			},
 			year: {
-				rules: [],
+				rules: ['required'],
 				value: '',
 			},
 		};
