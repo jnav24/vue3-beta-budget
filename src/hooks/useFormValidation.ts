@@ -11,7 +11,37 @@ export default function useFormValidation() {
 		return '';
 	};
 
-	return { validateInput };
+	const validateRules = (
+		value: string,
+		rules: Record<string, string>
+	): { error: null | string; valid: boolean } => {
+		let tempValid = true;
+		let error = null;
+
+		for (const [type, message] of Object.entries(rules)) {
+			const isValid = validateInput(type, value);
+
+			if (!tempValid) {
+				continue;
+			}
+
+			if ((!isValid || typeof isValid !== 'boolean') && tempValid) {
+				error = message;
+				tempValid = false;
+				continue;
+			}
+
+			error = null;
+			tempValid = true;
+		}
+
+		return {
+			error,
+			valid: tempValid,
+		};
+	};
+
+	return { validateInput, validateRules };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

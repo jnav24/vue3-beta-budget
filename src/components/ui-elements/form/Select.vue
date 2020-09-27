@@ -1,7 +1,7 @@
 <script lang="ts">
 import { computed, defineComponent, inject, onMounted, ref, watch } from 'vue';
 import ChevronDownIcon from '@/components/ui-elements/icons/ChevronDownIcon.vue';
-import { FormProvider } from '@/components/ui-elements';
+import { FormProvider } from '@/components/ui-elements/form/Form';
 
 type SelectItems = Array<{ label: string; value: string }>;
 
@@ -51,8 +51,8 @@ export default defineComponent({
 			(dropDownItems.value as any).classList.add('h-0', 'py-0');
 			currentValue.value = props.value;
 			if (props.label && !!FormContext) {
-				labelId.value = FormContext.setFormId(props.label);
-				FormContext.setFormElement(labelId.value, !props.rules);
+				labelId.value = FormContext.setupForm(props.label, props.rules);
+				FormContext.validateField(labelId.value, props.value);
 			}
 		});
 

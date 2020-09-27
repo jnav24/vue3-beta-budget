@@ -21,11 +21,13 @@ export default defineComponent({
 		const typesStore = useTypesStore();
 		const form = {
 			end_month: {
-				rules: [],
+				rules: {
+					required: 'this is required yo',
+				},
 				value: '',
 			},
 			start_month: {
-				rules: [],
+				rules: {},
 				value: '',
 			},
 			type: {
