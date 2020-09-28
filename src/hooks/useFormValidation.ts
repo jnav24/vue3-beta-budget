@@ -43,7 +43,7 @@ function validateMin(value: string, characters: string) {
 export default function useFormValidation() {
 	const defaultErrorMessages: Record<string, string> = {
 		required: 'Field is required',
-		email: 'Email not valid',
+		email: 'Must be a valid email address',
 		max: 'Field can not exceed ##REPLACE## characters',
 		min: 'Field should be ##REPLACE## or more characters',
 	};
