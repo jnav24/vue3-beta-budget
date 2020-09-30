@@ -144,6 +144,7 @@ export default defineComponent({
 
 			<SubNav class="w-full sm:w-auto mr-2 sm:mr-0">
 				<Button
+					color="primary"
 					class="mb-4 sm:mb-0 w-full sm:w-auto pr-2"
 					@on-click="showAddBudgetNav = !showAddBudgetNav"
 					@blur="showAddBudgetNav = false"
