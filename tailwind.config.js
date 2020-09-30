@@ -14,6 +14,9 @@ module.exports = {
 				primary: '#45ADA8',
 				secondary: '#EFC958',
 			},
+			maxHeight: {
+				'48': '12rem',
+			},
 			maxWidth: {
 				'32': '8rem',
 			},

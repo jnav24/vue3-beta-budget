@@ -139,7 +139,7 @@ export default defineComponent({
 		/>
 
 		<div
-			class="bg-white border border-gray-300 shadow-sm absolute transform top-0 left-0 rounded overflow-hidden w-full transition ease-out duration-300"
+			class="bg-white border border-gray-300 shadow-sm absolute transform top-0 left-0 rounded w-full transition ease-out duration-300 max-h-48 overflow-y-auto"
 			:class="{
 				'translate-y-12 opacity-100': selected,
 				'translate-y-0 opacity-0': !selected,
