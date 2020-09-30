@@ -41,7 +41,11 @@ export default defineComponent({
 					existing budgets will be unaffected.
 				</p>
 			</div>
-			<Button color="primary" class="w-full sm:w-auto" :is-disabled="true">
+			<Button
+				color="primary"
+				class="w-full sm:w-auto"
+				:is-disabled="true"
+			>
 				<SaveIcon class="w-5 h-5 mr-2" />
 				<span>Save</span>
 			</Button>
