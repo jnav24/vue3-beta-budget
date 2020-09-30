@@ -2,15 +2,21 @@
 import { defineComponent } from 'vue';
 import ArrowUpIcon from '@/components/ui-elements/icons/ArrowUpIcon.vue';
 import Card from '@/components/ui-elements/card/Card.vue';
+import CardContent from '@/components/ui-elements/card/CardContent.vue';
+import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
 import LineChart from '@/components/charts/LineChart.vue';
 import ReportsForm from '@/components/partials/ReportsForm.vue';
+import ReportsSummary from '@/components/partials/ReportsSummary.vue';
 
 export default defineComponent({
 	components: {
 		ArrowUpIcon,
 		Card,
+		CardContent,
+		CardHeader,
 		LineChart,
 		ReportsForm,
+		ReportsSummary,
 	},
 	setup() {
 		return {};
@@ -28,80 +34,35 @@ export default defineComponent({
 	<main class="container mx-auto py-6">
 		<div class="grid grid-cols-5 gap-4">
 			<aside class="col-span-1">
-				<Card>
-					<p class="text-gray-500 text-sm">YTD</p>
-					<div class="flex flex-row items-baseline">
-						<p class="text-xl text-gray-700">$253,983.23</p>
-						<p
-							class="text-sm flex flex-row items-baseline ml-2 space-x-1"
-						>
-							<ArrowUpIcon class="w-4 h-4 text-primary" />
-							<span class="text-primary">85%</span>
-						</p>
-					</div>
-				</Card>
+				<ReportsSummary title="YTD Gains/Loss" amount="253.983.23">
+					<ArrowUpIcon class="w-4 h-4 text-primary" />
+					<span class="text-primary">85%</span>
+				</ReportsSummary>
 
-				<Card>
-					<p class="text-gray-500 text-sm">Average</p>
-					<div class="flex flex-row items-baseline">
-						<p class="text-xl text-gray-700">$253,983.23</p>
-						<p
-							class="text-sm text-gray-500 flex flex-row items-baseline ml-2 space-x-1"
-						></p>
-					</div>
-				</Card>
+				<ReportsSummary title="Monthly Average" amount="253.983.23" />
 
-				<Card>
-					<p class="text-gray-500 text-sm">Beginning Balances</p>
-					<div class="flex flex-row items-baseline">
-						<p class="text-xl text-gray-700">$253,983.23</p>
-						<p
-							class="text-sm text-gray-500 flex flex-row items-baseline ml-2 space-x-1"
-						>
-							June
-						</p>
-					</div>
-				</Card>
+				<ReportsSummary title="Beginning Balances" amount="253.983.23">
+					June
+				</ReportsSummary>
 
-				<Card>
-					<p class="text-gray-500 text-sm">Ending Balances</p>
-					<div class="flex flex-row items-baseline">
-						<p class="text-xl text-gray-700">$253,983.23</p>
-						<p
-							class="text-sm text-gray-500 flex flex-row items-baseline ml-2 space-x-1"
-						>
-							June
-						</p>
-					</div>
-				</Card>
+				<ReportsSummary title="Ending Balances" amount="253.983.23">
+					June
+				</ReportsSummary>
 
-				<Card>
-					<p class="text-gray-500 text-sm">Highest Balances</p>
-					<div class="flex flex-row items-baseline">
-						<p class="text-xl text-gray-700">$253,983.23</p>
-						<p
-							class="text-sm text-gray-500 flex flex-row items-baseline ml-2 space-x-1"
-						>
-							June
-						</p>
-					</div>
-				</Card>
+				<ReportsSummary title="Highest Balances" amount="253.983.23">
+					June
+				</ReportsSummary>
 
-				<Card>
-					<p class="text-gray-500 text-sm">Lowest Balances</p>
-					<div class="flex flex-row items-baseline">
-						<p class="text-xl text-gray-700">$253,983.23</p>
-						<p
-							class="text-sm text-gray-500 flex flex-row items-baseline ml-2 space-x-1"
-						>
-							June
-						</p>
-					</div>
-				</Card>
+				<ReportsSummary title="Lowest Balances" amount="253.983.23">
+					June
+				</ReportsSummary>
 			</aside>
 
 			<Card class="col-span-4">
-				<LineChart />
+				<CardHeader>Hello</CardHeader>
+				<CardContent>
+					<LineChart />
+				</CardContent>
 			</Card>
 		</div>
 	</main>
