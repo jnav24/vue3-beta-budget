@@ -1,7 +1,6 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import Button from '@/components/ui-elements/form/Button.vue';
-import Card from '@/components/ui-elements/card/Card.vue';
 import Form from '@/components/ui-elements/form/Form';
 import Select from '@/components/ui-elements/form/Select.vue';
 import useTimestamp from '@/hooks/useTimestamp';
@@ -10,7 +9,6 @@ import { useTypesStore } from '@/store';
 export default defineComponent({
 	components: {
 		Button,
-		Card,
 		Form,
 		Select,
 	},
@@ -51,9 +49,9 @@ export default defineComponent({
 </script>
 
 <template>
-	<Card>
-		<Form v-model:valid="isFormValid">
-			<div class="mb-6">
+	<Form v-model:valid="isFormValid">
+		<div class="grid grid-cols-4 gap-8 mb-4">
+			<div>
 				<Select
 					:rules="form.type.rules"
 					:items="types"
@@ -64,7 +62,7 @@ export default defineComponent({
 				/>
 			</div>
 
-			<div class="mb-6">
+			<div>
 				<Select
 					:rules="form.year.rules"
 					:items="years"
@@ -73,7 +71,7 @@ export default defineComponent({
 				/>
 			</div>
 
-			<div class="mb-6">
+			<div>
 				<Select
 					:rules="form.start_month.rules"
 					:items="months"
@@ -82,7 +80,7 @@ export default defineComponent({
 				/>
 			</div>
 
-			<div class="mb-6">
+			<div>
 				<Select
 					:rules="form.end_month.rules"
 					:items="months"
@@ -90,8 +88,46 @@ export default defineComponent({
 					v-model:value="form.end_month.value"
 				/>
 			</div>
+		</div>
 
-			<Button class="w-full" :is-disabled="!isFormValid">Search</Button>
-		</Form>
-	</Card>
+		<div class="grid grid-cols-4 gap-8">
+			<div>
+				<Select
+					:rules="form.type.rules"
+					:items="types"
+					item-value="slug"
+					item-label="name"
+					label="Expense Type"
+					v-model:value="form.type.value"
+				/>
+			</div>
+
+			<div>
+				<Select
+					:rules="form.year.rules"
+					:items="years"
+					label="Year"
+					v-model:value="form.year.value"
+				/>
+			</div>
+
+			<div>
+				<Select
+					:rules="form.start_month.rules"
+					:items="months"
+					label="Start Month"
+					v-model:value="form.start_month.value"
+				/>
+			</div>
+		</div>
+
+		<hr class="my-8" />
+
+		<div class="flex flew-row justify-center items-center mt-6">
+			<Button color="secondary" :is-disabled="!isFormValid">
+				Search
+			</Button>
+			<Button>Reset</Button>
+		</div>
+	</Form>
 </template>
