@@ -91,6 +91,20 @@ export default defineComponent({
 		</div>
 
 		<div class="grid grid-cols-4 gap-8">
+			<!--
+			 every bill type has the following fields:
+			 input; search by keywords
+			 select; budget type
+
+			 bill types the only get the input field:
+			 incomes
+			 miscellaneous
+
+			 vehicles get the following
+			 input; search by keywords
+			 select; budget type
+			 select; choose a vehicle
+			--->
 			<div>
 				<Select
 					:rules="form.type.rules"

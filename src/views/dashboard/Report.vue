@@ -7,6 +7,7 @@ import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
 import LineChart from '@/components/charts/LineChart.vue';
 import ReportsForm from '@/components/partials/ReportsForm.vue';
 import ReportsSummary from '@/components/partials/ReportsSummary.vue';
+import ReportsTable from '@/components/tables/ReportsTable.vue';
 
 export default defineComponent({
 	components: {
@@ -17,6 +18,7 @@ export default defineComponent({
 		LineChart,
 		ReportsForm,
 		ReportsSummary,
+		ReportsTable,
 	},
 	setup() {
 		return {};
@@ -65,5 +67,9 @@ export default defineComponent({
 				</CardContent>
 			</Card>
 		</div>
+
+		<ReportsTable />
+		<ReportsTable />
+		<ReportsTable />
 	</main>
 </template>
