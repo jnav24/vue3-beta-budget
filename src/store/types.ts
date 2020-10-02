@@ -26,6 +26,7 @@ export const useTypesStore = createStore({
 	}),
 	actions: {
 		async getAllBillTypes() {
+			this.banks = [{ id: 4, name: 'Checking', slug: 'checking' }];
 			this.bills = [
 				{
 					id: 4,
@@ -51,6 +52,22 @@ export const useTypesStore = createStore({
 					updated_at: '2019-01-28 05:03:49',
 					save_type: 0,
 				},
+				{
+					id: 2,
+					name: 'Incomes',
+					slug: 'incomes',
+					created_at: '2019-01-28 05:03:49',
+					updated_at: '2019-01-28 05:03:49',
+					save_type: 0,
+				},
+				{
+					id: 3,
+					name: 'Vehicles',
+					slug: 'vehicles',
+					created_at: '2019-01-28 05:03:49',
+					updated_at: '2019-01-28 05:03:49',
+					save_type: 0,
+				},
 			];
 		},
 	},
@@ -65,7 +82,7 @@ type BillTypesInterface = {
 	updated_at?: string;
 };
 
-type CommonExpenseTypeInterface = {
+export type CommonExpenseTypeInterface = {
 	id: number;
 	name: string;
 	slug: string;

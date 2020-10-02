@@ -1,11 +1,11 @@
 <script lang="ts">
-import { computed, defineComponent, reactive, ref } from 'vue';
+import { computed, defineComponent, reactive, ref, ComputedRef } from 'vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import Form from '@/components/ui-elements/form/Form';
 import Input from '@/components/ui-elements/form/Input.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
 import useTimestamp from '@/hooks/useTimestamp';
-import { useTypesStore } from '@/store';
+import { useTypesStore, CommonExpenseTypeInterface } from '@/store';
 
 export default defineComponent({
 	components: {
@@ -56,10 +56,16 @@ export default defineComponent({
 		const years: any[] = [{ value: '2020', label: '2020' }];
 
 		const billName = computed(() => {
-			return types.find(obj => obj.value === form.type.value).value ?? '';
+			const type = types.find(obj => obj.slug === form.type.value);
+			return type ? type.name : '';
 		});
 
+		const billTypes: ComputedRef<CommonExpenseTypeInterface[]> = computed(
+			() => (typesStore as any)[form.type.value] ?? []
+		);
+
 		return {
+			billTypes,
 			form,
 			billName,
 			isFormValid,
@@ -124,13 +130,17 @@ export default defineComponent({
 					label="Vehicle"
 					v-model:value="form.vehicle.value"
 				/>
+
+				<!-- @todo search by notes? -->
 			</div>
 
 			<div v-if="showTypesSelect">
 				<Select
 					:rules="form.year.rules"
-					:items="years"
+					:items="billTypes"
 					:label="`${billName} Type`"
+					item-value="slug"
+					item-label="name"
 					v-model:value="form.year.value"
 				/>
 			</div>
@@ -140,11 +150,6 @@ export default defineComponent({
 					label="Search by keywords"
 					:value="form.keywords.value"
 				/>
-			</div>
-
-			<div v-if="form.type.value === 'vehicles'">
-				<!-- @todo search by notes? -->
-				<p>Search by notes?</p>
 			</div>
 		</div>
 
