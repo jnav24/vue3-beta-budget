@@ -68,8 +68,9 @@ export default defineComponent({
 			</Card>
 		</div>
 
-		<ReportsTable />
-		<ReportsTable />
-		<ReportsTable />
+		<ReportsTable :data="[]" type="banks" />
+		<ReportsTable :data="[]" type="vehicles" />
+		<ReportsTable :data="[]" type="credit-cards" />
+		<ReportsTable :data="[]" type="Banks" />
 	</main>
 </template>

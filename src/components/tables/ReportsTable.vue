@@ -4,6 +4,8 @@ import Card from '@/components/ui-elements/card/Card.vue';
 import CardContent from '@/components/ui-elements/card/CardContent.vue';
 import CardFooter from '@/components/ui-elements/card/CardFooter.vue';
 import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
+import WarningIcon from '@/components/ui-elements/icons/WarningIcon.vue';
+import useUtils from '@/hooks/useUtils';
 
 export default defineComponent({
 	components: {
@@ -11,31 +13,55 @@ export default defineComponent({
 		CardContent,
 		CardFooter,
 		CardHeader,
+		WarningIcon,
 	},
-	props: {},
+	props: {
+		data: {
+			required: true,
+			type: Array,
+		},
+		type: {
+			required: true,
+			type: String,
+		},
+	},
 	setup(props) {
+		const { toTitleCase } = useUtils();
 		const headers: string[] = [];
 
 		onMounted(() => {
-			console.log(props);
+			if (props.type === 'vehicles') {
+				headers.push('Vehicle');
+				headers.push('Mileage');
+			} else {
+				headers.push('Name');
+			}
+
+			if (props.type !== 'miscellaneous') {
+				headers.push('Type');
+			}
+
+			if (!['banks', 'investments'].includes(props.type)) {
+				headers.push('Paid Date');
+			}
+
+			if (
+				['vehicles', 'credit-cards', 'loans', 'housing'].includes(
+					props.type
+				)
+			) {
+				headers.push('Balance');
+			}
+
+			headers.push('Amount');
 		});
 
-		return { headers };
+		return { headers, toTitleCase };
 	},
 });
 </script>
 
 <template>
-	<!--
-		All Bill types will have the following
-		name (except vehicles)
-		vehicle (only vehicles)
-		type (except misc)
-		paid date (only for spending bill types)
-		amount
-		mileage (vehicles only)
-		balance (vehicles, credit card, loans, housing)
-	-->
 	<section class="mb-24 px-4 sm:px-0">
 		<div class="mt-4 flex flex-row items-center justify-between">
 			<h2 class="text-2xl text-gray-600 font-body">
@@ -45,19 +71,37 @@ export default defineComponent({
 
 		<Card>
 			<CardHeader class="bg-gray-100 rounded-t">
-				<div :class="`grid gap-2 grid-cols-2 sm:grid-cols-4`">
-					<div>
-						Header
+				<div
+					:class="
+						`grid gap-2 grid-cols-2 sm:grid-cols-${headers.length}`
+					"
+				>
+					<div v-for="(header, index) in headers" :key="index">
+						{{ header }}
 					</div>
 				</div>
 			</CardHeader>
 
 			<CardContent>
-				<p>Content goes here</p>
-				<p>Content goes here</p>
-				<p>Content goes here</p>
-				<p>Content goes here</p>
-				<p>Content goes here</p>
+				<div
+					v-if="!data.length"
+					class="py-32 text-gray-500 flex flex-col items-center justify-center"
+				>
+					<WarningIcon class="w-8 h-8" />
+					<span>{{ toTitleCase(type) }} is empty.</span>
+				</div>
+
+				<div
+					:class="
+						`grid gap-2 grid-cols-2 sm:grid-cols-${headers.length} text-gray-700 py-4 even:bg-gray-100 items-center`
+					"
+				>
+					<p>Content goes here</p>
+					<p>Content goes here</p>
+					<p>Content goes here</p>
+					<p>Content goes here</p>
+					<p>Content goes here</p>
+				</div>
 			</CardContent>
 
 			<CardFooter
