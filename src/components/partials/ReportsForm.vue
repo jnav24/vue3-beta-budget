@@ -19,6 +19,10 @@ export default defineComponent({
 		const typesStore = useTypesStore();
 
 		const form = reactive({
+			bill_type: {
+				rules: ['required'],
+				value: '',
+			},
 			end_month: {
 				rules: [],
 				value: '12',
@@ -32,7 +36,7 @@ export default defineComponent({
 				value: '01',
 			},
 			type: {
-				rules: ['required'],
+				rules: [],
 				value: '',
 			},
 			vehicle: {
@@ -46,22 +50,24 @@ export default defineComponent({
 		});
 		const isFormValid = ref(false);
 		const showNameInput = computed(
-			() => !['vehicles'].includes(form.type.value)
+			() => !['vehicles'].includes(form.bill_type.value)
 		);
 		const showTypesSelect = computed(
-			() => !['miscellaneous', 'incomes'].includes(form.type.value)
+			() => !['miscellaneous', 'incomes'].includes(form.bill_type.value)
 		);
-		const types: any[] = typesStore.bills;
+		const billTypes: any[] = typesStore.bills;
 		const vehicles: any[] = [];
 		const years: any[] = [{ value: '2020', label: '2020' }];
 
 		const billName = computed(() => {
-			const type = types.find(obj => obj.slug === form.type.value);
+			const type = billTypes.find(
+				obj => obj.slug === form.bill_type.value
+			);
 			return type ? type.name : '';
 		});
 
-		const billTypes: ComputedRef<CommonExpenseTypeInterface[]> = computed(
-			() => (typesStore as any)[form.type.value] ?? []
+		const types: ComputedRef<CommonExpenseTypeInterface[]> = computed(
+			() => (typesStore as any)[form.bill_type.value] ?? []
 		);
 
 		return {
@@ -85,12 +91,12 @@ export default defineComponent({
 		<div class="grid grid-cols-4 gap-8 mb-4">
 			<div>
 				<Select
-					:rules="form.type.rules"
-					:items="types"
+					:rules="form.bill_type.rules"
+					:items="billTypes"
 					item-value="slug"
 					item-label="name"
 					label="Expense Type"
-					v-model:value="form.type.value"
+					v-model:value="form.bill_type.value"
 				/>
 			</div>
 
@@ -122,8 +128,8 @@ export default defineComponent({
 			</div>
 		</div>
 
-		<div v-if="form.type.value.length" class="grid grid-cols-4 gap-8">
-			<div v-if="form.type.value === 'vehicles'">
+		<div v-if="form.bill_type.value.length" class="grid grid-cols-4 gap-8">
+			<div v-if="form.bill_type.value === 'vehicles'">
 				<Select
 					:rules="form.vehicle.rules"
 					:items="vehicles"
@@ -136,12 +142,12 @@ export default defineComponent({
 
 			<div v-if="showTypesSelect">
 				<Select
-					:rules="form.year.rules"
-					:items="billTypes"
+					:rules="form.type.rules"
+					:items="types"
 					:label="`${billName} Type`"
 					item-value="slug"
 					item-label="name"
-					v-model:value="form.year.value"
+					v-model:value="form.type.value"
 				/>
 			</div>
 
