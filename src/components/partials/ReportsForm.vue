@@ -1,7 +1,8 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, reactive, ref } from 'vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import Form from '@/components/ui-elements/form/Form';
+import Input from '@/components/ui-elements/form/Input.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
 import useTimestamp from '@/hooks/useTimestamp';
 import { useTypesStore } from '@/store';
@@ -10,15 +11,21 @@ export default defineComponent({
 	components: {
 		Button,
 		Form,
+		Input,
 		Select,
 	},
 	setup() {
 		const { getAllMonths } = useTimestamp();
 		const typesStore = useTypesStore();
-		const form = {
+
+		const form = reactive({
 			end_month: {
 				rules: [],
 				value: '12',
+			},
+			keywords: {
+				rules: [],
+				value: '',
 			},
 			start_month: {
 				rules: {},
@@ -28,20 +35,39 @@ export default defineComponent({
 				rules: ['required'],
 				value: '',
 			},
+			vehicle: {
+				rules: [],
+				value: '',
+			},
 			year: {
 				rules: ['required'],
 				value: '',
 			},
-		};
+		});
 		const isFormValid = ref(false);
+		const showNameInput = computed(
+			() => !['vehicles'].includes(form.type.value)
+		);
+		const showTypesSelect = computed(
+			() => !['miscellaneous', 'incomes'].includes(form.type.value)
+		);
 		const types: any[] = typesStore.bills;
+		const vehicles: any[] = [];
 		const years: any[] = [{ value: '2020', label: '2020' }];
+
+		const billName = computed(() => {
+			return types.find(obj => obj.value === form.type.value).value ?? '';
+		});
 
 		return {
 			form,
+			billName,
 			isFormValid,
 			months: getAllMonths('abbr'),
+			showNameInput,
+			showTypesSelect,
 			types,
+			vehicles,
 			years,
 		};
 	},
@@ -90,48 +116,35 @@ export default defineComponent({
 			</div>
 		</div>
 
-		<div class="grid grid-cols-4 gap-8">
-			<!--
-			 every bill type has the following fields:
-			 input; search by keywords
-			 select; budget type
-
-			 bill types the only get the input field:
-			 incomes
-			 miscellaneous
-
-			 vehicles get the following
-			 input; search by keywords
-			 select; budget type
-			 select; choose a vehicle
-			--->
-			<div>
+		<div v-if="form.type.value.length" class="grid grid-cols-4 gap-8">
+			<div v-if="form.type.value === 'vehicles'">
 				<Select
-					:rules="form.type.rules"
-					:items="types"
-					item-value="slug"
-					item-label="name"
-					label="Expense Type"
-					v-model:value="form.type.value"
+					:rules="form.vehicle.rules"
+					:items="vehicles"
+					label="Vehicle"
+					v-model:value="form.vehicle.value"
 				/>
 			</div>
 
-			<div>
+			<div v-if="showTypesSelect">
 				<Select
 					:rules="form.year.rules"
 					:items="years"
-					label="Year"
+					:label="`${billName} Type`"
 					v-model:value="form.year.value"
 				/>
 			</div>
 
-			<div>
-				<Select
-					:rules="form.start_month.rules"
-					:items="months"
-					label="Start Month"
-					v-model:value="form.start_month.value"
+			<div v-if="showNameInput">
+				<Input
+					label="Search by keywords"
+					:value="form.keywords.value"
 				/>
+			</div>
+
+			<div v-if="form.type.value === 'vehicles'">
+				<!-- @todo search by notes? -->
+				<p>Search by notes?</p>
 			</div>
 		</div>
 
