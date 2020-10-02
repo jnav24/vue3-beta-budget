@@ -45,13 +45,11 @@ export default defineComponent({
 		const error = ref(false);
 		const selected = ref(false);
 		const dropDownItems = ref(null);
-		const currentValue = ref('');
 		const labelId = ref(null);
 		const FormContext = inject<any>(FormProvider, undefined);
 
 		onMounted(() => {
 			(dropDownItems.value as any).classList.add('h-0', 'py-0');
-			currentValue.value = props.value;
 			if (props.label && !!FormContext) {
 				labelId.value = FormContext.setupForm(props.label, props.rules);
 				FormContext.validateField(labelId.value, props.value);
@@ -59,12 +57,12 @@ export default defineComponent({
 		});
 
 		const isValueSelected = computed(
-			() => currentValue.value && currentValue.value.length
+			() => props.value && props.value.length
 		);
 
 		const getPlaceholder = computed(() => {
 			const text: any = props.items.find(
-				(obj: any) => currentValue.value === obj[props.itemValue]
+				(obj: any) => props.value === obj[props.itemValue]
 			);
 
 			if (isValueSelected.value && text && text[props.itemLabel]) {
@@ -78,13 +76,11 @@ export default defineComponent({
 			if (FormContext) {
 				error.value = FormContext.validateField(labelId.value, value);
 			}
-			currentValue.value = value;
 			emit('update:value', value);
 		};
 
 		const blurEvent = () => {
 			selected.value = false;
-			setValue(currentValue.value);
 		};
 
 		watch(selected, n => {
@@ -104,7 +100,6 @@ export default defineComponent({
 
 		return {
 			blurEvent,
-			currentValue,
 			dropDownItems,
 			error,
 			getPlaceholder,

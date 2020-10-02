@@ -70,12 +70,18 @@ export default defineComponent({
 			() => (typesStore as any)[form.bill_type.value] ?? []
 		);
 
+		const resetForm = () => {
+			form.bill_type.value = '';
+			form.year.value = '';
+		};
+
 		return {
 			billTypes,
 			form,
 			billName,
 			isFormValid,
 			months: getAllMonths('abbr'),
+			resetForm,
 			showNameInput,
 			showTypesSelect,
 			types,
@@ -165,7 +171,7 @@ export default defineComponent({
 			<Button color="secondary" :is-disabled="!isFormValid">
 				Search
 			</Button>
-			<Button>Reset</Button>
+			<Button @click="resetForm()">Reset</Button>
 		</div>
 	</Form>
 </template>
