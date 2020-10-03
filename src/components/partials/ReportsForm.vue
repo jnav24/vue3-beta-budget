@@ -94,7 +94,7 @@ export default defineComponent({
 
 <template>
 	<Form v-model:valid="isFormValid">
-		<div class="grid grid-cols-4 gap-8 mb-4">
+		<div class="grid grid-cols-1 sm:grid-cols-4 gap-8 mb-4 px-4 sm:px-0">
 			<div>
 				<Select
 					:rules="form.bill_type.rules"
@@ -134,7 +134,10 @@ export default defineComponent({
 			</div>
 		</div>
 
-		<div v-if="form.bill_type.value.length" class="grid grid-cols-4 gap-8">
+		<div
+			v-if="form.bill_type.value.length"
+			class="grid grid-cols-1 sm:grid-cols-4 gap-8 px-4 sm:px-0"
+		>
 			<div v-if="form.bill_type.value === 'vehicles'">
 				<Select
 					:rules="form.vehicle.rules"
@@ -167,11 +170,15 @@ export default defineComponent({
 
 		<hr class="my-8" />
 
-		<div class="flex flew-row justify-center items-center mt-6">
-			<Button color="secondary" :is-disabled="!isFormValid">
+		<div class="flex flex-col sm:flew-row justify-center items-center mt-6 px-4 sm:px-0">
+			<Button
+				class="w-full sm:w-auto mb-2 sm:mb-0"
+				color="secondary"
+				:is-disabled="!isFormValid"
+			>
 				Search
 			</Button>
-			<Button @click="resetForm()">Reset</Button>
+			<Button class="w-full sm:w-auto" @click="resetForm()">Reset</Button>
 		</div>
 	</Form>
 </template>
