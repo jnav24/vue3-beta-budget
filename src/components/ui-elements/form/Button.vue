@@ -2,6 +2,7 @@
 import { defineComponent, onMounted, ref } from 'vue';
 
 enum ColorEnum {
+	'default',
 	'primary',
 	'secondary',
 }
@@ -9,7 +10,7 @@ enum ColorEnum {
 export default defineComponent({
 	props: {
 		color: {
-			default: 'primary',
+			default: 'default',
 			type: String,
 		},
 		isDisabled: {
@@ -18,7 +19,7 @@ export default defineComponent({
 		},
 	},
 	setup(props) {
-		const buttonColor = ref('primary');
+		const buttonColor = ref('default');
 
 		onMounted(() => {
 			if (Object.values(ColorEnum).includes(props.color)) {
@@ -36,6 +37,8 @@ export default defineComponent({
 		@click="$emit('on-click')"
 		class="focus:outline-none focus:shadow-outline transition duration-150 py-3 px-6 rounded-md text-sm mr-2"
 		:class="{
+			'bg-white hover:bg-gray-100 active:bg-gray-200 text-gray-700 border-gray-400 border':
+				buttonColor === 'default' && !isDisabled,
 			'bg-primary hover:bg-opacity-85 active:bg-dark-primary text-white':
 				buttonColor === 'primary' && !isDisabled,
 			'bg-secondary hover:bg-opacity-85 active:bg-dark-secondary text-gray-700':

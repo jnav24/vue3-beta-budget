@@ -1,7 +1,6 @@
 <script lang="ts">
 import { defineComponent, ref, inject, onMounted } from 'vue';
 import { FormProvider } from '@/components/ui-elements/form/Form';
-import useFormValidation from '@/hooks/useFormValidation';
 import Label from '@/components/ui-elements/form/Label.vue';
 
 export default defineComponent({
@@ -29,40 +28,23 @@ export default defineComponent({
 	setup(props, { emit }) {
 		const error = ref(null);
 		const labelId = ref(null);
-		const { validateInput } = useFormValidation();
-		const { isFormValid, setFormElement, setFormId } = inject<any>(
-			FormProvider
-		);
+		const FormContext = inject<any>(FormProvider, undefined);
 
 		onMounted(() => {
-			labelId.value = setFormId(props.label);
-			setFormElement(labelId.value, !props.rules);
+			if (props.label && !!FormContext) {
+				labelId.value = FormContext.setupForm(props.label, props.rules);
+				FormContext.validateField(labelId.value, props.value);
+			}
 		});
 
-		const updateValue = (e: string) => {
-			let tempValid = true;
-
-			// @todo update this
-			for (const [type, message] of Object.entries(props.rules)) {
-				const isValid = validateInput(type, e);
-
-				if (!tempValid) {
-					continue;
-				}
-
-				if ((!isValid || typeof isValid !== 'boolean') && tempValid) {
-					error.value = message;
-					tempValid = false;
-					continue;
-				}
-
-				error.value = null;
-				tempValid = true;
+		const updateValue = (inputValue: string) => {
+			if (FormContext) {
+				error.value = FormContext.validateField(
+					labelId.value,
+					inputValue
+				);
 			}
-
-			setFormElement(labelId.value, tempValid);
-			isFormValid();
-			emit('update:value', e);
+			emit('update:value', inputValue);
 		};
 
 		return {

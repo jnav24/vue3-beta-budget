@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import { useBudgetStore } from '@/store/budget';
-import { useTemplateStore } from '@/store/template';
+import { useBudgetStore, useTemplateStore, useTypesStore } from '@/store';
 
 const routes: Array<RouteRecordRaw> = [
 	{
@@ -28,8 +27,10 @@ const routes: Array<RouteRecordRaw> = [
 		beforeEnter: (to, from, next) => {
 			const budgetStore = useBudgetStore();
 			const templateStore = useTemplateStore();
+			const typesStore = useTypesStore();
 			budgetStore.getBudgets();
 			templateStore.getTemplates();
+			typesStore.getAllBillTypes();
 			next();
 		},
 		children: [

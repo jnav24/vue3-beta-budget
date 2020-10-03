@@ -14,7 +14,7 @@ import SubNav from '@/components/partials/SubNav.vue';
 import SubNavItems from '@/components/partials/SubNavItems.vue';
 import TrendDownIcon from '@/components/ui-elements/icons/TrendDownIcon.vue';
 import TrendUpIcon from '@/components/ui-elements/icons/TrendUpIcon.vue';
-import { useBudgetStore } from '@/store/budget';
+import { useBudgetStore } from '@/store';
 import { useRouter } from 'vue-router';
 import useUtils from '@/hooks/useUtils';
 import YTDSummary from '@/components/partials/YTDSummary.vue';
@@ -144,6 +144,7 @@ export default defineComponent({
 
 			<SubNav class="w-full sm:w-auto mr-2 sm:mr-0">
 				<Button
+					color="primary"
 					class="mb-4 sm:mb-0 w-full sm:w-auto pr-2"
 					@on-click="showAddBudgetNav = !showAddBudgetNav"
 					@blur="showAddBudgetNav = false"
