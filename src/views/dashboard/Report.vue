@@ -34,9 +34,9 @@ export default defineComponent({
 	</div>
 
 	<main class="container mx-auto px-4 sm:px-0 py-6">
-		<div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-			<aside class="col-span-1 md:col-span-1">
-				<div class="block sm:grid-cols-3 sm:grid sm:gap-2 md:block">
+		<div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
+			<aside class="col-span-1 lg:col-span-1">
+				<div class="block sm:grid-cols-3 sm:grid sm:gap-2 lg:block">
 					<ReportsSummary title="YTD Gains/Loss" amount="253.983.23">
 						<ArrowUpIcon class="w-4 h-4 text-primary" />
 						<span class="text-primary">85%</span>
@@ -71,7 +71,7 @@ export default defineComponent({
 				</div>
 			</aside>
 
-			<Card class="col-span-1 md:col-span-4 hidden sm:grid">
+			<Card class="col-span-1 lg:col-span-4 hidden sm:grid">
 				<CardHeader>Hello</CardHeader>
 				<CardContent>
 					<LineChart />
