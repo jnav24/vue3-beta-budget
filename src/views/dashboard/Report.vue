@@ -1,6 +1,5 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import ArrowUpIcon from '@/components/ui-elements/icons/ArrowUpIcon.vue';
 import Card from '@/components/ui-elements/card/Card.vue';
 import CardContent from '@/components/ui-elements/card/CardContent.vue';
 import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
@@ -11,7 +10,6 @@ import ReportsTable from '@/components/tables/ReportsTable.vue';
 
 export default defineComponent({
 	components: {
-		ArrowUpIcon,
 		Card,
 		CardContent,
 		CardHeader,
@@ -37,10 +35,11 @@ export default defineComponent({
 		<div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
 			<aside class="col-span-1 lg:col-span-1">
 				<div class="block sm:grid-cols-3 sm:grid sm:gap-2 lg:block">
-					<ReportsSummary title="YTD Gains/Loss" amount="253.983.23">
-						<ArrowUpIcon class="w-4 h-4 text-primary" />
-						<span class="text-primary">85%</span>
-					</ReportsSummary>
+					<ReportsSummary
+						title="YTD Gains/Loss"
+						amount="253.983.23"
+						percentage="85"
+					/>
 
 					<ReportsSummary
 						title="Monthly Average"
@@ -50,24 +49,26 @@ export default defineComponent({
 					<ReportsSummary
 						title="Beginning Balances"
 						amount="253.983.23"
-					>
-						June
-					</ReportsSummary>
+						text="June"
+					/>
 
-					<ReportsSummary title="Ending Balances" amount="253.983.23">
-						June
-					</ReportsSummary>
+					<ReportsSummary
+						title="Ending Balances"
+						amount="253.983.23"
+						text="March"
+					/>
 
 					<ReportsSummary
 						title="Highest Balances"
 						amount="253.983.23"
-					>
-						June
-					</ReportsSummary>
+						text="August"
+					/>
 
-					<ReportsSummary title="Lowest Balances" amount="253.983.23">
-						June
-					</ReportsSummary>
+					<ReportsSummary
+						title="Lowest Balances"
+						amount="253.983.23"
+						text="October"
+					/>
 				</div>
 			</aside>
 
