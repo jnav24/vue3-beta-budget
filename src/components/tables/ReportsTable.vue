@@ -77,7 +77,7 @@ export default defineComponent({
 </script>
 
 <template>
-	<section class="mb-24 px-4 sm:px-0">
+	<section class="mb-24">
 		<div class="mt-4 flex flex-row items-center justify-between">
 			<h2 class="text-2xl text-gray-600 font-body">
 				January
@@ -91,7 +91,16 @@ export default defineComponent({
 						`grid gap-2 grid-cols-2 sm:grid-cols-${headers.length}`
 					"
 				>
-					<div v-for="(header, index) in headers" :key="index">
+					<div
+						class="col-span-1"
+						:class="{
+							'hidden sm:block': !['Name', 'Amount', 'Vehicle'].includes(
+								header
+							),
+						}"
+						v-for="(header, index) in headers"
+						:key="index"
+					>
 						{{ header }}
 					</div>
 				</div>
@@ -117,6 +126,11 @@ export default defineComponent({
 						v-for="(header, index) in headers"
 						:key="index"
 						class="col-span-1"
+						:class="{
+							'hidden sm:block': !['Name', 'Amount', 'Vehicle'].includes(
+								header
+							),
+						}"
 					>
 						<!-- @todo get elements from data -->
 						{{ header }}
