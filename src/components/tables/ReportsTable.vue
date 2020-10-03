@@ -25,11 +25,12 @@ export default defineComponent({
 			type: String,
 		},
 	},
-	setup(props) {
+	setup(props, { emit }) {
 		const { toTitleCase } = useUtils();
 		const headers: string[] = [];
+		let total = 0;
 
-		onMounted(() => {
+		const setHeaders = () => {
 			if (props.type === 'vehicles') {
 				headers.push('Vehicle');
 				headers.push('Mileage');
@@ -54,9 +55,23 @@ export default defineComponent({
 			}
 
 			headers.push('Amount');
+		};
+
+		const setTotalAmount = () => {
+			total = (props.data as Array<
+				Record<string, { amount: number }>
+			>).reduce((acc, item) => {
+				return acc + Number(item.amount);
+			}, 0);
+			emit('set-table-total', total);
+		};
+
+		onMounted(() => {
+			setHeaders();
+			setTotalAmount();
 		});
 
-		return { headers, toTitleCase };
+		return { headers, total, toTitleCase };
 	},
 });
 </script>
@@ -85,22 +100,27 @@ export default defineComponent({
 			<CardContent>
 				<div
 					v-if="!data.length"
-					class="py-32 text-gray-500 flex flex-col items-center justify-center"
+					class="py-16 text-gray-500 flex flex-col items-center justify-center"
 				>
 					<WarningIcon class="w-8 h-8" />
 					<span>{{ toTitleCase(type) }} is empty.</span>
 				</div>
 
 				<div
+					v-for="item in data"
+					:key="item.id"
 					:class="
 						`grid gap-2 grid-cols-2 sm:grid-cols-${headers.length} text-gray-700 py-4 even:bg-gray-100 items-center`
 					"
 				>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
+					<div
+						v-for="(header, index) in headers"
+						:key="index"
+						class="col-span-1"
+					>
+						<!-- @todo get elements from data -->
+						{{ header }}
+					</div>
 				</div>
 			</CardContent>
 
@@ -108,7 +128,9 @@ export default defineComponent({
 				class="bg-gray-100 overflow-hidden pt-2 rounded-b text-right"
 			>
 				<span class="text-gray-600 mr-2 text-base">Total</span>
-				<span class="font-bold text-gray-700 text-lg">$12,324.23</span>
+				<span class="font-bold text-gray-700 text-lg">
+					${{ total }}
+				</span>
 			</CardFooter>
 		</Card>
 	</section>
