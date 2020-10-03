@@ -170,7 +170,9 @@ export default defineComponent({
 
 		<hr class="my-8" />
 
-		<div class="flex flex-col sm:flew-row justify-center items-center mt-6 px-4 sm:px-0">
+		<div
+			class="flex flex-col sm:flew-row justify-center items-center mt-6 px-4 sm:px-0"
+		>
 			<Button
 				class="w-full sm:w-auto mb-2 sm:mb-0"
 				color="secondary"
