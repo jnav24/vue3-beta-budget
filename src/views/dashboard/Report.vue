@@ -34,33 +34,44 @@ export default defineComponent({
 	</div>
 
 	<main class="container mx-auto px-4 sm:px-0 py-6">
-		<div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
-			<aside class="col-span-1">
-				<ReportsSummary title="YTD Gains/Loss" amount="253.983.23">
-					<ArrowUpIcon class="w-4 h-4 text-primary" />
-					<span class="text-primary">85%</span>
-				</ReportsSummary>
+		<div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+			<aside class="col-span-1 md:col-span-1">
+				<div class="block sm:grid-cols-3 sm:grid sm:gap-2 md:block">
+					<ReportsSummary title="YTD Gains/Loss" amount="253.983.23">
+						<ArrowUpIcon class="w-4 h-4 text-primary" />
+						<span class="text-primary">85%</span>
+					</ReportsSummary>
 
-				<ReportsSummary title="Monthly Average" amount="253.983.23" />
+					<ReportsSummary
+						title="Monthly Average"
+						amount="253.983.23"
+					/>
 
-				<ReportsSummary title="Beginning Balances" amount="253.983.23">
-					June
-				</ReportsSummary>
+					<ReportsSummary
+						title="Beginning Balances"
+						amount="253.983.23"
+					>
+						June
+					</ReportsSummary>
 
-				<ReportsSummary title="Ending Balances" amount="253.983.23">
-					June
-				</ReportsSummary>
+					<ReportsSummary title="Ending Balances" amount="253.983.23">
+						June
+					</ReportsSummary>
 
-				<ReportsSummary title="Highest Balances" amount="253.983.23">
-					June
-				</ReportsSummary>
+					<ReportsSummary
+						title="Highest Balances"
+						amount="253.983.23"
+					>
+						June
+					</ReportsSummary>
 
-				<ReportsSummary title="Lowest Balances" amount="253.983.23">
-					June
-				</ReportsSummary>
+					<ReportsSummary title="Lowest Balances" amount="253.983.23">
+						June
+					</ReportsSummary>
+				</div>
 			</aside>
 
-			<Card class="col-span-4 hidden sm:grid">
+			<Card class="col-span-1 md:col-span-4 hidden sm:grid">
 				<CardHeader>Hello</CardHeader>
 				<CardContent>
 					<LineChart />
