@@ -94,9 +94,11 @@ export default defineComponent({
 					<div
 						class="col-span-1"
 						:class="{
-							'hidden sm:block': !['Name', 'Amount', 'Vehicle'].includes(
-								header
-							),
+							'hidden sm:block': ![
+								'Name',
+								'Amount',
+								'Vehicle',
+							].includes(header),
 						}"
 						v-for="(header, index) in headers"
 						:key="index"
@@ -127,9 +129,11 @@ export default defineComponent({
 						:key="index"
 						class="col-span-1"
 						:class="{
-							'hidden sm:block': !['Name', 'Amount', 'Vehicle'].includes(
-								header
-							),
+							'hidden sm:block': ![
+								'Name',
+								'Amount',
+								'Vehicle',
+							].includes(header),
 						}"
 					>
 						<!-- @todo get elements from data -->
