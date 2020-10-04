@@ -1,10 +1,12 @@
 <script lang="ts">
-import { defineComponent, ref, reactive } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import { Form } from '@/components/ui-elements';
+import Button from '@/components/ui-elements/form/Button.vue';
 import Input from '@/components/ui-elements/form/Input.vue';
 
 export default defineComponent({
 	components: {
+		Button,
 		Form,
 		Input,
 	},
@@ -12,12 +14,6 @@ export default defineComponent({
 		const form = reactive({
 			email: {
 				rules: ['required', 'email'],
-				value: '',
-			},
-			password: {
-				rules: {
-					required: 'Password is required',
-				},
 				value: '',
 			},
 		});
@@ -42,45 +38,39 @@ export default defineComponent({
 				/>
 			</div>
 		</div>
+
 		<div class="pb-6 px-0 sm:px-6 sm:shadow-sm">
 			<h1
-				class="text-center text-2xl text-gray-800 sm:text-gray-600 font-header mb-8"
+				class="text-center text-2xl text-gray-800 sm:text-gray-600 font-header"
 			>
-				Welcome Back
+				Forgot Password?
 			</h1>
+			<p class="text-sm text-center text-gray-600 mb-8">
+				Enter your email and we will send you a link with instructions
+				on resetting your password.
+			</p>
+
 			<Form v-model:valid="valid">
 				<Input
 					label="Email"
 					v-model:value="form.email.value"
 					:rules="form.email.rules"
 				/>
-				<Input
-					label="Password"
-					type="password"
-					v-model:value="form.password.value"
-					:rules="form.password.rules"
-				/>
-				<button
-					class="w-full py-2 rounded"
-					type="button"
-					:disabled="!valid"
-					:class="{
-						'bg-secondary shadow-md': valid,
-						'bg-gray-300 text-gray-600': !valid,
-					}"
-				>
-					Login
-				</button>
+
+				<Button :is-disabled="!valid" color="secondary">
+					Reset Password
+				</Button>
 			</Form>
 		</div>
+
 		<div
 			class="py-4 px-6 sm:bg-gray-100 flex flex-row justify-center sm:justify-end items-center"
 		>
 			<router-link
 				class="text-gray-700 underline text-sm hover:no-underline"
-				:to="{ name: 'forgot-password' }"
+				:to="{ name: 'login' }"
 			>
-				Forgot Password?
+				Login
 			</router-link>
 		</div>
 	</div>
