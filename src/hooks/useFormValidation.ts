@@ -21,6 +21,11 @@ function isLowercasePresent(value: string): boolean {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+function validateAlphaNumeric(value: string): boolean {
+	return /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/.test(value);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function validateSame(value: string, confirm: string): boolean {
 	return value === confirm;
 }
@@ -46,6 +51,7 @@ export default function useFormValidation() {
 		email: 'Must be a valid email address',
 		max: 'Field can not exceed ##REPLACE## characters',
 		min: 'Field should be ##REPLACE## or more characters',
+		'alpha-numeric': 'Field must contain letters and numbers',
 	};
 
 	const setMessage = (message: string, rep: string) =>
@@ -55,7 +61,7 @@ export default function useFormValidation() {
 
 	const validateInput = (type: string, value: string): boolean => {
 		const [validationType, validationParam] = getTypeAndParam(type);
-		const func: any = `validate${useUtils().ucFirst(validationType)}`;
+		const func: any = `validate${useUtils().toTitleCase(validationType).replace(/\s+/, '')}`;
 
 		try {
 			return validationParam

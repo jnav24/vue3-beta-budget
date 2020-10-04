@@ -14,11 +14,11 @@ export default defineComponent({
 		const valid = ref(false);
 		const form = reactive({
 			password: {
-				rules: [],
+				rules: ['required', 'min:8', 'alpha-numeric'],
 				value: '',
 			},
 			confirm_password: {
-				rules: [],
+				rules: ['required'],
 				value: '',
 			},
 		});
