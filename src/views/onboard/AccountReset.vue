@@ -50,7 +50,7 @@ export default defineComponent({
 				Reset Password
 			</h1>
 
-			<Form v-model:value="valid">
+			<Form v-model:valid="valid">
 				<Input
 					label="New Password"
 					type="password"
