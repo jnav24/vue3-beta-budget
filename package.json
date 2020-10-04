@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "NODE_ENV=development && npx tailwindcss build src/assets/tailwind.css -o public/app.css && vue-cli-service serve",
+    "serve": "NODE_ENV=development && npx tailwindcss build src/assets/tailwind.css -o public/app.css && vue-cli-service serve --port 8081",
     "build": "NODE_ENV=production && rm -f public/app.css && vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
