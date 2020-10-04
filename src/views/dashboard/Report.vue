@@ -6,6 +6,7 @@ import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
 import LineChart from '@/components/charts/LineChart.vue';
 import ReportsEmpty from '@/components/partials/ReportsEmpty.vue';
 import ReportsForm from '@/components/partials/ReportsForm.vue';
+import ReportsSkeleton from '@/components/partials/ReportsSkeleton.vue';
 import ReportsSummary from '@/components/partials/ReportsSummary.vue';
 import ReportsTable from '@/components/tables/ReportsTable.vue';
 
@@ -17,6 +18,7 @@ export default defineComponent({
 		LineChart,
 		ReportsEmpty,
 		ReportsForm,
+		ReportsSkeleton,
 		ReportsSummary,
 		ReportsTable,
 	},
@@ -37,6 +39,8 @@ export default defineComponent({
 		</div>
 	</div>
 
+	<ReportsSkeleton v-if="isLoading" />
+
 	<ReportsEmpty
 		v-if="!searchResults.length && !isLoading && hasSearched"
 		icon="SadIcon"
@@ -52,7 +56,7 @@ export default defineComponent({
 	/>
 
 	<main
-		v-if="searchResults.length"
+		v-if="searchResults.length && !isLoading && hasSearched"
 		class="container mx-auto px-4 sm:px-0 py-6"
 	>
 		<div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
