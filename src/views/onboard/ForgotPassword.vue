@@ -60,7 +60,7 @@ export default defineComponent({
 					/>
 
 					<Button :is-disabled="!valid" color="secondary">
-						Reset Password
+						Send
 					</Button>
 				</Form>
 			</template>

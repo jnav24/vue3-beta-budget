@@ -23,6 +23,11 @@ const routes: Array<RouteRecordRaw> = [
 				name: 'forgot-password',
 				component: () => import('@/views/onboard/ForgotPassword.vue'),
 			},
+			{
+				path: '/account-reset/:token',
+				name: 'account-reset',
+				component: () => import('@/views/onboard/AccountReset.vue'),
+			},
 		],
 	},
 	{
