@@ -1,10 +1,12 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import Card from '@/components/ui-elements/card/Card.vue';
 import CardContent from '@/components/ui-elements/card/CardContent.vue';
 import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
 import LineChart from '@/components/charts/LineChart.vue';
+import ReportsEmpty from '@/components/partials/ReportsEmpty.vue';
 import ReportsForm from '@/components/partials/ReportsForm.vue';
+import ReportsSkeleton from '@/components/partials/ReportsSkeleton.vue';
 import ReportsSummary from '@/components/partials/ReportsSummary.vue';
 import ReportsTable from '@/components/tables/ReportsTable.vue';
 
@@ -14,12 +16,18 @@ export default defineComponent({
 		CardContent,
 		CardHeader,
 		LineChart,
+		ReportsEmpty,
 		ReportsForm,
+		ReportsSkeleton,
 		ReportsSummary,
 		ReportsTable,
 	},
 	setup() {
-		return {};
+		const hasSearched = ref(false);
+		const isLoading = ref(false);
+		const searchResults = reactive([]);
+
+		return { hasSearched, isLoading, searchResults };
 	},
 });
 </script>
@@ -31,7 +39,26 @@ export default defineComponent({
 		</div>
 	</div>
 
-	<main class="container mx-auto px-4 sm:px-0 py-6">
+	<ReportsSkeleton v-if="isLoading" />
+
+	<ReportsEmpty
+		v-if="!searchResults.length && !isLoading && hasSearched"
+		icon="SadIcon"
+		title="No results found."
+		text="Try modifying your search criteria to find what your are looking for."
+	/>
+
+	<ReportsEmpty
+		v-if="!searchResults.length && !isLoading && !hasSearched"
+		icon="SearchIcon"
+		title="Nothing, yet."
+		text="Looks like you haven't tried to run a search yet."
+	/>
+
+	<main
+		v-if="searchResults.length && !isLoading && hasSearched"
+		class="container mx-auto px-4 sm:px-0 py-6"
+	>
 		<div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
 			<aside class="col-span-1 lg:col-span-1">
 				<div class="block sm:grid-cols-3 sm:grid sm:gap-2 lg:block">

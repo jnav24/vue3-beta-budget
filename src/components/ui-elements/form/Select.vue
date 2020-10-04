@@ -111,43 +111,45 @@ export default defineComponent({
 </script>
 
 <template>
-	<Label :error="error" :labelId="labelId" :label="label" />
-	<div
-		class="border-solid border cursor-pointer px-2 py-2 mt-2 rounded-md flex items-center justify-between outline-none transform relative bg-white"
-		:class="{
-			'border-gray-300 hover:border-gray-600 text-gray-600 hover:text-gray-700 focus:border-primary transition duration-300': !error,
-			'border-red-600 text-red-600': error,
-			'z-50': selected,
-			'z-0': !selected,
-		}"
-		tabindex="0"
-		@blur="blurEvent()"
-		@click="selected = !selected"
-	>
-		<span class="flex-1">{{ getPlaceholder }}</span>
-		<ChevronDownIcon
-			class="transform transition duration-300 h-6 w-6"
-			:class="{
-				'rotate-180': selected,
-				'rotate-0': !selected,
-			}"
-		/>
-
+	<div>
+		<Label :error="error" :labelId="labelId" :label="label" />
 		<div
-			class="bg-white border border-gray-300 shadow-sm absolute transform top-0 left-0 rounded w-full transition ease-out duration-300 max-h-48 overflow-y-auto"
+			class="border-solid border cursor-pointer px-2 py-2 mt-2 rounded-md flex items-center justify-between outline-none transform relative bg-white"
 			:class="{
-				'translate-y-12 opacity-100': selected,
-				'translate-y-0 opacity-0': !selected,
+				'border-gray-300 hover:border-gray-600 text-gray-600 hover:text-gray-700 focus:border-primary transition duration-300': !error,
+				'border-red-600 text-red-600': error,
+				'z-50': selected,
+				'z-0': !selected,
 			}"
-			ref="dropDownItems"
+			tabindex="0"
+			@blur="blurEvent()"
+			@click="selected = !selected"
 		>
+			<span class="flex-1">{{ getPlaceholder }}</span>
+			<ChevronDownIcon
+				class="transform transition duration-300 h-6 w-6"
+				:class="{
+					'rotate-180': selected,
+					'rotate-0': !selected,
+				}"
+			/>
+
 			<div
-				v-for="(item, index) in items"
-				:key="index"
-				class="hover:bg-gray-200 p-2"
-				@click="setValue(item[itemValue])"
+				class="bg-white border border-gray-300 shadow-sm absolute transform top-0 left-0 rounded w-full transition ease-out duration-300 max-h-48 overflow-y-auto"
+				:class="{
+					'translate-y-12 opacity-100': selected,
+					'translate-y-0 opacity-0': !selected,
+				}"
+				ref="dropDownItems"
 			>
-				{{ item[itemLabel] }}
+				<div
+					v-for="(item, index) in items"
+					:key="index"
+					class="hover:bg-gray-200 p-2"
+					@click="setValue(item[itemValue])"
+				>
+					{{ item[itemLabel] }}
+				</div>
 			</div>
 		</div>
 	</div>
