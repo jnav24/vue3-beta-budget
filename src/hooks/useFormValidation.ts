@@ -61,7 +61,9 @@ export default function useFormValidation() {
 
 	const validateInput = (type: string, value: string): boolean => {
 		const [validationType, validationParam] = getTypeAndParam(type);
-		const func: any = `validate${useUtils().toTitleCase(validationType).replace(/\s+/, '')}`;
+		const func: any = `validate${useUtils()
+			.toTitleCase(validationType)
+			.replace(/\s+/, '')}`;
 
 		try {
 			return validationParam
