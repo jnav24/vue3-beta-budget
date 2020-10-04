@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import Card from '@/components/ui-elements/card/Card.vue';
 import CardContent from '@/components/ui-elements/card/CardContent.vue';
 import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
@@ -21,9 +21,11 @@ export default defineComponent({
 		ReportsTable,
 	},
 	setup() {
+		const hasSearched = ref(false);
+		const isLoading = ref(false);
 		const searchResults = reactive([]);
 
-		return { searchResults };
+		return { hasSearched, isLoading, searchResults };
 	},
 });
 </script>
@@ -35,22 +37,15 @@ export default defineComponent({
 		</div>
 	</div>
 
-	<main
-		v-if="!searchResults.length"
-		class="container mx-auto px-4 sm:px-0 py-6"
-	>
-		is loading
-	</main>
-
 	<ReportsEmpty
-		v-if="!searchResults.length"
+		v-if="!searchResults.length && !isLoading && hasSearched"
 		icon="SadIcon"
 		title="No results found."
 		text="Try modifying your search criteria to find what your are looking for."
 	/>
 
 	<ReportsEmpty
-		v-if="!searchResults.length"
+		v-if="!searchResults.length && !isLoading && !hasSearched"
 		icon="SearchIcon"
 		title="Nothing, yet."
 		text="Looks like you haven't tried to run a search yet."

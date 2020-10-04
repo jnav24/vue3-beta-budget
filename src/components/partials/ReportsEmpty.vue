@@ -33,7 +33,7 @@ export default defineComponent({
 	<main
 		class="container mx-auto px-4 sm:px-0 py-16  w-full rounded items-center text-gray-500 flex-col flex mt-12 space-y-2"
 	>
-		<component :is="getComponent()" class="w-32 h-32" />
+		<component :is="getComponent()" class="w-24 h-24" />
 		<p class="text-2xl text-gray-600">{{ title }}</p>
 		<p class="text-base">{{ text }}</p>
 	</main>
