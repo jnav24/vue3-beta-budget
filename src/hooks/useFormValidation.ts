@@ -42,7 +42,7 @@ function validateMax(value: string, characters: string) {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function validateMin(value: string, characters: string) {
-	return value.length > Number(characters);
+	return value.length >= Number(characters);
 }
 
 export default function useFormValidation() {
@@ -52,10 +52,10 @@ export default function useFormValidation() {
 		max: 'Field can not exceed ##REPLACE## characters',
 		min: 'Field should be ##REPLACE## or more characters',
 		'alpha-numeric': 'Field must contain letters and numbers',
-		upper: 'Field must contain, at least, 1 uppercase letter',
-		lower: 'Field must contain, at least, 1 lowercase letter',
+		upper: 'Field must contain an uppercase letter',
+		lower: 'Field must contain a lowercase letter',
 		match: 'Field needs to match with `##REPLACE##`',
-		numeric: 'Field can only contain numbers'
+		numeric: 'Field can only contain numbers',
 	};
 
 	const setMessage = (message: string, rep: string) =>
