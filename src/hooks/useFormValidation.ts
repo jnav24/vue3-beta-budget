@@ -11,12 +11,12 @@ function validateRequired(val: string | number): boolean {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function isUppercasePresent(value: string): boolean {
+function validateUpper(value: string): boolean {
 	return /[A-Z]/.test(value);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function isLowercasePresent(value: string): boolean {
+function validateLower(value: string): boolean {
 	return /[a-z]/.test(value);
 }
 
@@ -26,7 +26,7 @@ function validateAlphaNumeric(value: string): boolean {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function validateSame(value: string, confirm: string): boolean {
+function validateMatch(value: string, confirm: string): boolean {
 	return value === confirm;
 }
 
@@ -52,6 +52,10 @@ export default function useFormValidation() {
 		max: 'Field can not exceed ##REPLACE## characters',
 		min: 'Field should be ##REPLACE## or more characters',
 		'alpha-numeric': 'Field must contain letters and numbers',
+		upper: 'Field must contain, at least, 1 uppercase letter',
+		lower: 'Field must contain, at least, 1 lowercase letter',
+		match: 'Field needs to match with `##REPLACE##`',
+		numeric: 'Field can only contain numbers'
 	};
 
 	const setMessage = (message: string, rep: string) =>

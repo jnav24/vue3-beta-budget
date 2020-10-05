@@ -71,6 +71,7 @@ export default defineComponent({
 			:autocomplete="type !== 'password' ? 'on' : 'off'"
 			@blur="updateValue($event.target.value)"
 			@input="updateValue($event.target.value)"
+			:aria-labelledby="labelId"
 		/>
 		<span v-if="error" class="text-sm text-red-600">{{ error }}</span>
 	</div>
