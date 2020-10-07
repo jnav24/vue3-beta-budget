@@ -1,4 +1,4 @@
-import { defineComponent, provide } from 'vue';
+import { defineComponent, provide, reactive, readonly } from 'vue';
 import useFormValidation from '@/hooks/useFormValidation';
 
 export const FormProvider = Symbol('Form Provider');
@@ -13,19 +13,27 @@ export default defineComponent({
 	setup(props, { emit }) {
 		const formElements: Record<
 			string,
-			{ valid: boolean; rules: Record<string, string> }
-		> = {};
+			{
+				valid: boolean;
+				rules: Record<string, string>;
+				error: string | null;
+				value: string;
+			}
+		> = reactive({});
 		const updateValid = (isValid: boolean) => {
 			emit('update:valid', isValid);
 		};
 
 		const setFormElement = (
 			name: string,
-			rules: Record<string, string>
+			rules: Record<string, string>,
+			value = ''
 		): void => {
 			formElements[name] = {
 				rules,
 				valid: !rules.length,
+				error: null,
+				value,
 			};
 		};
 
@@ -49,7 +57,8 @@ export default defineComponent({
 
 		const validateField = (
 			labelId: string,
-			value: string
+			value: string,
+			initialize = false
 		): string | null => {
 			const { validateRules } = useFormValidation();
 			if (!labelId || !labelId.length || !formElements[labelId]) {
@@ -59,11 +68,17 @@ export default defineComponent({
 			const { rules } = formElements[labelId];
 			const { error, valid } = validateRules(value, rules);
 			formElements[labelId].valid = valid;
+			formElements[labelId].value = value;
+
+			if (!initialize) {
+				formElements[labelId].error = error;
+			}
+
 			isFormValid();
 			return error;
 		};
 
-		provide(FormProvider, { validateField, setupForm });
+		provide(FormProvider, { validateField, setupForm, formElements: readonly(formElements) });
 	},
 	render() {
 		return (this as any).$slots.default();
