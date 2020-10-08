@@ -25,9 +25,18 @@ function validateAlphaNumeric(value: string): boolean {
 	return /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/.test(value);
 }
 
+/**
+ *
+ * @param matchingValue; has the form rule `match`
+ * @param value; regular form rule that `matchingValue` is getting matched to
+ */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function validateMatch(value: string, confirm: string): boolean {
-	return value === confirm;
+function validateMatch(matchingValue: string, value: string): boolean {
+	if (value.includes('|')) {
+		return matchingValue === value.split('|')[1];
+	}
+
+	return matchingValue === value;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -58,8 +67,13 @@ export default function useFormValidation() {
 		numeric: 'Field can only contain numbers',
 	};
 
-	const setMessage = (message: string, rep: string) =>
-		message.replace('##REPLACE##', rep);
+	const setMessage = (message: string, rep: string) => {
+		if (rep.includes('|')) {
+			return message.replace('##REPLACE##', rep.split('|')[0]);
+		}
+
+		return message.replace('##REPLACE##', rep);
+	};
 
 	const getTypeAndParam = (type: string): string[] => type.split(':');
 
