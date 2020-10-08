@@ -25,6 +25,11 @@ function validateAlphaNumeric(value: string): boolean {
 	return /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/.test(value);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function validateSpecialCharacters(value: string): boolean {
+	return /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[-@.\/#&+])([a-zA-Z0-9-@.\/#&+]+)$/.test(value);
+}
+
 /**
  *
  * @param matchingValue; has the form rule `match`
