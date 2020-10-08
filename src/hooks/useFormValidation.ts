@@ -11,18 +11,39 @@ function validateRequired(val: string | number): boolean {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function isUppercasePresent(value: string): boolean {
+function validateUpper(value: string): boolean {
 	return /[A-Z]/.test(value);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function isLowercasePresent(value: string): boolean {
+function validateLower(value: string): boolean {
 	return /[a-z]/.test(value);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function validateSame(value: string, confirm: string): boolean {
-	return value === confirm;
+function validateAlphaNumeric(value: string): boolean {
+	return /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/.test(value);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function validateSpecialCharacters(value: string): boolean {
+	return /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[-@./#&+])([a-zA-Z0-9-@./#&+]+)$/.test(
+		value
+	);
+}
+
+/**
+ *
+ * @param matchingValue; has the form rule `match`
+ * @param value; regular form rule that `matchingValue` is getting matched to
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function validateMatch(matchingValue: string, value: string): boolean {
+	if (value.includes('|')) {
+		return matchingValue === value.split('|')[1];
+	}
+
+	return matchingValue === value;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -37,7 +58,7 @@ function validateMax(value: string, characters: string) {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function validateMin(value: string, characters: string) {
-	return value.length > Number(characters);
+	return value.length >= Number(characters);
 }
 
 export default function useFormValidation() {
@@ -46,16 +67,28 @@ export default function useFormValidation() {
 		email: 'Must be a valid email address',
 		max: 'Field can not exceed ##REPLACE## characters',
 		min: 'Field should be ##REPLACE## or more characters',
+		'alpha-numeric': 'Field must contain letters and numbers',
+		upper: 'Field must contain an uppercase letter',
+		lower: 'Field must contain a lowercase letter',
+		match: 'Field must match with `##REPLACE##`',
+		numeric: 'Field can only contain numbers',
 	};
 
-	const setMessage = (message: string, rep: string) =>
-		message.replace('##REPLACE##', rep);
+	const setMessage = (message: string, rep: string) => {
+		if (rep.includes('|')) {
+			return message.replace('##REPLACE##', rep.split('|')[0]);
+		}
+
+		return message.replace('##REPLACE##', rep);
+	};
 
 	const getTypeAndParam = (type: string): string[] => type.split(':');
 
 	const validateInput = (type: string, value: string): boolean => {
 		const [validationType, validationParam] = getTypeAndParam(type);
-		const func: any = `validate${useUtils().ucFirst(validationType)}`;
+		const func: any = `validate${useUtils()
+			.toTitleCase(validationType)
+			.replace(/\s+/, '')}`;
 
 		try {
 			return validationParam

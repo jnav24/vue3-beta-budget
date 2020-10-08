@@ -1,4 +1,10 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import {
+	createRouter,
+	createWebHistory,
+	RouteRecordRaw,
+	RouteLocationNormalized,
+	NavigationGuardNext,
+} from 'vue-router';
 import { useBudgetStore, useTemplateStore, useTypesStore } from '@/store';
 
 const routes: Array<RouteRecordRaw> = [
@@ -18,13 +24,34 @@ const routes: Array<RouteRecordRaw> = [
 				name: 'login',
 				component: () => import('@/views/onboard/Login.vue'),
 			},
+			{
+				path: '/forgot-password',
+				name: 'forgot-password',
+				component: () => import('@/views/onboard/ForgotPassword.vue'),
+			},
+			{
+				path: '/account-reset/:token',
+				name: 'account-reset',
+				component: () => import('@/views/onboard/AccountReset.vue'),
+				beforeEnter: (
+					to: RouteLocationNormalized,
+					from: RouteLocationNormalized,
+					next: NavigationGuardNext
+				) => {
+					next();
+				},
+			},
 		],
 	},
 	{
 		path: '/dashboard',
 		name: 'dashbaord',
 		component: () => import('@/views/dashboard/Dashboard.vue'),
-		beforeEnter: (to, from, next) => {
+		beforeEnter: (
+			to: RouteLocationNormalized,
+			from: RouteLocationNormalized,
+			next: NavigationGuardNext
+		) => {
 			const budgetStore = useBudgetStore();
 			const templateStore = useTemplateStore();
 			const typesStore = useTypesStore();

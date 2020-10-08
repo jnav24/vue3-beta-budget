@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, ref, inject, onMounted } from 'vue';
+import { defineComponent, ref, inject, computed, onMounted } from 'vue';
 import { FormProvider } from '@/components/ui-elements/form/Form';
 import Label from '@/components/ui-elements/form/Label.vue';
 
@@ -26,23 +26,27 @@ export default defineComponent({
 		},
 	},
 	setup(props, { emit }) {
-		const error = ref(null);
-		const labelId = ref(null);
+		const labelId = ref<string>('');
 		const FormContext = inject<any>(FormProvider, undefined);
 
 		onMounted(() => {
 			if (props.label && !!FormContext) {
 				labelId.value = FormContext.setupForm(props.label, props.rules);
-				FormContext.validateField(labelId.value, props.value);
+				FormContext.validateField(labelId.value, props.value, true);
 			}
+		});
+
+		const error = computed(() => {
+			if (FormContext && FormContext.formElements[labelId.value]) {
+				return FormContext.formElements[labelId.value].error;
+			}
+
+			return null;
 		});
 
 		const updateValue = (inputValue: string) => {
 			if (FormContext) {
-				error.value = FormContext.validateField(
-					labelId.value,
-					inputValue
-				);
+				FormContext.validateField(labelId.value, inputValue);
 			}
 			emit('update:value', inputValue);
 		};
@@ -71,6 +75,7 @@ export default defineComponent({
 			:autocomplete="type !== 'password' ? 'on' : 'off'"
 			@blur="updateValue($event.target.value)"
 			@input="updateValue($event.target.value)"
+			:aria-labelledby="labelId"
 		/>
 		<span v-if="error" class="text-sm text-red-600">{{ error }}</span>
 	</div>
