@@ -70,7 +70,7 @@ export default function useFormValidation() {
 		'alpha-numeric': 'Field must contain letters and numbers',
 		upper: 'Field must contain an uppercase letter',
 		lower: 'Field must contain a lowercase letter',
-		match: 'Field needs to match with `##REPLACE##`',
+		match: 'Field must match with `##REPLACE##`',
 		numeric: 'Field can only contain numbers',
 	};
 
