@@ -11,7 +11,22 @@ export default defineComponent({});
 		></div>
 		<div class="bg-image"></div>
 
-		<router-view />
+		<div
+			class="relative z-30 w-full sm:w-100 mt-6 px-4 sm:px-0 pt-4 sm:bg-white sm:rounded-lg sm:shadow-md overflow-hidden text-left"
+		>
+			<div class="flex flex-row justify-center mb-4">
+				<div class="overflow-hidden h-16 w-16">
+					<img
+						src="@/assets/logo_1.png"
+						alt="Dime Budget"
+						style="max-width: 12rem;"
+						class="crisp h-full w-64"
+					/>
+				</div>
+			</div>
+
+			<router-view />
+		</div>
 	</div>
 </template>
 
