@@ -1,4 +1,10 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import {
+	createRouter,
+	createWebHistory,
+	RouteRecordRaw,
+	RouteLocationNormalized,
+	NavigationGuardNext,
+} from 'vue-router';
 import { useBudgetStore, useTemplateStore, useTypesStore } from '@/store';
 
 const routes: Array<RouteRecordRaw> = [
@@ -27,6 +33,13 @@ const routes: Array<RouteRecordRaw> = [
 				path: '/account-reset/:token',
 				name: 'account-reset',
 				component: () => import('@/views/onboard/AccountReset.vue'),
+				beforeEnter: (
+					to: RouteLocationNormalized,
+					from: RouteLocationNormalized,
+					next: NavigationGuardNext
+				) => {
+					next();
+				},
 			},
 		],
 	},
@@ -34,7 +47,11 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/dashboard',
 		name: 'dashbaord',
 		component: () => import('@/views/dashboard/Dashboard.vue'),
-		beforeEnter: (to, from, next) => {
+		beforeEnter: (
+			to: RouteLocationNormalized,
+			from: RouteLocationNormalized,
+			next: NavigationGuardNext
+		) => {
 			const budgetStore = useBudgetStore();
 			const templateStore = useTemplateStore();
 			const typesStore = useTypesStore();
