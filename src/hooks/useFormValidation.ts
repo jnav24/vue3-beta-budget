@@ -27,7 +27,9 @@ function validateAlphaNumeric(value: string): boolean {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function validateSpecialCharacters(value: string): boolean {
-	return /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[-@.\/#&+])([a-zA-Z0-9-@.\/#&+]+)$/.test(value);
+	return /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[-@./#&+])([a-zA-Z0-9-@./#&+]+)$/.test(
+		value
+	);
 }
 
 /**
