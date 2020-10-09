@@ -6,6 +6,9 @@ import {
 	NavigationGuardNext,
 } from 'vue-router';
 import { useBudgetStore, useTemplateStore, useTypesStore } from '@/store';
+import useRouteMiddleware from '@/hooks/useRouteMiddleware';
+
+const { auth, runMiddleware } = useRouteMiddleware();
 
 const routes: Array<RouteRecordRaw> = [
 	{
@@ -41,12 +44,16 @@ const routes: Array<RouteRecordRaw> = [
 					next();
 				},
 			},
+			// @todo need to do a verify login page
 		],
 	},
 	{
 		path: '/dashboard',
 		name: 'dashbaord',
 		component: () => import('@/views/dashboard/Dashboard.vue'),
+		meta: {
+			middleware: [auth],
+		},
 		beforeEnter: (
 			to: RouteLocationNormalized,
 			from: RouteLocationNormalized,
@@ -106,5 +113,15 @@ const router = createRouter({
 	history: createWebHistory(process.env.BASE_URL),
 	routes,
 });
+
+router.beforeEach(
+	(
+		to: RouteLocationNormalized,
+		from: RouteLocationNormalized,
+		next: NavigationGuardNext
+	) => {
+		runMiddleware({ next, to, from });
+	}
+);
 
 export default router;
