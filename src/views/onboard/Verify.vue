@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import Alert from '@/components/ui-elements/Alert.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import Form from '@/components/ui-elements/form/Form';
@@ -17,6 +18,7 @@ export default defineComponent({
 	},
 	setup() {
 		const { loading, post } = useHttp();
+		const { push } = useRouter();
 
 		const alert = reactive({
 			display: false,
@@ -48,6 +50,27 @@ export default defineComponent({
 			const response = await post(data);
 
 			if (response.success) {
+				push({ name: 'home' });
+				return true;
+			}
+
+			expired.value = response.error.includes('expired');
+			alert.message = response.error;
+			alert.type = 'error';
+			alert.display = true;
+		};
+
+		const resendEmail = async (token: string, id: string) => {
+			const data = {
+				path: `auth/resend-verify`,
+				params: {
+					id,
+					token,
+				},
+			};
+			const response = await post(data);
+
+			if (response.success) {
 				alert.display = true;
 				alert.message =
 					'Email sent! If email is not in your inbox, check your spam folder.';
@@ -57,16 +80,6 @@ export default defineComponent({
 				alert.message = 'Unable to resend email at this time';
 				alert.type = 'error';
 			}
-		};
-
-		const resendEmail = (token: string, id: string) => {
-			const data = {
-				path: `auth/resend-verify`,
-				params: {
-					id,
-					token,
-				},
-			};
 		};
 
 		return {
