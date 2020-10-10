@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
+import { defineComponent, onMounted, reactive, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import Alert from '@/components/ui-elements/Alert.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
@@ -7,6 +7,7 @@ import Form from '@/components/ui-elements/form/Form';
 import Input from '@/components/ui-elements/form/Input.vue';
 import LoaderIcon from '@/components/ui-elements/icons/LoaderIcon.vue';
 import useHttp from '@/hooks/useHttp';
+import useTimestamp from '@/hooks/useTimestamp';
 import { useUserStore } from '@/store';
 
 export default defineComponent({
@@ -19,6 +20,7 @@ export default defineComponent({
 	},
 	setup() {
 		const { loading, post } = useHttp();
+		const { unix } = useTimestamp();
 		const { push } = useRouter();
 		const { params } = useRoute();
 		const userStore = useUserStore();
@@ -36,6 +38,10 @@ export default defineComponent({
 			},
 		});
 		const valid = ref(false);
+
+		onMounted(() => {
+			expired.value = unix() > unix(userStore.login.verify.expires_at);
+		});
 
 		const submitVerify = async () => {
 			const data = {
