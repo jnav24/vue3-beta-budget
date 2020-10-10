@@ -62,7 +62,10 @@ export const useUserStore = createStore({
 					const { user, vehicles, verify } = response.data.data;
 
 					if (verify.token) {
-						return failedResponse(process.env.VUE_APP_VERIFY, verify);
+						return failedResponse(
+							process.env.VUE_APP_VERIFY,
+							verify
+						);
 					}
 
 					this.user = { ...user };
