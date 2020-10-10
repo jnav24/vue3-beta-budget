@@ -4,6 +4,8 @@ import Alert from '@/components/ui-elements/Alert.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import Form from '@/components/ui-elements/form/Form';
 import Input from '@/components/ui-elements/form/Input.vue';
+import LoaderIcon from '@/components/ui-elements/icons/LoaderIcon.vue';
+import useHttp from '@/hooks/useHttp';
 
 export default defineComponent({
 	components: {
@@ -11,9 +13,17 @@ export default defineComponent({
 		Button,
 		Form,
 		Input,
+		LoaderIcon,
 	},
 	setup() {
-		const expired = ref(true);
+		const { loading, post } = useHttp();
+
+		const alert = reactive({
+			display: false,
+			message: '',
+			type: '',
+		});
+		const expired = ref(false);
 		const form = reactive({
 			verify: {
 				rules: ['required', 'max:6', 'alpha-numeric'],
@@ -22,7 +32,52 @@ export default defineComponent({
 		});
 		const valid = ref(false);
 
-		return { expired, form, valid };
+		const submitVerify = async (
+			token: string,
+			id: string,
+			verify: string
+		) => {
+			const data = {
+				path: `auth/submit-verify`,
+				params: {
+					id,
+					token,
+					verify,
+				},
+			};
+			const response = await post(data);
+
+			if (response.success) {
+				alert.display = true;
+				alert.message =
+					'Email sent! If email is not in your inbox, check your spam folder.';
+				alert.type = 'success';
+			} else {
+				alert.display = true;
+				alert.message = 'Unable to resend email at this time';
+				alert.type = 'error';
+			}
+		};
+
+		const resendEmail = (token: string, id: string) => {
+			const data = {
+				path: `auth/resend-verify`,
+				params: {
+					id,
+					token,
+				},
+			};
+		};
+
+		return {
+			alert,
+			expired,
+			form,
+			loading,
+			resendEmail,
+			submitVerify,
+			valid,
+		};
 	},
 });
 </script>
@@ -35,7 +90,11 @@ export default defineComponent({
 			Verify your device
 		</h1>
 
-		<Alert type="error" message="sdfs" v-if="false" />
+		<Alert
+			:type="alert.type"
+			:message="alert.message"
+			v-if="alert.display"
+		/>
 
 		<template v-if="!expired">
 			<p class="text-sm text-center text-gray-600 mb-8">
@@ -50,7 +109,13 @@ export default defineComponent({
 					v-model:value="form.verify.value"
 					:rules="form.verify.rules"
 				/>
-				<Button :is-disabled="!valid" color="secondary">Submit</Button>
+				<Button :is-disabled="!valid" color="secondary">
+					<LoaderIcon
+						v-if="loading"
+						class="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-600"
+					/>
+					<span v-if="!loading">Submit</span>
+				</Button>
 			</Form>
 		</template>
 
