@@ -48,7 +48,7 @@ export default defineComponent({
 			const data = {
 				path: `auth/submit-verify`,
 				params: {
-					id: userStore.user.id,
+					id: userStore.user.user_id,
 					token: params.token,
 					verify: form.verify.value,
 				},
@@ -130,7 +130,11 @@ export default defineComponent({
 					v-model:value="form.verify.value"
 					:rules="form.verify.rules"
 				/>
-				<Button :is-disabled="!valid || loading" color="secondary">
+				<Button
+					:is-disabled="!valid || loading"
+					color="secondary"
+					@on-click="submitVerify()"
+				>
 					<LoaderIcon
 						v-if="loading"
 						class="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-600"
