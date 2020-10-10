@@ -1,12 +1,13 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import Alert from '@/components/ui-elements/Alert.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import Form from '@/components/ui-elements/form/Form';
 import Input from '@/components/ui-elements/form/Input.vue';
 import LoaderIcon from '@/components/ui-elements/icons/LoaderIcon.vue';
 import useHttp from '@/hooks/useHttp';
+import { useUserStore } from '@/store';
 
 export default defineComponent({
 	components: {
@@ -19,6 +20,8 @@ export default defineComponent({
 	setup() {
 		const { loading, post } = useHttp();
 		const { push } = useRouter();
+		const { params } = useRoute();
+		const userStore = useUserStore();
 
 		const alert = reactive({
 			display: false,
@@ -34,17 +37,13 @@ export default defineComponent({
 		});
 		const valid = ref(false);
 
-		const submitVerify = async (
-			token: string,
-			id: string,
-			verify: string
-		) => {
+		const submitVerify = async () => {
 			const data = {
 				path: `auth/submit-verify`,
 				params: {
-					id,
-					token,
-					verify,
+					id: userStore.user.id,
+					token: params.token,
+					verify: form.verify.value,
 				},
 			};
 			const response = await post(data);
@@ -60,12 +59,12 @@ export default defineComponent({
 			alert.display = true;
 		};
 
-		const resendEmail = async (token: string, id: string) => {
+		const resendEmail = async () => {
 			const data = {
 				path: `auth/resend-verify`,
 				params: {
-					id,
-					token,
+					id: userStore.user.id,
+					token: params.token,
 				},
 			};
 			const response = await post(data);
