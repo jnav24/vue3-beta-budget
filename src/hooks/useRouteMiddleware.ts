@@ -14,14 +14,13 @@ export default function useRouteMiddleware() {
 
 			if (response.success) {
 				context.next();
-				// } else {
-				// 	if (response.msg === process.env.VUE_APP_VERIFY) {
-				// 		context.next(`/verify/${response.data.token}`);
-				// 	} else {
-				// 		context.next('/login');
-				// 	}
+			} else {
+				if (response.error === process.env.VUE_APP_VERIFY) {
+					context.next(`/verify/${response.data.token}`);
+				} else {
+					context.next('/login');
+				}
 			}
-			context.next();
 		} catch (error) {
 			context.next('/login');
 		}

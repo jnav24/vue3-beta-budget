@@ -44,7 +44,18 @@ const routes: Array<RouteRecordRaw> = [
 					next();
 				},
 			},
-			// @todo need to do a verify login page
+			{
+				path: '/verify/:token',
+				name: 'verify',
+				component: () => import('@/views/onboard/Verify.vue'),
+				beforeEnter: (
+					to: RouteLocationNormalized,
+					from: RouteLocationNormalized,
+					next: NavigationGuardNext
+				) => {
+					next();
+				},
+			},
 		],
 	},
 	{
