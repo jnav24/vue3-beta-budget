@@ -62,7 +62,7 @@ export const useUserStore = createStore({
 					const { user, vehicles, verify } = response.data.data;
 
 					if (verify.token) {
-						// fail and redirect to verify screen
+						return failedResponse(process.env.VUE_APP_VERIFY, verify);
 					}
 
 					this.user = { ...user };
@@ -72,7 +72,6 @@ export const useUserStore = createStore({
 				return response;
 			}
 
-			// logout
 			this.logout();
 			return failedResponse();
 		},

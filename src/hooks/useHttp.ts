@@ -120,10 +120,11 @@ export default function useHttp() {
 	};
 
 	const failedResponse = (
-		error = 'Something unexpected has occurred.'
+		error = 'Something unexpected has occurred.',
+		data = {}
 	): HttpResponse => ({
 		loading: false,
-		data: {},
+		data,
 		error,
 		success: false,
 	});
