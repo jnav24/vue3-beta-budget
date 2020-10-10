@@ -96,7 +96,10 @@ export const useUserStore = createStore({
 		},
 
 		logout() {
-			console.log('logging out');
+			const { deleteCookie } = useSession();
+			deleteCookie(cookieName);
+			this.resetUser();
+			// @todo add reset to other stores
 		},
 
 		setVerifyExpiration(payload: string) {
