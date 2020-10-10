@@ -30,6 +30,7 @@ export default defineComponent({
 			message: '',
 			type: '',
 		});
+		const emailSent = ref(false);
 		const expired = ref(false);
 		const form = reactive({
 			verify: {
@@ -69,7 +70,7 @@ export default defineComponent({
 			const data = {
 				path: `auth/resend-verify`,
 				params: {
-					id: userStore.user.id,
+					id: userStore.user.user_id,
 					token: params.token,
 				},
 			};
@@ -80,6 +81,7 @@ export default defineComponent({
 				alert.message =
 					'Email sent! If email is not in your inbox, check your spam folder.';
 				alert.type = 'success';
+				emailSent.value = true;
 			} else {
 				alert.display = true;
 				alert.message = 'Unable to resend email at this time';
@@ -89,6 +91,7 @@ export default defineComponent({
 
 		return {
 			alert,
+			emailSent,
 			expired,
 			form,
 			loading,
@@ -127,7 +130,7 @@ export default defineComponent({
 					v-model:value="form.verify.value"
 					:rules="form.verify.rules"
 				/>
-				<Button :is-disabled="!valid" color="secondary">
+				<Button :is-disabled="!valid || loading" color="secondary">
 					<LoaderIcon
 						v-if="loading"
 						class="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-600"
@@ -144,7 +147,17 @@ export default defineComponent({
 				and we will send you a new verification code to the email on
 				file.
 			</p>
-			<Button color="secondary">Resend Email</Button>
+			<Button
+				:is-disabled="emailSent || loading"
+				color="secondary"
+				@on-click="resendEmail()"
+			>
+				<LoaderIcon
+					v-if="loading"
+					class="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-600"
+				/>
+				<span v-if="!loading">Resend Email</span>
+			</Button>
 		</template>
 	</div>
 </template>
