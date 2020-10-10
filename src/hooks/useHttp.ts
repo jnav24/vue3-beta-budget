@@ -1,5 +1,6 @@
 import { reactive, toRefs } from 'vue';
 import axios, { AxiosResponse } from 'axios';
+import useSession from '@/hooks/useSession';
 
 enum URLMethods {
 	GET = 'get',
@@ -23,6 +24,8 @@ export type HttpResponse = {
 };
 
 export default function useHttp() {
+	const { getCookie } = useSession();
+
 	const state: HttpResponse = reactive({
 		loading: false,
 		data: {},
@@ -91,7 +94,7 @@ export default function useHttp() {
 			path,
 			params: params || {},
 			headers: {
-				Authorization: `Bearer `,
+				Authorization: `Bearer ${getCookie(process.env.VUE_APP_TOKEN)}`,
 			},
 		});
 	};
@@ -111,10 +114,19 @@ export default function useHttp() {
 			path,
 			params: params || {},
 			headers: {
-				Authorization: `Bearer `,
+				Authorization: `Bearer ${getCookie(process.env.VUE_APP_TOKEN)}`,
 			},
 		});
 	};
+
+	const failedResponse = (
+		error = 'Something unexpected has occurred.'
+	): HttpResponse => ({
+		loading: false,
+		data: {},
+		error,
+		success: false,
+	});
 
 	return {
 		...toRefs(state),
@@ -122,5 +134,6 @@ export default function useHttp() {
 		getAuth,
 		post,
 		postAuth,
+		failedResponse,
 	};
 }

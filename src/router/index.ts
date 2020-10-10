@@ -72,6 +72,9 @@ const routes: Array<RouteRecordRaw> = [
 				path: '',
 				name: 'home',
 				component: () => import('@/views/dashboard/Home.vue'),
+				meta: {
+					middleware: [auth],
+				},
 			},
 			{
 				path: 'budgets',

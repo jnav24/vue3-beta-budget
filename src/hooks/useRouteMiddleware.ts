@@ -1,23 +1,26 @@
 import { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
+import { useUserStore } from '@/store';
+import { HttpResponse } from '@/hooks/useHttp';
 
 export default function useRouteMiddleware() {
-	const auth = (context: {
+	const auth = async (context: {
 		to: RouteLocationNormalized;
 		next: NavigationGuardNext;
 		from: RouteLocationNormalized;
 	}) => {
 		try {
-			// const response: ResponseInterface = await store.dispatch('isLoggedIn');
+			const { isLoggedIn } = useUserStore();
+			const response: HttpResponse = await isLoggedIn();
 
-			// if (response.success) {
-			// 	context.next();
-			// } else {
-			// 	if (response.msg === process.env.VUE_APP_VERIFY) {
-			// 		context.next(`/verify/${response.data.token}`);
-			// 	} else {
-			// 		context.next('/login');
-			// 	}
-			// }
+			if (response.success) {
+				context.next();
+				// } else {
+				// 	if (response.msg === process.env.VUE_APP_VERIFY) {
+				// 		context.next(`/verify/${response.data.token}`);
+				// 	} else {
+				// 		context.next('/login');
+				// 	}
+			}
 			context.next();
 		} catch (error) {
 			context.next('/login');
