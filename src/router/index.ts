@@ -15,7 +15,6 @@ import {
 } from '@/store';
 import useRouteMiddleware from '@/hooks/useRouteMiddleware';
 import useHttp from '@/hooks/useHttp';
-import useSession from '@/hooks/useSession';
 
 const { auth, autoLogin, runMiddleware } = useRouteMiddleware();
 
@@ -143,12 +142,10 @@ const routes: Array<RouteRecordRaw> = [
 					defineComponent({
 						setup() {
 							const { push } = useRouter();
-							const { deleteCookie } = useSession();
-							const { resetUser } = useUserStore();
+							const { logout } = useUserStore();
 
 							onBeforeMount(() => {
-								deleteCookie(process.env.VUE_APP_TOKEN);
-								resetUser();
+								logout();
 								push({ name: 'login' });
 							});
 						},
