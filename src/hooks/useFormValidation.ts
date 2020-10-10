@@ -53,7 +53,7 @@ function validateNumeric(value: string): boolean {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function validateMax(value: string, characters: string) {
-	return value.length < Number(characters);
+	return value.length <= Number(characters);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
