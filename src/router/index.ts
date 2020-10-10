@@ -49,7 +49,7 @@ const routes: Array<RouteRecordRaw> = [
 	},
 	{
 		path: '/dashboard',
-		name: 'dashbaord',
+		name: 'dashboard',
 		component: () => import('@/views/dashboard/Dashboard.vue'),
 		meta: {
 			middleware: [auth],

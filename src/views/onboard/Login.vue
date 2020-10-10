@@ -5,6 +5,7 @@ import { Form } from '@/components/ui-elements';
 import Input from '@/components/ui-elements/form/Input.vue';
 import LoaderIcon from '@/components/ui-elements/icons/LoaderIcon.vue';
 import { useUserStore } from '@/store';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
 	components: {
@@ -15,6 +16,7 @@ export default defineComponent({
 	},
 	setup() {
 		const { logUserIn } = useUserStore();
+		const { push } = useRouter();
 		const disableSubmit = ref(false);
 		const error = reactive({
 			display: false,
@@ -42,7 +44,9 @@ export default defineComponent({
 			});
 
 			if (response.success) {
-				// ...
+				error.display = false;
+				error.message = '';
+				push({ name: 'home' });
 			} else {
 				error.display = true;
 				error.message = response.error;
