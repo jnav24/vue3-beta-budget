@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import Alert from '@/components/ui-elements/Alert.vue';
 import Card from '@/components/ui-elements/card/Card.vue';
 import CardContent from '@/components/ui-elements/card/CardContent.vue';
@@ -33,7 +33,7 @@ export default defineComponent({
 		const form = {
 			year: {
 				rules: {},
-				value: '19',
+				value: '2019',
 			},
 		};
 
@@ -96,11 +96,6 @@ export default defineComponent({
 			],
 		};
 
-		const items = [
-			{ value: '20', label: '2020' },
-			{ value: '19', label: '2019' },
-		];
-
 		const summary = [
 			{
 				icon: 'DollarIcon',
@@ -127,10 +122,10 @@ export default defineComponent({
 
 		return {
 			form,
-			items,
 			summary,
-			totalUnpaid: aggregationStore.totalUnpaid,
+			totalUnpaid: computed(() => aggregationStore.totalUnpaid),
 			yearlyExpenseData,
+			years: computed(() => aggregationStore.allYears),
 		};
 	},
 });
@@ -155,7 +150,7 @@ export default defineComponent({
 					<Select
 						class="w-40 mr-3"
 						v-model:value="form.year.value"
-						:items="items"
+						:items="years"
 					/>
 				</div>
 			</CardHeader>

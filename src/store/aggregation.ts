@@ -20,10 +20,10 @@ export const useAggregationStore = createStore({
 	getters: {
 		allYears() {
 			const yearList: string[] = Object.keys(this.budget);
-			const yearObjList: Array<{ value: number; label: string }> = [];
+			const yearObjList: Array<{ value: string; label: string }> = [];
 
 			for (const year of yearList) {
-				yearObjList.push({ value: Number(year), label: year });
+				yearObjList.push({ value: year, label: year });
 			}
 
 			return yearObjList;
