@@ -42,5 +42,44 @@ export default function useSession() {
 		return null;
 	};
 
-	return { deleteCookie, getCookie, setCookie };
+	const getStorage = (name: string): string | null => {
+		return localStorage.getItem(name);
+	};
+
+	const setStorage = (name: string, value: string): void => {
+		localStorage.setItem(name, value);
+	};
+
+	const deleteStorage = (name: string): void => {
+		localStorage.removeItem(name);
+	};
+
+	const clearStorage = (): void => {
+		localStorage.clear();
+	};
+
+	const checkStorage = (store: string, state: string): {} | boolean => {
+		const storage = getStorage(store);
+
+		if (storage) {
+			const data = JSON.parse(storage);
+
+			if (data[state]) {
+				return data[state];
+			}
+		}
+
+		return false;
+	};
+
+	return {
+		checkStorage,
+		clearStorage,
+		deleteCookie,
+		deleteStorage,
+		getCookie,
+		getStorage,
+		setCookie,
+		setStorage,
+	};
 }
