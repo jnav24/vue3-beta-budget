@@ -61,15 +61,15 @@ export const useUserStore = createStore({
 				if (response.success) {
 					const { user, vehicles, verify } = response.data.data;
 
+					this.user = { ...user };
+					this.vehicles = [...vehicles];
+
 					if (verify.token) {
 						return failedResponse(
 							process.env.VUE_APP_VERIFY,
 							verify
 						);
 					}
-
-					this.user = { ...user };
-					this.vehicles = [...vehicles];
 				}
 
 				return response;
@@ -97,6 +97,15 @@ export const useUserStore = createStore({
 
 		logout() {
 			console.log('logging out');
+		},
+
+		setVerifyExpiration(payload: string) {
+			this.login = {
+				...this.login,
+				verify: {
+					expires_at: payload,
+				},
+			};
 		},
 	},
 });

@@ -5,8 +5,14 @@ import {
 	RouteLocationNormalized,
 	NavigationGuardNext,
 } from 'vue-router';
-import { useBudgetStore, useTemplateStore, useTypesStore } from '@/store';
+import {
+	useBudgetStore,
+	useTemplateStore,
+	useTypesStore,
+	useUserStore
+} from '@/store';
 import useRouteMiddleware from '@/hooks/useRouteMiddleware';
+import useHttp from '@/hooks/useHttp';
 
 const { auth, runMiddleware } = useRouteMiddleware();
 
@@ -48,11 +54,29 @@ const routes: Array<RouteRecordRaw> = [
 				path: '/verify/:token',
 				name: 'verify',
 				component: () => import('@/views/onboard/Verify.vue'),
-				beforeEnter: (
+				beforeEnter: async (
 					to: RouteLocationNormalized,
 					from: RouteLocationNormalized,
 					next: NavigationGuardNext
 				) => {
+					const userStore = useUserStore();
+					const { get } = useHttp();
+					const response = await userStore.isLoggedIn();
+
+					if (response.error !== process.env.VUE_APP_VERIFY) {
+						next('/login');
+					}
+
+					const data = {
+						path: `auth/verify/${userStore.user.user_id}/${to.params.token}`,
+					};
+					const tokenResponse = await get(data);
+
+					if (!tokenResponse.success) {
+						next('/login');
+					}
+
+					userStore.setVerifyExpiration(tokenResponse.data.data.expires_at);
 					next();
 				},
 			},
