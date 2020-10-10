@@ -42,5 +42,5 @@ export default function useSession() {
 		return null;
 	};
 
-	return { getCookie, setCookie };
+	return { deleteCookie, getCookie, setCookie };
 }

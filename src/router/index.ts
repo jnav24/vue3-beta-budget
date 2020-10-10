@@ -1,9 +1,11 @@
+import { defineComponent, onBeforeMount } from 'vue';
 import {
 	createRouter,
 	createWebHistory,
 	RouteRecordRaw,
 	RouteLocationNormalized,
 	NavigationGuardNext,
+	useRouter,
 } from 'vue-router';
 import {
 	useBudgetStore,
@@ -13,6 +15,7 @@ import {
 } from '@/store';
 import useRouteMiddleware from '@/hooks/useRouteMiddleware';
 import useHttp from '@/hooks/useHttp';
+import useSession from '@/hooks/useSession';
 
 const { auth, autoLogin, runMiddleware } = useRouteMiddleware();
 
@@ -132,6 +135,24 @@ const routes: Array<RouteRecordRaw> = [
 				path: 'reports',
 				name: 'reports',
 				component: () => import('@/views/dashboard/Report.vue'),
+			},
+			{
+				path: 'logout',
+				name: 'logout',
+				component: () =>
+					defineComponent({
+						setup() {
+							const { push } = useRouter();
+							const { deleteCookie } = useSession();
+							const { resetUser } = useUserStore();
+
+							onBeforeMount(() => {
+								deleteCookie(process.env.VUE_APP_TOKEN);
+								resetUser();
+								push({ name: 'login' });
+							});
+						},
+					}),
 			},
 			{
 				// @todo create a dashboard 404 page
