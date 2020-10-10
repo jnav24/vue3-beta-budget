@@ -9,7 +9,7 @@ import {
 	useBudgetStore,
 	useTemplateStore,
 	useTypesStore,
-	useUserStore
+	useUserStore,
 } from '@/store';
 import useRouteMiddleware from '@/hooks/useRouteMiddleware';
 import useHttp from '@/hooks/useHttp';
@@ -76,7 +76,9 @@ const routes: Array<RouteRecordRaw> = [
 						next('/login');
 					}
 
-					userStore.setVerifyExpiration(tokenResponse.data.data.expires_at);
+					userStore.setVerifyExpiration(
+						tokenResponse.data.data.expires_at
+					);
 					next();
 				},
 			},
