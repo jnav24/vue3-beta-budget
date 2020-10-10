@@ -3,6 +3,7 @@ import useHttp from '@/hooks/useHttp';
 
 export const useAggregationStore = createStore({
 	id: 'aggregation',
+
 	state: (): AggregationState => ({
 		budget: {},
 		unpaid: {
@@ -15,6 +16,32 @@ export const useAggregationStore = createStore({
 			},
 		},
 	}),
+
+	getters: {
+		allYears() {
+			const yearList: string[] = Object.keys(this.budget);
+			const yearObjList: Array<{ value: number; label: string }> = [];
+
+			for (const year of yearList) {
+				yearObjList.push({ value: Number(year), label: year });
+			}
+
+			return yearObjList;
+		},
+
+		totalUnpaid() {
+			let total = 0;
+
+			if (this.unpaid.totals) {
+				for (const key of Object.keys(this.unpaid.totals)) {
+					total += Number((this.unpaid.totals as any)[key]);
+				}
+			}
+
+			return total;
+		},
+	},
+
 	actions: {
 		async getUnpaidBillTotals() {
 			const data = {
