@@ -20,6 +20,7 @@ export default defineComponent({
 			const mapTypes: Record<string, string> = {
 				error: 'bg-red-200 border-red-600 text-red-700',
 				info: 'bg-blue-200 border-blue-600',
+				success: 'bg-green-200 border-green-600 text-green-800',
 				warn: 'bg-yellow-200 border-yellow-500',
 			};
 

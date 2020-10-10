@@ -1,11 +1,22 @@
+import { defineComponent, onBeforeMount } from 'vue';
 import {
 	createRouter,
 	createWebHistory,
 	RouteRecordRaw,
 	RouteLocationNormalized,
 	NavigationGuardNext,
+	useRouter,
 } from 'vue-router';
-import { useBudgetStore, useTemplateStore, useTypesStore } from '@/store';
+import {
+	useBudgetStore,
+	useTemplateStore,
+	useTypesStore,
+	useUserStore,
+} from '@/store';
+import useRouteMiddleware from '@/hooks/useRouteMiddleware';
+import useHttp from '@/hooks/useHttp';
+
+const { auth, autoLogin, runMiddleware } = useRouteMiddleware();
 
 const routes: Array<RouteRecordRaw> = [
 	{
@@ -23,6 +34,9 @@ const routes: Array<RouteRecordRaw> = [
 				path: '',
 				name: 'login',
 				component: () => import('@/views/onboard/Login.vue'),
+				meta: {
+					middleware: [autoLogin],
+				},
 			},
 			{
 				path: '/forgot-password',
@@ -41,12 +55,47 @@ const routes: Array<RouteRecordRaw> = [
 					next();
 				},
 			},
+			{
+				path: '/verify/:token',
+				name: 'verify',
+				component: () => import('@/views/onboard/Verify.vue'),
+				beforeEnter: async (
+					to: RouteLocationNormalized,
+					from: RouteLocationNormalized,
+					next: NavigationGuardNext
+				) => {
+					const userStore = useUserStore();
+					const { get } = useHttp();
+					const response = await userStore.isLoggedIn();
+
+					if (response.error !== process.env.VUE_APP_VERIFY) {
+						next('/login');
+					}
+
+					const data = {
+						path: `auth/verify/${userStore.user.user_id}/${to.params.token}`,
+					};
+					const tokenResponse = await get(data);
+
+					if (!tokenResponse.success) {
+						next('/login');
+					}
+
+					userStore.setVerifyExpiration(
+						tokenResponse.data.data.expires_at
+					);
+					next();
+				},
+			},
 		],
 	},
 	{
 		path: '/dashboard',
-		name: 'dashbaord',
+		name: 'dashboard',
 		component: () => import('@/views/dashboard/Dashboard.vue'),
+		meta: {
+			middleware: [auth],
+		},
 		beforeEnter: (
 			to: RouteLocationNormalized,
 			from: RouteLocationNormalized,
@@ -87,6 +136,22 @@ const routes: Array<RouteRecordRaw> = [
 				component: () => import('@/views/dashboard/Report.vue'),
 			},
 			{
+				path: 'logout',
+				name: 'logout',
+				component: () =>
+					defineComponent({
+						setup() {
+							const { push } = useRouter();
+							const { logout } = useUserStore();
+
+							onBeforeMount(() => {
+								logout();
+								push({ name: 'login' });
+							});
+						},
+					}),
+			},
+			{
 				// @todo create a dashboard 404 page
 				path: '/:catchAll(.*)',
 				name: 'dashboard-404',
@@ -106,5 +171,15 @@ const router = createRouter({
 	history: createWebHistory(process.env.BASE_URL),
 	routes,
 });
+
+router.beforeEach(
+	(
+		to: RouteLocationNormalized,
+		from: RouteLocationNormalized,
+		next: NavigationGuardNext
+	) => {
+		runMiddleware({ next, to, from });
+	}
+);
 
 export default router;

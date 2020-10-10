@@ -1,14 +1,27 @@
 <script lang="ts">
 import { defineComponent, ref, reactive } from 'vue';
+import Alert from '@/components/ui-elements/Alert.vue';
 import { Form } from '@/components/ui-elements';
 import Input from '@/components/ui-elements/form/Input.vue';
+import LoaderIcon from '@/components/ui-elements/icons/LoaderIcon.vue';
+import { useUserStore } from '@/store';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
 	components: {
+		Alert,
 		Form,
 		Input,
+		LoaderIcon,
 	},
 	setup() {
+		const { logUserIn } = useUserStore();
+		const { push } = useRouter();
+		const disableSubmit = ref(false);
+		const error = reactive({
+			display: false,
+			message: '',
+		});
 		const form = reactive({
 			email: {
 				rules: ['required', 'email'],
@@ -23,7 +36,25 @@ export default defineComponent({
 		});
 		const valid = ref(false);
 
-		return { form, valid };
+		const login = async () => {
+			disableSubmit.value = true;
+			const response = await logUserIn({
+				username: form.email.value,
+				password: form.password.value,
+			});
+
+			if (response.success) {
+				error.display = false;
+				error.message = '';
+				push({ name: 'home' });
+			} else {
+				error.display = true;
+				error.message = response.error;
+				disableSubmit.value = false;
+			}
+		};
+
+		return { disableSubmit, error, form, login, valid };
 	},
 });
 </script>
@@ -35,6 +66,9 @@ export default defineComponent({
 		>
 			Welcome Back
 		</h1>
+
+		<Alert type="error" :message="error.message" v-if="error.display" />
+
 		<Form v-model:valid="valid">
 			<Input
 				label="Email"
@@ -48,15 +82,20 @@ export default defineComponent({
 				:rules="form.password.rules"
 			/>
 			<button
-				class="w-full py-2 rounded"
+				@click="login()"
+				class="w-full py-2 rounded flex flex-row items-center justify-center"
 				type="button"
-				:disabled="!valid"
+				:disabled="!valid || disableSubmit"
 				:class="{
-					'bg-secondary shadow-md': valid,
-					'bg-gray-300 text-gray-600': !valid,
+					'bg-secondary shadow-md': valid && !disableSubmit,
+					'bg-gray-300 text-gray-600': !valid || disableSubmit,
 				}"
 			>
-				Login
+				<LoaderIcon
+					v-if="disableSubmit"
+					class="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-600"
+				/>
+				<span v-if="!disableSubmit">Login</span>
 			</button>
 		</Form>
 	</div>

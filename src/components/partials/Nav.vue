@@ -30,7 +30,7 @@ export default defineComponent({
 		const showSubNav = ref(false);
 		const profileLinks = [
 			{ value: '', label: 'Profile', icon: 'UserIcon' },
-			{ value: '', label: 'Logout', icon: 'LogoutIcon' },
+			{ value: { name: 'logout' }, label: 'Logout', icon: 'LogoutIcon' },
 		];
 		const menu = [
 			{ link: { name: 'home' }, label: 'Home', icon: 'HomeIcon' },
