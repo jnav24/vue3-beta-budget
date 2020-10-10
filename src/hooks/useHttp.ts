@@ -1,4 +1,4 @@
-import { reactive, toRefs } from 'vue';
+import { reactive, ref, toRefs } from 'vue';
 import axios, { AxiosResponse } from 'axios';
 import useSession from '@/hooks/useSession';
 
@@ -17,7 +17,6 @@ type URLInterface = {
 };
 
 export type HttpResponse = {
-	loading: boolean;
 	data: any;
 	error: string;
 	success: boolean;
@@ -27,11 +26,11 @@ export default function useHttp() {
 	const { getCookie } = useSession();
 
 	const state: HttpResponse = reactive({
-		loading: false,
 		data: {},
 		error: '',
 		success: true,
 	});
+	const loading = ref(false);
 
 	const getResponse = async ({
 		method,
@@ -40,7 +39,7 @@ export default function useHttp() {
 		headers,
 	}: URLInterface) => {
 		try {
-			state.loading = true;
+			loading.value = true;
 			let responseData: any = {
 				data: params,
 			};
@@ -73,7 +72,7 @@ export default function useHttp() {
 			state.success = false;
 			state.error = msg;
 		} finally {
-			state.loading = false;
+			loading.value = false;
 		}
 
 		return state;
@@ -123,7 +122,6 @@ export default function useHttp() {
 		error = 'Something unexpected has occurred.',
 		data = {}
 	): HttpResponse => ({
-		loading: false,
 		data,
 		error,
 		success: false,
@@ -133,6 +131,7 @@ export default function useHttp() {
 		...toRefs(state),
 		get,
 		getAuth,
+		loading,
 		post,
 		postAuth,
 		failedResponse,
