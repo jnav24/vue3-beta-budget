@@ -14,7 +14,7 @@ import {
 import useRouteMiddleware from '@/hooks/useRouteMiddleware';
 import useHttp from '@/hooks/useHttp';
 
-const { auth, runMiddleware } = useRouteMiddleware();
+const { auth, autoLogin, runMiddleware } = useRouteMiddleware();
 
 const routes: Array<RouteRecordRaw> = [
 	{
@@ -32,6 +32,9 @@ const routes: Array<RouteRecordRaw> = [
 				path: '',
 				name: 'login',
 				component: () => import('@/views/onboard/Login.vue'),
+				meta: {
+					middleware: [autoLogin],
+				},
 			},
 			{
 				path: '/forgot-password',

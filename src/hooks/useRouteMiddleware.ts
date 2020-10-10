@@ -26,17 +26,18 @@ export default function useRouteMiddleware() {
 		}
 	};
 
-	const autoLogin = (context: {
+	const autoLogin = async (context: {
 		to: RouteLocationNormalized;
 		next: NavigationGuardNext;
 		from: RouteLocationNormalized;
 	}) => {
 		try {
-			// const response: ResponseInterface = await store.dispatch('isLoggedIn');
+			const { isLoggedIn } = useUserStore();
+			const response: HttpResponse = await isLoggedIn();
 
-			// if (response.success) {
-			// 	context.next({ name: 'dashboard' });
-			// }
+			if (response.success) {
+				context.next({ name: 'home' });
+			}
 
 			context.next();
 		} catch (error) {
