@@ -11,6 +11,7 @@ import LineChart from '@/components/charts/LineChart.vue';
 import BarChart from '@/components/charts/BarChart.vue';
 import SummaryCard from '@/components/partials/SummaryCard.vue';
 import YTDSummary from '@/components/partials/YTDSummary.vue';
+import { useAggregationStore } from '@/store';
 
 export default defineComponent({
 	components: {
@@ -27,6 +28,8 @@ export default defineComponent({
 		YTDSummary,
 	},
 	setup() {
+		const aggregationStore = useAggregationStore();
+
 		const form = {
 			year: {
 				rules: {},
@@ -126,6 +129,7 @@ export default defineComponent({
 			form,
 			items,
 			summary,
+			totalUnpaid: aggregationStore.totalUnpaid,
 			yearlyExpenseData,
 		};
 	},
@@ -134,7 +138,11 @@ export default defineComponent({
 
 <template>
 	<div class="container mx-auto py-6">
-		<Alert type="warn" message="You have 19 unpaid bills"></Alert>
+		<Alert
+			v-if="totalUnpaid"
+			type="warn"
+			:message="`You have ${totalUnpaid} unpaid bills`"
+		/>
 
 		<Card class="mx-2 sm:mx-0">
 			<CardHeader>
