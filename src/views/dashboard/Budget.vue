@@ -17,6 +17,7 @@ import TrendUpIcon from '@/components/ui-elements/icons/TrendUpIcon.vue';
 import { useBudgetStore } from '@/store';
 import { useRouter } from 'vue-router';
 import useUtils from '@/hooks/useUtils';
+import { useAggregationStore } from '@/store';
 import YTDSummary from '@/components/partials/YTDSummary.vue';
 
 export default defineComponent({
@@ -41,6 +42,8 @@ export default defineComponent({
 		const { arrayColumn } = useUtils();
 		const budgetStore = useBudgetStore();
 		const { push } = useRouter();
+		const aggregationStore = useAggregationStore();
+
 		const addBudgetItems = [
 			{ value: '', label: 'Monthly Budget', icon: 'CalendarIcon' },
 			{ value: '', label: 'Blank Budget', icon: 'ArchiveIcon' },
@@ -51,10 +54,6 @@ export default defineComponent({
 			...arrayColumn('saved', budgets as any).map(val => Number(val))
 		).toString();
 
-		const years = [
-			{ label: '2020', value: '2020' },
-			{ label: '2019', value: '2019' },
-		];
 		const selectedYear = ref('2020');
 
 		const goToEditPage = (id: string) =>
@@ -70,7 +69,7 @@ export default defineComponent({
 			goToTemplatePage,
 			maxSaved,
 			selectedYear,
-			years,
+			years: aggregationStore.allYears,
 		};
 	},
 });
