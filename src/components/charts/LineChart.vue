@@ -6,11 +6,11 @@ export default defineComponent({
 	props: {
 		labels: {
 			required: true,
-			type: Array,
+			type: Array as () => string[],
 		},
 		data: {
 			required: true,
-			type: Array,
+			type: Array as () => ChartDataSets[],
 		},
 	},
 	setup(props) {
@@ -32,8 +32,8 @@ export default defineComponent({
 		watch(
 			() => props.data,
 			() => {
-				data.data.datasets = props.data as ChartDataSets[];
-				data.data.labels = props.labels as string[];
+				data.data.datasets = props.data;
+				data.data.labels = props.labels;
 				chart.update();
 			}
 		);
