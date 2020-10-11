@@ -1,4 +1,5 @@
 import { createStore } from 'pinia';
+import useHttp from '@/hooks/useHttp';
 
 type BudgetState = {
 	list: Array<BudgetList>;
@@ -70,26 +71,16 @@ export const useBudgetStore = createStore({
 		},
 
 		async getBudgets() {
-			this.list = [
-				{
-					id: 83,
-					name: 'April',
-					budget_cycle: '2020-04-01 00:00:00',
-					saved: '52449.50',
-				},
-				{
-					id: 82,
-					name: 'March',
-					budget_cycle: '2020-03-01 00:00:00',
-					saved: '52473.50',
-				},
-				{
-					id: 51,
-					name: 'February',
-					budget_cycle: '2020-02-01 00:00:00',
-					saved: '21.30',
-				},
-			];
+			const { getAuth } = useHttp();
+
+			const data = {
+				path: 'budgets',
+			};
+			const response = await getAuth(data);
+
+			if (response.success) {
+				this.list = [...response.data.data.budgets];
+			}
 		},
 
 		async saveBudget() {
