@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent, reactive, ref, watchEffect } from 'vue';
 import Alert from '@/components/ui-elements/Alert.vue';
 import Card from '@/components/ui-elements/card/Card.vue';
 import CardContent from '@/components/ui-elements/card/CardContent.vue';
@@ -11,6 +11,10 @@ import LineChart from '@/components/charts/LineChart.vue';
 import BarChart from '@/components/charts/BarChart.vue';
 import SummaryCard from '@/components/partials/SummaryCard.vue';
 import YTDSummary from '@/components/partials/YTDSummary.vue';
+import { useAggregationStore } from '@/store';
+import { ChartDataSets } from 'chart.js';
+import useTimestamp from '@/hooks/useTimestamp';
+import useCurrency from '@/hooks/useCurrency';
 
 export default defineComponent({
 	components: {
@@ -27,12 +31,67 @@ export default defineComponent({
 		YTDSummary,
 	},
 	setup() {
-		const form = {
+		const aggregationStore = useAggregationStore();
+		const { formatDate } = useTimestamp();
+		const { formatDollar, getYtd } = useCurrency();
+
+		const averageEarned = ref('0.00');
+		const averageSaved = ref('0.00');
+		const averageSpent = ref('0.00');
+		const savedYtd = ref(0);
+		const spentYtd = ref(0);
+		const totalEarned = ref('0.00');
+		const totalSaved = ref('0.00');
+		const totalSpent = ref('0.00');
+		const form = reactive({
 			year: {
 				rules: {},
-				value: '19',
+				value: formatDate('yyyy'),
 			},
-		};
+		});
+
+		const chartData = computed(() => {
+			const data: {
+				labels: string[];
+				datasets: ChartDataSets[];
+			} = {
+				labels: [],
+				datasets: [],
+			};
+			const selectedYear = aggregationStore.budget[form.year.value];
+			const months = [
+				'January',
+				'February',
+				'March',
+				'April',
+				'May',
+				'June',
+				'July',
+				'August',
+				'September',
+				'October',
+				'November',
+				'December',
+			];
+
+			if (selectedYear && selectedYear.earned && selectedYear.spent) {
+				data.labels = months.splice(0, selectedYear.earned.length);
+				data.datasets = [
+					{
+						label: 'Earned',
+						backgroundColor: 'rgba(68,173,168,0.7)',
+						data: selectedYear.earned as any,
+					},
+					{
+						label: 'Spent',
+						backgroundColor: 'rgba(198,40,40,0.5)',
+						data: selectedYear.spent as any,
+					},
+				];
+			}
+
+			return data;
+		});
 
 		const yearlyExpenseData = {
 			labels: [
@@ -93,40 +152,55 @@ export default defineComponent({
 			],
 		};
 
-		const items = [
-			{ value: '20', label: '2020' },
-			{ value: '19', label: '2019' },
-		];
+		const getAverage = (amount: number) => {
+			return amount / Number(formatDate('M'));
+		};
 
-		const summary = [
-			{
-				icon: 'DollarIcon',
-				title: 'Total Saved 2020',
-				amount: '$300,378.60',
-				average: '$12,547.32',
-				color: 'text-primary',
-			},
-			{
-				icon: 'TrendUpIcon',
-				title: 'Total Earned 2020',
-				amount: '$376,530.63',
-				average: '$22,066.32',
-				color: 'text-secondary',
-			},
-			{
-				icon: 'TrendDownIcon',
-				title: 'Total Spent 2020',
-				amount: '$76,152.03',
-				average: '$22,066.32',
-				color: 'text-danger',
-			},
-		];
+		const getTotals = (priceList: string[]) => {
+			return priceList.reduce((acc, cur) => {
+				return acc + Number(cur);
+			}, 0);
+		};
+
+		watchEffect(() => {
+			const currentBudget = aggregationStore.budget[form.year.value];
+
+			if (currentBudget) {
+				const earned = getTotals(currentBudget.earned);
+				const saved = getTotals(currentBudget.saved);
+				const spent = getTotals(currentBudget.spent);
+
+				savedYtd.value = getYtd(
+					currentBudget.saved[0],
+					currentBudget.saved[currentBudget.saved.length - 1]
+				);
+				spentYtd.value = getYtd(
+					currentBudget.spent[0],
+					currentBudget.spent[currentBudget.spent.length - 1]
+				);
+				totalEarned.value = formatDollar(earned);
+				totalSaved.value = formatDollar(saved);
+				totalSpent.value = formatDollar(spent);
+				averageEarned.value = formatDollar(getAverage(earned));
+				averageSaved.value = formatDollar(getAverage(saved));
+				averageSpent.value = formatDollar(getAverage(spent));
+			}
+		});
 
 		return {
+			averageEarned,
+			averageSaved,
+			averageSpent,
+			chartData,
 			form,
-			items,
-			summary,
+			savedYtd,
+			spentYtd,
+			totalEarned,
+			totalSaved,
+			totalSpent,
+			totalUnpaid: computed(() => aggregationStore.totalUnpaid),
 			yearlyExpenseData,
+			years: computed(() => aggregationStore.allYears),
 		};
 	},
 });
@@ -134,7 +208,11 @@ export default defineComponent({
 
 <template>
 	<div class="container mx-auto py-6">
-		<Alert type="warn" message="You have 19 unpaid bills"></Alert>
+		<Alert
+			v-if="totalUnpaid"
+			type="warn"
+			:message="`You have ${totalUnpaid} unpaid bills`"
+		/>
 
 		<Card class="mx-2 sm:mx-0">
 			<CardHeader>
@@ -147,31 +225,51 @@ export default defineComponent({
 					<Select
 						class="w-40 mr-3"
 						v-model:value="form.year.value"
-						:items="items"
+						:items="years"
 					/>
 				</div>
 			</CardHeader>
 
 			<CardContent>
 				<div class="hidden sm:block">
-					<LineChart />
+					<LineChart
+						:labels="chartData.labels"
+						:data="chartData.datasets"
+					/>
 				</div>
 
 				<div class="block sm:hidden">
-					<BarChart />
+					<BarChart
+						:labels="chartData.labels"
+						:data="chartData.datasets"
+					/>
 				</div>
 			</CardContent>
 		</Card>
 
 		<div class="grid grid-cols-1 px-2 sm:grid-cols-3 sm:gap-6 sm:px-0">
 			<SummaryCard
-				v-for="(item, index) in summary"
-				:amount="item.amount"
-				:average="item.average"
-				:color="item.color"
-				:icon="item.icon"
-				:key="index"
-				:title="item.title"
+				:amount="`$${totalSaved}`"
+				:average="`$${averageSaved}`"
+				color="text-primary"
+				icon="DollarIcon"
+				:title="`Total Saved ${form.year.value}`"
+			/>
+
+			<SummaryCard
+				:amount="`$${totalEarned}`"
+				:average="`$${averageEarned}`"
+				color="text-secondary"
+				icon="TrendUpIcon"
+				:title="`Total Earned ${form.year.value}`"
+			/>
+
+			<SummaryCard
+				:amount="`$${totalSpent}`"
+				:average="`$${averageSpent}`"
+				color="text-danger"
+				icon="TrendDownIcon"
+				:title="`Total Spent ${form.year.value}`"
 			/>
 		</div>
 
@@ -201,12 +299,12 @@ export default defineComponent({
 					<div class="flex flex-col justify-center items-center">
 						<YTDSummary
 							color="#45ADA8"
-							percentage="40"
+							:percentage="savedYtd"
 							text="Saved since the beginning of the year."
 						/>
 						<YTDSummary
-							color="#45ADA8"
-							percentage="65"
+							color="#C62828"
+							:percentage="spentYtd"
 							text="Spent since the beginning of the year."
 						/>
 					</div>

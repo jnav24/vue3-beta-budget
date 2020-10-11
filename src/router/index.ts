@@ -8,6 +8,7 @@ import {
 	useRouter,
 } from 'vue-router';
 import {
+	useAggregationStore,
 	useBudgetStore,
 	useTemplateStore,
 	useTypesStore,
@@ -101,9 +102,13 @@ const routes: Array<RouteRecordRaw> = [
 			from: RouteLocationNormalized,
 			next: NavigationGuardNext
 		) => {
+			const aggregationStore = useAggregationStore();
 			const budgetStore = useBudgetStore();
 			const templateStore = useTemplateStore();
 			const typesStore = useTypesStore();
+
+			aggregationStore.getYearlyAggregations();
+			aggregationStore.getUnpaidBillTotals();
 			budgetStore.getBudgets();
 			templateStore.getTemplates();
 			typesStore.getAllBillTypes();

@@ -1,41 +1,42 @@
-<script>
-import Chart from 'chart.js';
-import { defineComponent, onMounted, ref } from 'vue';
+<script lang="ts">
+import Chart, { ChartDataSets } from 'chart.js';
+import { defineComponent, onMounted, ref, watch } from 'vue';
 
 export default defineComponent({
-	setup() {
+	props: {
+		labels: {
+			required: true,
+			type: Array as () => string[],
+		},
+		data: {
+			required: true,
+			type: Array as () => ChartDataSets[],
+		},
+	},
+	setup(props) {
+		let chart: Chart;
 		const data = {
 			type: 'line',
 			data: {
-				labels: [
-					'January',
-					'February',
-					'March',
-					'April',
-					'May',
-					'June',
-					'July',
-				],
-				datasets: [
-					{
-						label: 'Earned',
-						backgroundColor: 'rgba(69,173,168,0.7)',
-						data: [40, 39, 10, 40, 39, 80, 40],
-					},
-					{
-						label: 'Spent',
-						backgroundColor: 'rgba(198,40,40,0.5)',
-						data: [80, 19, 20, 60, 9, 20, 70],
-					},
-				],
+				labels: props.labels,
+				datasets: props.data,
 			},
 			options: {},
 		};
 		const myChart = ref(null);
 
 		onMounted(() => {
-			new Chart(myChart.value, data);
+			chart = new Chart(myChart.value as any, data);
 		});
+
+		watch(
+			() => props.data,
+			() => {
+				data.data.datasets = props.data;
+				data.data.labels = props.labels;
+				chart.update();
+			}
+		);
 
 		return { myChart };
 	},

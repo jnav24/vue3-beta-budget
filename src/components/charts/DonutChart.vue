@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, ref, onMounted, PropType } from 'vue';
+import { defineComponent, ref, onMounted, PropType, watch } from 'vue';
 import Chart, { ChartConfiguration, ChartData, ChartOptions } from 'chart.js';
 
 export default defineComponent({
@@ -14,6 +14,7 @@ export default defineComponent({
 		},
 	},
 	setup(props) {
+		let chart: Chart;
 		const data: ChartConfiguration = {
 			type: 'doughnut',
 			data: props.data,
@@ -32,8 +33,16 @@ export default defineComponent({
 		const myChart = ref(null);
 
 		onMounted(() => {
-			new Chart(myChart.value ?? '', data);
+			chart = new Chart(myChart.value ?? '', data);
 		});
+
+		watch(
+			() => props.data,
+			() => {
+				data.data = props.data;
+				chart.update();
+			}
+		);
 
 		return { myChart };
 	},

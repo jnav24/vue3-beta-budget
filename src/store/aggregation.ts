@@ -1,7 +1,9 @@
 import { createStore } from 'pinia';
+import useHttp from '@/hooks/useHttp';
 
 export const useAggregationStore = createStore({
 	id: 'aggregation',
+
 	state: (): AggregationState => ({
 		budget: {},
 		unpaid: {
@@ -14,7 +16,81 @@ export const useAggregationStore = createStore({
 			},
 		},
 	}),
-	actions: {},
+
+	getters: {
+		allYears() {
+			const yearList: string[] = Object.keys(this.budget);
+			const yearObjList: Array<{ value: string; label: string }> = [];
+
+			for (const year of yearList) {
+				yearObjList.push({ value: year, label: year });
+			}
+
+			return yearObjList;
+		},
+
+		totalUnpaid() {
+			let total = 0;
+
+			if (this.unpaid.totals) {
+				for (const key of Object.keys(this.unpaid.totals)) {
+					total += Number((this.unpaid.totals as any)[key]);
+				}
+			}
+
+			return total;
+		},
+	},
+
+	actions: {
+		async getUnpaidBillTotals() {
+			const data = {
+				path: 'unpaid-aggregate',
+			};
+			const { getAuth } = useHttp();
+			const response = await getAuth(data);
+
+			if (response.success) {
+				const { unpaid } = response.data.data;
+				this.unpaid = {
+					...this.unpaid,
+					...unpaid,
+				};
+			}
+		},
+
+		async getSelectedYearAggregate(year: string) {
+			const data = {
+				path: `current-budget-aggregate/${year}`,
+			};
+			const { getAuth } = useHttp();
+			const response = await getAuth(data);
+
+			if (response.success) {
+				const { aggregate } = response.data.data;
+				this.budget = {
+					...this.budget,
+					[year]: { ...aggregate[year] },
+				};
+			}
+		},
+
+		async getYearlyAggregations() {
+			const data = {
+				path: 'budget-aggregate',
+			};
+			const { getAuth } = useHttp();
+			const response = await getAuth(data);
+
+			if (response.success) {
+				const { aggregations } = response.data.data;
+				this.budget = {
+					...this.budget,
+					...aggregations,
+				};
+			}
+		},
+	},
 });
 
 type AggregationState = {
