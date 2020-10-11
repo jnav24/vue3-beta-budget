@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, reactive } from 'vue';
 import Alert from '@/components/ui-elements/Alert.vue';
 import Card from '@/components/ui-elements/card/Card.vue';
 import CardContent from '@/components/ui-elements/card/CardContent.vue';
@@ -13,6 +13,7 @@ import SummaryCard from '@/components/partials/SummaryCard.vue';
 import YTDSummary from '@/components/partials/YTDSummary.vue';
 import { useAggregationStore } from '@/store';
 import { ChartDataSets } from 'chart.js';
+import useTimestamp from '@/hooks/useTimestamp';
 
 export default defineComponent({
 	components: {
@@ -30,14 +31,14 @@ export default defineComponent({
 	},
 	setup() {
 		const aggregationStore = useAggregationStore();
-		console.log(aggregationStore.budget);
+		const { formatDate } = useTimestamp();
 
-		const form = {
+		const form = reactive({
 			year: {
 				rules: {},
-				value: '2019',
+				value: formatDate('yyyy'),
 			},
-		};
+		});
 
 		const chartData = computed(() => {
 			const data: {
