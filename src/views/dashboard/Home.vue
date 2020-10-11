@@ -33,11 +33,13 @@ export default defineComponent({
 	setup() {
 		const aggregationStore = useAggregationStore();
 		const { formatDate } = useTimestamp();
-		const { formatDollar } = useCurrency();
+		const { formatDollar, getYtd } = useCurrency();
 
 		const averageEarned = ref('0.00');
 		const averageSaved = ref('0.00');
 		const averageSpent = ref('0.00');
+		const savedYtd = ref(0);
+		const spentYtd = ref(0);
 		const totalEarned = ref('0.00');
 		const totalSaved = ref('0.00');
 		const totalSpent = ref('0.00');
@@ -168,6 +170,14 @@ export default defineComponent({
 				const saved = getTotals(currentBudget.saved);
 				const spent = getTotals(currentBudget.spent);
 
+				savedYtd.value = getYtd(
+					currentBudget.saved[0],
+					currentBudget.saved[currentBudget.saved.length - 1]
+				);
+				spentYtd.value = getYtd(
+					currentBudget.spent[0],
+					currentBudget.spent[currentBudget.spent.length - 1]
+				);
 				totalEarned.value = formatDollar(earned);
 				totalSaved.value = formatDollar(saved);
 				totalSpent.value = formatDollar(spent);
@@ -183,6 +193,8 @@ export default defineComponent({
 			averageSpent,
 			chartData,
 			form,
+			savedYtd,
+			spentYtd,
 			totalEarned,
 			totalSaved,
 			totalSpent,
@@ -287,12 +299,12 @@ export default defineComponent({
 					<div class="flex flex-col justify-center items-center">
 						<YTDSummary
 							color="#45ADA8"
-							percentage="40"
+							:percentage="savedYtd"
 							text="Saved since the beginning of the year."
 						/>
 						<YTDSummary
-							color="#45ADA8"
-							percentage="65"
+							color="#C62828"
+							:percentage="spentYtd"
 							text="Spent since the beginning of the year."
 						/>
 					</div>
