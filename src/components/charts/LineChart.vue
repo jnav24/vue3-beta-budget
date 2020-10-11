@@ -18,8 +18,8 @@ export default defineComponent({
 		const data = {
 			type: 'line',
 			data: {
-				labels: [] as string[],
-				datasets: [] as ChartDataSets[],
+				labels: props.labels,
+				datasets: props.data,
 			},
 			options: {},
 		};
