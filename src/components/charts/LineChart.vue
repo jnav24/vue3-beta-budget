@@ -27,7 +27,6 @@ export default defineComponent({
 
 		onMounted(() => {
 			chart = new Chart(myChart.value as any, data);
-			console.log(chart);
 		});
 
 		watch(
