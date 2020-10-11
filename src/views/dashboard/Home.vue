@@ -12,6 +12,7 @@ import BarChart from '@/components/charts/BarChart.vue';
 import SummaryCard from '@/components/partials/SummaryCard.vue';
 import YTDSummary from '@/components/partials/YTDSummary.vue';
 import { useAggregationStore } from '@/store';
+import { ChartDataSets } from 'chart.js';
 
 export default defineComponent({
 	components: {
@@ -29,6 +30,7 @@ export default defineComponent({
 	},
 	setup() {
 		const aggregationStore = useAggregationStore();
+		console.log(aggregationStore.budget);
 
 		const form = {
 			year: {
@@ -36,6 +38,49 @@ export default defineComponent({
 				value: '2019',
 			},
 		};
+
+		const chartData = computed(() => {
+			const data: {
+				labels: string[];
+				datasets: ChartDataSets[];
+			} = {
+				labels: [],
+				datasets: [],
+			};
+			const selectedYear = aggregationStore.budget[form.year.value];
+			const months = [
+				'January',
+				'February',
+				'March',
+				'April',
+				'May',
+				'June',
+				'July',
+				'August',
+				'September',
+				'October',
+				'November',
+				'December',
+			];
+
+			if (selectedYear && selectedYear.earned && selectedYear.spent) {
+				data.labels = months.splice(0, selectedYear.earned.length);
+				data.datasets = [
+					{
+						label: 'Earned',
+						backgroundColor: 'rgba(68,173,168,0.7)',
+						data: selectedYear.earned as any,
+					},
+					{
+						label: 'Spent',
+						backgroundColor: 'rgba(198,40,40,0.5)',
+						data: selectedYear.spent as any,
+					},
+				];
+			}
+
+			return data;
+		});
 
 		const yearlyExpenseData = {
 			labels: [
@@ -121,6 +166,7 @@ export default defineComponent({
 		];
 
 		return {
+			chartData,
 			form,
 			summary,
 			totalUnpaid: computed(() => aggregationStore.totalUnpaid),
@@ -157,11 +203,17 @@ export default defineComponent({
 
 			<CardContent>
 				<div class="hidden sm:block">
-					<LineChart />
+					<LineChart
+						:labels="chartData.labels"
+						:data="chartData.datasets"
+					/>
 				</div>
 
 				<div class="block sm:hidden">
-					<BarChart />
+					<BarChart
+						:labels="chartData.labels"
+						:data="chartData.datasets"
+					/>
 				</div>
 			</CardContent>
 		</Card>
