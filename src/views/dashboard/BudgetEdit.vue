@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, onMounted, ref } from 'vue';
 import BudgetEditSummary from '@/components/partials/BudgetEditSummary.vue';
 import BudgetEditTable from '@/components/tables/BudgetEditTable.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
@@ -20,11 +20,13 @@ export default defineComponent({
 			params: { id },
 		} = useRoute();
 
-		const budget = ref({});
+		const budget = computed(() =>
+			budgetStore.list.find(item => item.id === Number(id))
+		);
 		const loading = ref(true);
 
 		onMounted(async () => {
-			budget.value = await budgetStore.getBudget(id.toString());
+			await budgetStore.getBudget(id.toString());
 			loading.value = false;
 		});
 
