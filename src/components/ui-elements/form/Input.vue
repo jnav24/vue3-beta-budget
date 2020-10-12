@@ -63,6 +63,7 @@ export default defineComponent({
 <template>
 	<div class="mb-4">
 		<Label :error="error" :labelId="labelId" :label="label" />
+		<!-- @todo add prop to set autocomplete besides password -->
 		<input
 			:id="labelId"
 			class="w-full p-2 mt-2 border rounded outline-none"

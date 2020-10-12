@@ -5,6 +5,7 @@ import BudgetEditTotal from '@/components/partials/BudgetEditTotal.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import SaveIcon from '@/components/ui-elements/icons/SaveIcon.vue';
 import useTimestamp from '@/hooks/useTimestamp';
+import { BudgetExpense } from '@/store/budget';
 
 export default defineComponent({
 	components: {
@@ -18,27 +19,30 @@ export default defineComponent({
 			required: true,
 			type: String,
 		},
-		total: {
+		expenses: {
 			required: true,
-			type: String,
+			type: Array as () => Array<BudgetExpense>,
 		},
 	},
 	setup(props) {
 		const { formatDate } = useTimestamp();
 		const cycle = formatDate('MMM yyyy', props.date);
 		const disableSave = ref(true);
-		const totals = [
-			{ title: 'Total Earned', amount: '19,546.24', icon: 'CashIcon' },
-			{ title: 'Total Spent', amount: '456.14', icon: 'ShoppingBagIcon' },
-			{
-				title: 'Total Invested',
-				amount: '419,423.77',
-				icon: 'ReceiptTaxIcon',
-			},
-			{ title: 'Total Banked', amount: '13,956.07', icon: 'LibraryIcon' },
-		];
+		const totalBanked = ref('0.00');
+		const totalEarned = ref('0.00');
+		const totalInvested = ref('0.00');
+		const totalSaved = ref('0.00');
+		const totalSpent = ref('0.00');
 
-		return { cycle, disableSave, totals };
+		return {
+			cycle,
+			disableSave,
+			totalBanked,
+			totalEarned,
+			totalInvested,
+			totalSaved,
+			totalSpent,
+		};
 	},
 });
 </script>
@@ -52,10 +56,11 @@ export default defineComponent({
 				<div class="space-y-0">
 					<p class="text-gray-300 uppercase">
 						<!-- @todo say `Total Loss` on negative -->
-						Total Saved
+						<template v-if="true">Total Saved</template>
+						<template v-if="false">Total Loss</template>
 					</p>
 					<p class="text-4xl font-body font-bold text-primary">
-						${{ total }}
+						${{ totalSaved }}
 					</p>
 				</div>
 
@@ -90,11 +95,30 @@ export default defineComponent({
 		>
 			<BudgetEditTotal
 				class="justify-center md:justify-start"
-				v-for="(total, index) in totals"
-				:key="index"
-				:amount="total.amount"
-				:icon="total.icon"
-				:title="total.title"
+				:amount="totalEarned"
+				icon="CashIcon"
+				title="Total Earned"
+			/>
+
+			<BudgetEditTotal
+				class="justify-center md:justify-start"
+				:amount="totalSpent"
+				icon="ShoppingBagIcon"
+				title="Total Spent"
+			/>
+
+			<BudgetEditTotal
+				class="justify-center md:justify-start"
+				:amount="totalInvested"
+				icon="ReceiptTaxIcon"
+				title="Total Invested"
+			/>
+
+			<BudgetEditTotal
+				class="justify-center md:justify-start"
+				:amount="totalBanked"
+				icon="LibraryIcon"
+				title="Total Banked"
 			/>
 		</div>
 	</div>

@@ -34,13 +34,22 @@ export default defineComponent({
 		const selectedCategory = ref('banks');
 		const categories = computed(() => typeStore.bills);
 
-		return { categories, budget, selectedCategory, loading };
+		return {
+			categories,
+			budget,
+			selectedCategory,
+			loading,
+		};
 	},
 });
 </script>
 
 <template>
-	<BudgetEditSummary v-if="budget" :date="budget.budget_cycle" />
+	<BudgetEditSummary
+		v-if="budget"
+		:date="budget.budget_cycle"
+		:expenses="budget.expenses"
+	/>
 
 	<div class="container mx-auto py-6 px-4 sm:px-0">
 		<Select
