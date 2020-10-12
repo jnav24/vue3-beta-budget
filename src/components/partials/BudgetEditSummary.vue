@@ -18,6 +18,10 @@ export default defineComponent({
 			required: true,
 			type: String,
 		},
+		total: {
+			required: true,
+			type: String,
+		},
 	},
 	setup(props) {
 		const { formatDate } = useTimestamp();
@@ -51,7 +55,7 @@ export default defineComponent({
 						Total Saved
 					</p>
 					<p class="text-4xl font-body font-bold text-primary">
-						$19,456.24
+						${{ total }}
 					</p>
 				</div>
 
