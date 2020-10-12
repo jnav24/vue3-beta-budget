@@ -132,7 +132,7 @@ export default defineComponent({
 		<CardContent>
 			<div
 				v-if="!data[category].length"
-				class="py-32 text-gray-500 flex flex-col items-center justify-center"
+				class="py-8 text-gray-500 flex flex-col items-center justify-center"
 			>
 				<WarningIcon class="w-8 h-8" />
 				<span>{{ ucFirst(category) }} is empty.</span>
@@ -140,7 +140,7 @@ export default defineComponent({
 
 			<div
 				:class="
-					`grid grid-cols-2 sm:grid-cols-${categoryHeader.length} gap-2 text-gray-700 py-4 even:bg-gray-100 items-center`
+					`grid grid-cols-2 sm:grid-cols-${categoryHeader.length} gap-2 text-gray-700 py-4 even:bg-gray-100 items-center text-sm`
 				"
 				v-for="item in data[category]"
 				:key="item.id"
