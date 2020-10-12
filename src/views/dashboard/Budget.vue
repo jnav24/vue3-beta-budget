@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import BanIcon from '@/components/ui-elements/icons/BanIcon.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import Card from '@/components/ui-elements/card/Card.vue';
@@ -16,6 +16,8 @@ import TrendDownIcon from '@/components/ui-elements/icons/TrendDownIcon.vue';
 import TrendUpIcon from '@/components/ui-elements/icons/TrendUpIcon.vue';
 import { useBudgetStore } from '@/store';
 import { useRouter } from 'vue-router';
+import useCurrency from '@/hooks/useCurrency';
+import useTimestamp from '@/hooks/useTimestamp';
 import useUtils from '@/hooks/useUtils';
 import { useAggregationStore } from '@/store';
 import YTDSummary from '@/components/partials/YTDSummary.vue';
@@ -40,8 +42,10 @@ export default defineComponent({
 	},
 	setup() {
 		const { arrayColumn } = useUtils();
-		const budgetStore = useBudgetStore();
 		const { push } = useRouter();
+		const { formatDate } = useTimestamp();
+		const { formatDollar } = useCurrency();
+		const budgetStore = useBudgetStore();
 		const aggregationStore = useAggregationStore();
 
 		const addBudgetItems = [
@@ -49,12 +53,16 @@ export default defineComponent({
 			{ value: '', label: 'Blank Budget', icon: 'ArchiveIcon' },
 		];
 		const showAddBudgetNav = ref(false);
-		const budgets = budgetStore.list;
-		const maxSaved = Math.max(
-			...arrayColumn('saved', budgets as any).map(val => Number(val))
-		).toString();
-
-		const selectedYear = ref('2020');
+		const budgets = computed(() => budgetStore.sortedBudges);
+		const selectedYear = ref(formatDate('yyyy'));
+		const maxSaved = computed(() => {
+			return Math.max(
+				...arrayColumn(
+					'saved',
+					(budgets.value as any)[selectedYear.value]
+				).map(val => Number(val))
+			).toString();
+		});
 
 		const goToEditPage = (id: string) =>
 			push({ name: 'budget-edit', params: { id } });
@@ -65,11 +73,12 @@ export default defineComponent({
 			addBudgetItems,
 			showAddBudgetNav,
 			budgets,
+			formatDollar,
 			goToEditPage,
 			goToTemplatePage,
 			maxSaved,
 			selectedYear,
-			years: aggregationStore.allYears,
+			years: computed(() => aggregationStore.allYears),
 		};
 	},
 });
@@ -186,7 +195,7 @@ export default defineComponent({
 				</CardHeader>
 				<CardContent class="px-0">
 					<div
-						v-for="item in budgets"
+						v-for="item in budgets[selectedYear]"
 						:key="item.id"
 						class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-gray-700 py-4 even:bg-gray-100 items-center"
 					>
@@ -208,7 +217,7 @@ export default defineComponent({
 						</div>
 						<div class="pl-4 sm:pl-0">{{ item.name }}</div>
 						<div class="hidden sm:block">
-							${{ item.saved.replace('-', '') }}
+							${{ formatDollar(item.saved.replace('-', '')) }}
 						</div>
 						<div>
 							<button
