@@ -44,6 +44,30 @@ export const useTypesStore = createStore({
 				}
 			}
 		},
+
+		getType(type: string, id: number): CommonExpenseTypeInterface | null {
+			const mapTypes = {
+				bank: 'banks',
+				credit_card: 'creditCards',
+				investment: 'investments',
+				income: 'incomes',
+				utility: 'utilities',
+				vehicle: 'vehicles',
+			};
+			const [typeName] = type.split('_type_id');
+			const typeIndex = (this as any)[typeName]
+				? typeName
+				: (mapTypes as any)[typeName] ?? '';
+
+			if (typeIndex.length) {
+				const typeObject = (this as any)[typeIndex].find(
+					(obj: CommonExpenseTypeInterface) => obj.id === id
+				);
+				return typeObject ?? null;
+			}
+
+			return null;
+		},
 	},
 });
 

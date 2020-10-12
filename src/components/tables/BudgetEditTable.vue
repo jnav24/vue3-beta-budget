@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import BanIcon from '@/components/ui-elements/icons/BanIcon.vue';
 import BudgetTableHeaders from '@/components/partials/BudgetTableHeaders.vue';
 import Card from '@/components/ui-elements/card/Card.vue';
@@ -11,6 +11,7 @@ import WarningIcon from '@/components/ui-elements/icons/WarningIcon.vue';
 import useBudgetTable from '@/hooks/useBudgetTable';
 import useCurrency from '@/hooks/useCurrency';
 import useUtils from '@/hooks/useUtils';
+import { useTypesStore } from '@/store';
 
 type ExpenseType = {
 	name: string;
@@ -45,6 +46,7 @@ export default defineComponent({
 		const { getHeaders } = useBudgetTable();
 		const { ucFirst } = useUtils();
 		const { formatDollar } = useCurrency();
+		const typesStore = useTypesStore();
 		const headers: Record<string, Array<string>> = {
 			common: [
 				'',
@@ -83,12 +85,14 @@ export default defineComponent({
 			],
 		};
 
-		const categoryHeader = getHeaders(props.category, headers);
+		const categoryHeader = computed(() =>
+			getHeaders(props.category, headers)
+		);
 
 		const getExpenseValue = (
 			header: string,
 			item: Record<string, string>
-		): string => {
+		): string | null => {
 			if (['amount', 'balance'].includes(header)) {
 				return `$${formatDollar(item[header])}`;
 			}
@@ -98,11 +102,15 @@ export default defineComponent({
 			}
 
 			if (header === 'type') {
-				return (
+				const typeName =
 					Object.keys(item)
 						.filter((key: string) => /[a-z]*_type_[a-z]*/.exec(key))
-						.shift() ?? ''
+						.shift() ?? '';
+				const typeObj = typesStore.getType(
+					typeName,
+					(item as any)[typeName]
 				);
+				return typeObj?.name ?? null;
 			}
 
 			if (header === 'due date') {
