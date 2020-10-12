@@ -40,7 +40,7 @@ export default defineComponent({
 </script>
 
 <template>
-	<BudgetEditSummary />
+	<BudgetEditSummary v-if="budget" :date="budget.budget_cycle" />
 
 	<div class="container mx-auto py-6 px-4 sm:px-0">
 		<Select
