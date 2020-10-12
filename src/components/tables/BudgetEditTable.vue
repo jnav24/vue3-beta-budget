@@ -12,6 +12,7 @@ import useBudgetTable from '@/hooks/useBudgetTable';
 import useCurrency from '@/hooks/useCurrency';
 import useUtils from '@/hooks/useUtils';
 import { useTypesStore } from '@/store';
+import { BudgetExpense } from '@/store/budget';
 
 type ExpenseType = {
 	name: string;
@@ -89,27 +90,20 @@ export default defineComponent({
 			getHeaders(props.category, headers)
 		);
 
-		const getExpenseValue = (
-			header: string,
-			item: Record<string, string>
+		const getExpenseValue = <K extends keyof T, T extends BudgetExpense>(
+			header: K,
+			item: T
 		): string | null => {
-			if (['amount', 'balance'].includes(header)) {
-				return `$${formatDollar(item[header])}`;
+			if (['amount', 'balance'].includes(header as string)) {
+				return `$${formatDollar((item as any)[header])}`;
 			}
 
 			if (item[header]) {
-				return item[header];
+				return item[header] as any;
 			}
 
 			if (header === 'type') {
-				const typeName =
-					Object.keys(item)
-						.filter((key: string) => /[a-z]*_type_[a-z]*/.exec(key))
-						.shift() ?? '';
-				const typeObj = typesStore.getType(
-					typeName,
-					(item as any)[typeName]
-				);
+				const typeObj = typesStore.getType(item);
 				return typeObj?.name ?? null;
 			}
 

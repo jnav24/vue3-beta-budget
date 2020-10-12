@@ -5,11 +5,23 @@ import useTimestamp from '@/hooks/useTimestamp';
 type BudgetState = {
 	list: Array<BudgetList>;
 };
+
+export type BudgetExpense = {
+	id: number;
+	budget_id: number;
+	name: string;
+	amount: string;
+	balance?: string;
+	confirmation?: string;
+	paid_date?: string;
+	initial_pay_date?: string;
+};
+
 type BudgetList = {
 	id: number;
 	name: string;
 	budget_cycle: string;
-	expenses?: any;
+	expenses?: Array<BudgetExpense>;
 	saved?: string;
 };
 

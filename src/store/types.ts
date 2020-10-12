@@ -1,6 +1,7 @@
 import { createStore } from 'pinia';
 import useHttp from '@/hooks/useHttp';
 import useUtils from '@/hooks/useUtils';
+import { BudgetExpense } from '@/store/budget';
 
 export const useTypesStore = createStore({
 	id: 'types',
@@ -45,7 +46,7 @@ export const useTypesStore = createStore({
 			}
 		},
 
-		getType(type: string, id: number): CommonExpenseTypeInterface | null {
+		getType<T extends BudgetExpense>(item: T): CommonExpenseTypeInterface | null {
 			const mapTypes = {
 				bank: 'banks',
 				credit_card: 'creditCards',
@@ -54,6 +55,10 @@ export const useTypesStore = createStore({
 				utility: 'utilities',
 				vehicle: 'vehicles',
 			};
+			const type =
+				Object.keys(item)
+					.filter((key: string) => /[a-z]*_type_[a-z]*/.exec(key))
+					.shift() ?? '';
 			const [typeName] = type.split('_type_id');
 			const typeIndex = (this as any)[typeName]
 				? typeName
@@ -61,7 +66,7 @@ export const useTypesStore = createStore({
 
 			if (typeIndex.length) {
 				const typeObject = (this as any)[typeIndex].find(
-					(obj: CommonExpenseTypeInterface) => obj.id === id
+					(obj: CommonExpenseTypeInterface) => obj.id === item.id
 				);
 				return typeObject ?? null;
 			}
