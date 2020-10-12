@@ -24,7 +24,7 @@ type UserState = {
 		token?: string;
 	};
 	vehicles: Array<{
-		id: string;
+		id: number;
 		make: string;
 		model: string;
 		year: string;
@@ -38,11 +38,13 @@ const cookieName = process.env.VUE_APP_TOKEN;
 
 export const useUserStore = createStore({
 	id: 'user',
+
 	state: (): UserState => ({
 		login: {} as LoginType,
 		user: {},
 		vehicles: [],
 	}),
+
 	actions: {
 		resetUser() {
 			this.login = {} as LoginType;
@@ -109,6 +111,10 @@ export const useUserStore = createStore({
 					expires_at: payload,
 				},
 			};
+		},
+
+		getVehicleName(id: number) {
+			return this.vehicles.find(obj => obj.id === id);
 		},
 	},
 });

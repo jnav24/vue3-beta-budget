@@ -15,6 +15,7 @@ export type BudgetExpense = {
 	confirmation?: string;
 	paid_date?: string;
 	initial_pay_date?: string;
+	user_vehicle_id?: number;
 };
 
 type BudgetList = {

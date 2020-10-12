@@ -10,8 +10,9 @@ import EditIcon from '@/components/ui-elements/icons/EditIcon.vue';
 import WarningIcon from '@/components/ui-elements/icons/WarningIcon.vue';
 import useBudgetTable from '@/hooks/useBudgetTable';
 import useCurrency from '@/hooks/useCurrency';
+import useTimestamp from '@/hooks/useTimestamp';
 import useUtils from '@/hooks/useUtils';
-import { useTypesStore } from '@/store';
+import { useUserStore, useTypesStore } from '@/store';
 import { BudgetExpense } from '@/store/budget';
 
 type ExpenseType = {
@@ -47,6 +48,8 @@ export default defineComponent({
 		const { getHeaders } = useBudgetTable();
 		const { ucFirst } = useUtils();
 		const { formatDollar } = useCurrency();
+		const { formatDate } = useTimestamp();
+		const userStore = useUserStore();
 		const typesStore = useTypesStore();
 		const headers: Record<string, Array<string>> = {
 			common: ['', 'name', 'type', 'amount', 'paid_date', 'actions'],
@@ -81,11 +84,23 @@ export default defineComponent({
 			header: string,
 			item: T
 		): string | null => {
+			const dateFormat = 'MMM d';
 			if (['amount', 'balance'].includes(header as string)) {
 				return `$${formatDollar((item as any)[header])}`;
 			}
 
+			if (header === 'name' && item.user_vehicle_id) {
+				const vehicle = userStore.getVehicleName(item.user_vehicle_id);
+				return vehicle
+					? `${vehicle.year} ${vehicle.make} ${vehicle.model}`
+					: '';
+			}
+
 			if ((item as any)[header]) {
+				if (header === 'paid_date') {
+					return formatDate(dateFormat, item['paid_date']);
+				}
+
 				return (item as any)[header];
 			}
 
@@ -96,7 +111,7 @@ export default defineComponent({
 
 			if (header === 'date') {
 				if (item['initial_pay_date']) {
-					return item['initial_pay_date'];
+					return formatDate(dateFormat, item['initial_pay_date']);
 				}
 			}
 
@@ -142,7 +157,10 @@ export default defineComponent({
 					:key="index"
 				>
 					<template v-if="!header.trim().length">
-						<div class="rounded-full p-2 bg-primary w-8 mr-2">
+						<div
+							class="rounded-full p-2 bg-primary w-8 mr-2"
+							v-if="item.confirmation"
+						>
 							<CheckIcon class="w-4 h-4 text-white" />
 						</div>
 					</template>
