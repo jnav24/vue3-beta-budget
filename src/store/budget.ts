@@ -65,15 +65,14 @@ export const useBudgetStore = createStore({
 
 			if (response.success) {
 				const data: BudgetList = getDataFromResponse(response);
-				const index = this.list.findIndex(obj => obj.id === Number(data.id));
+				const index = this.list.findIndex(
+					obj => obj.id === Number(data.id)
+				);
 
 				if (index > -1) {
 					this.list[index].expenses = data.expenses;
 				} else {
-					this.list = [
-						...this.list,
-						data,
-					];
+					this.list = [...this.list, data];
 				}
 			}
 		},
