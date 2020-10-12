@@ -49,31 +49,18 @@ export default defineComponent({
 		const { formatDollar } = useCurrency();
 		const typesStore = useTypesStore();
 		const headers: Record<string, Array<string>> = {
-			common: [
-				'',
-				'name',
-				'type',
-				'amount',
-				'due date/paid date',
-				'actions',
-			],
+			common: ['', 'name', 'type', 'amount', 'paid_date', 'actions'],
 			'credit-cards': [
 				'',
 				'name',
 				'type',
 				'amount',
 				'balance',
-				'due date',
+				'paid_date',
 				'actions',
 			],
-			income: ['name', 'type', 'amount', 'paid date', 'actions'],
-			miscellaneous: [
-				'',
-				'name',
-				'amount',
-				'due date/paid date',
-				'actions',
-			],
+			incomes: ['name', 'type', 'amount', 'date', 'actions'],
+			miscellaneous: ['', 'name', 'amount', 'paid_date', 'actions'],
 			savings: ['name', 'type', 'amount', 'actions'],
 			vehicles: [
 				'',
@@ -81,7 +68,7 @@ export default defineComponent({
 				'type',
 				'amount',
 				'balance',
-				'due date/paid date',
+				'paid_date',
 				'actions',
 			],
 		};
@@ -90,16 +77,16 @@ export default defineComponent({
 			getHeaders(props.category, headers)
 		);
 
-		const getExpenseValue = <K extends keyof T, T extends BudgetExpense>(
-			header: K,
+		const getExpenseValue = <T extends BudgetExpense>(
+			header: string,
 			item: T
 		): string | null => {
 			if (['amount', 'balance'].includes(header as string)) {
 				return `$${formatDollar((item as any)[header])}`;
 			}
 
-			if (item[header]) {
-				return item[header] as any;
+			if ((item as any)[header]) {
+				return (item as any)[header];
 			}
 
 			if (header === 'type') {
@@ -107,11 +94,7 @@ export default defineComponent({
 				return typeObj?.name ?? null;
 			}
 
-			if (header === 'due date') {
-				if (item['paid_date']) {
-					return item['paid_date'];
-				}
-
+			if (header === 'date') {
 				if (item['initial_pay_date']) {
 					return item['initial_pay_date'];
 				}
