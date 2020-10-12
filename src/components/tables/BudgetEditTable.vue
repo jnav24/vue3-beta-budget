@@ -9,6 +9,7 @@ import CheckIcon from '@/components/ui-elements/icons/CheckIcon.vue';
 import EditIcon from '@/components/ui-elements/icons/EditIcon.vue';
 import WarningIcon from '@/components/ui-elements/icons/WarningIcon.vue';
 import useBudgetTable from '@/hooks/useBudgetTable';
+import useCurrency from '@/hooks/useCurrency';
 import useUtils from '@/hooks/useUtils';
 
 type ExpenseType = {
@@ -43,6 +44,7 @@ export default defineComponent({
 	setup(props) {
 		const { getHeaders } = useBudgetTable();
 		const { ucFirst } = useUtils();
+		const { formatDollar } = useCurrency();
 		const headers: Record<string, Array<string>> = {
 			common: [
 				'',
@@ -88,7 +90,7 @@ export default defineComponent({
 			item: Record<string, string>
 		): string => {
 			if (['amount', 'balance'].includes(header)) {
-				return `$${item[header]}`;
+				return `$${formatDollar(item[header])}`;
 			}
 
 			if (item[header]) {
