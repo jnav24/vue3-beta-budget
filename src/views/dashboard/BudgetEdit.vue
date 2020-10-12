@@ -4,7 +4,7 @@ import BudgetEditSummary from '@/components/partials/BudgetEditSummary.vue';
 import BudgetEditTable from '@/components/tables/BudgetEditTable.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
 import SideBar from '@/components/partials/SideBar.vue';
-import { useBudgetStore } from '@/store';
+import { useBudgetStore, useTypesStore } from '@/store';
 import { useRoute } from 'vue-router';
 
 export default defineComponent({
@@ -16,6 +16,7 @@ export default defineComponent({
 	},
 	setup() {
 		const budgetStore = useBudgetStore();
+		const typeStore = useTypesStore();
 		const {
 			params: { id },
 		} = useRoute();
@@ -31,11 +32,7 @@ export default defineComponent({
 		});
 
 		const selectedCategory = ref('banks');
-		const categories = [
-			{ label: 'Banks', value: 'banks' },
-			{ label: 'Credit Cards', value: 'credit-cards' },
-			{ label: 'Investments', value: 'investments' },
-		];
+		const categories = computed(() => typeStore.bills);
 
 		return { categories, budget, selectedCategory, loading };
 	},
@@ -49,12 +46,16 @@ export default defineComponent({
 		<Select
 			class="block md:hidden"
 			:items="categories"
+			item-value="slug"
+			item-label="name"
 			v-model:value="selectedCategory"
 		/>
 		<div class="grid grid-cols-1 md:grid-cols-5 gap-3">
 			<SideBar
 				title="Categories"
 				:items="categories"
+				item-value="slug"
+				item-label="name"
 				v-model:selected-item="selectedCategory"
 			/>
 
