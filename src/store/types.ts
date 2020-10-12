@@ -46,7 +46,9 @@ export const useTypesStore = createStore({
 			}
 		},
 
-		getType<T extends BudgetExpense>(item: T): CommonExpenseTypeInterface | null {
+		getType<T extends BudgetExpense>(
+			item: T
+		): CommonExpenseTypeInterface | null {
 			const mapTypes = {
 				bank: 'banks',
 				credit_card: 'creditCards',
@@ -66,7 +68,7 @@ export const useTypesStore = createStore({
 
 			if (typeIndex.length) {
 				const typeObject = (this as any)[typeIndex].find(
-					(obj: CommonExpenseTypeInterface) => obj.id === item.id
+					(obj: CommonExpenseTypeInterface) => obj.id === (item as any)[type]
 				);
 				return typeObject ?? null;
 			}
