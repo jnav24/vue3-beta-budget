@@ -68,7 +68,8 @@ export const useTypesStore = createStore({
 
 			if (typeIndex.length) {
 				const typeObject = (this as any)[typeIndex].find(
-					(obj: CommonExpenseTypeInterface) => obj.id === (item as any)[type]
+					(obj: CommonExpenseTypeInterface) =>
+						obj.id === (item as any)[type]
 				);
 				return typeObject ?? null;
 			}
