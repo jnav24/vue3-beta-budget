@@ -22,7 +22,7 @@ type BudgetList = {
 	id: number;
 	name: string;
 	budget_cycle: string;
-	expenses?: Array<BudgetExpense>;
+	expenses?: Record<string, BudgetExpense>;
 	saved?: string;
 };
 
@@ -34,7 +34,7 @@ export const useBudgetStore = createStore({
 	}),
 
 	getters: {
-		sortedBudges() {
+		sortedBudgets() {
 			const { formatDate } = useTimestamp();
 			const budgets: Record<string, Array<BudgetList>> = {};
 

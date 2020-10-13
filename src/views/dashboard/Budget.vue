@@ -53,7 +53,7 @@ export default defineComponent({
 			{ value: '', label: 'Blank Budget', icon: 'ArchiveIcon' },
 		];
 		const showAddBudgetNav = ref(false);
-		const budgets = computed(() => budgetStore.sortedBudges);
+		const budgets = computed(() => budgetStore.sortedBudgets);
 		const selectedYear = ref(formatDate('yyyy'));
 		const maxSaved = computed(() => {
 			return Math.max(
