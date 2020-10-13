@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, onMounted, ref } from 'vue';
 import AddIcon from '@/components/ui-elements/icons/AddIcon.vue';
 import BudgetEditTotal from '@/components/partials/BudgetEditTotal.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
@@ -67,6 +67,7 @@ export default defineComponent({
 		return {
 			cycle,
 			disableSave,
+			isGain: computed(() => !totalSaved.value.includes('-')),
 			totalBanked,
 			totalEarned,
 			totalInvested,
@@ -78,19 +79,27 @@ export default defineComponent({
 </script>
 
 <template>
-	<div class="bg-dark-primary w-full">
+	<div
+		class="w-full"
+		:class="{ 'bg-dark-danger': !isGain, 'bg-dark-primary': isGain }"
+	>
 		<div class="container mx-auto py-8">
 			<div
 				class="flex flex-col sm:flex-row justify-start sm:justify-between items-start sm:items-center px-4 sm:px-0"
 			>
 				<div class="space-y-0">
 					<p class="text-gray-300 uppercase">
-						<!-- @todo say `Total Loss` on negative -->
-						<template v-if="true">Total Saved</template>
-						<template v-if="false">Total Loss</template>
+						<template v-if="isGain">Total Saved</template>
+						<template v-if="!isGain">Total Loss</template>
 					</p>
-					<p class="text-4xl font-body font-bold text-primary">
-						${{ totalSaved }}
+					<p
+						class="text-4xl font-body font-bold"
+						:class="{
+							'text-danger': !isGain,
+							'text-primary': isGain,
+						}"
+					>
+						${{ totalSaved.replace('-', '') }}
 					</p>
 				</div>
 
