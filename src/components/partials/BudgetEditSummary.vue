@@ -1,11 +1,13 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import AddIcon from '@/components/ui-elements/icons/AddIcon.vue';
 import BudgetEditTotal from '@/components/partials/BudgetEditTotal.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import SaveIcon from '@/components/ui-elements/icons/SaveIcon.vue';
 import useTimestamp from '@/hooks/useTimestamp';
+import useUtils from '@/hooks/useUtils';
 import { BudgetExpense } from '@/store/budget';
+import useCurrency from '@/hooks/useCurrency';
 
 export default defineComponent({
 	components: {
@@ -21,11 +23,13 @@ export default defineComponent({
 		},
 		expenses: {
 			required: true,
-			type: Array as () => Array<BudgetExpense>,
+			type: Object as () => Record<string, Array<BudgetExpense>>,
 		},
 	},
 	setup(props) {
+		const { formatDollar } = useCurrency();
 		const { formatDate } = useTimestamp();
+		const { arrayColumn } = useUtils();
 		const cycle = formatDate('MMM yyyy', props.date);
 		const disableSave = ref(true);
 		const totalBanked = ref('0.00');
@@ -33,6 +37,32 @@ export default defineComponent({
 		const totalInvested = ref('0.00');
 		const totalSaved = ref('0.00');
 		const totalSpent = ref('0.00');
+
+		const generateTotals = (list: Array<BudgetExpense>) => {
+			const amounts = arrayColumn('amount', list as any);
+			return formatDollar(
+				amounts.reduce((acc, cir) => acc + Number(cir), 0)
+			);
+		};
+
+		onMounted(() => {
+			const spentList: Array<BudgetExpense> = [];
+			Object.keys(props.expenses)
+				.filter(
+					type => !['banks', 'incomes', 'investments'].includes(type)
+				)
+				.forEach(key => spentList.push(...props.expenses[key]));
+			totalSpent.value = generateTotals(spentList);
+			totalBanked.value = generateTotals(props.expenses['banks']);
+			totalEarned.value = generateTotals(props.expenses['incomes']);
+			totalInvested.value = generateTotals(props.expenses['investments']);
+			totalSaved.value = formatDollar(
+				(
+					Number(totalEarned.value.replace(',', '')) -
+					Number(totalSpent.value.replace(',', ''))
+				).toString()
+			);
+		});
 
 		return {
 			cycle,

@@ -46,7 +46,7 @@ export default defineComponent({
 
 <template>
 	<BudgetEditSummary
-		v-if="budget"
+		v-if="budget && budget.expenses"
 		:date="budget.budget_cycle"
 		:expenses="budget.expenses"
 	/>
