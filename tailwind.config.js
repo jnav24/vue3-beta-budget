@@ -26,6 +26,10 @@ module.exports = {
 			},
 			width: {
 				'100': '25rem',
+				'300': '75rem',
+			},
+			zIndex: {
+				'100': 100,
 			},
 		},
 	},
