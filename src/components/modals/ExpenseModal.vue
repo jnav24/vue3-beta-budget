@@ -12,13 +12,16 @@ export default defineComponent({
 			type: Boolean,
 		},
 	},
+	setup(props, { emit }) {
+		return {
+			closeModal: (e: boolean) => emit('update:show', e),
+		};
+	},
 });
 </script>
 
 <template>
-	<Modal>
-		<div class="w-300">
-			woah!!
-		</div>
+	<Modal :show="show" @close="closeModal($event)">
+		huh?
 	</Modal>
 </template>

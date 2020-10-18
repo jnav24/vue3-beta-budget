@@ -8,51 +8,42 @@ export default defineComponent({
 			type: Boolean,
 		},
 	},
+	setup(props, { emit }) {
+		return {
+			closeModal: (e: boolean) => emit('close', e),
+		};
+	},
 });
 </script>
 
+<style>
+.modal-enter-active,
+.modal-leave-active {
+	@apply transition-opacity duration-500 ease-out;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+	@apply opacity-0;
+}
+</style>
+
 <template>
-	<div class="fixed z-100 inset-0 overflow-y-auto">
-		<div
-			class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
-		>
-			<!--
-			  Background overlay, show/hide based on modal state.
-
-			  Entering: "ease-out duration-300"
-				From: "opacity-0"
-				To: "opacity-100"
-			  Leaving: "ease-in duration-200"
-				From: "opacity-100"
-				To: "opacity-0"
-			-->
-			<div class="fixed inset-0 transition-opacity">
-				<div class="absolute inset-0 bg-gray-900 opacity-75"></div>
-			</div>
-
-			<!-- This element is to trick the browser into centering the modal contents. -->
-			<span
-				class="hidden sm:inline-block sm:align-middle sm:h-screen"
-			></span>
-			&#8203;
-			<!--
-			  Modal panel, show/hide based on modal state.
-
-			  Entering: "ease-out duration-300"
-				From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-				To: "opacity-100 translate-y-0 sm:scale-100"
-			  Leaving: "ease-in duration-200"
-				From: "opacity-100 translate-y-0 sm:scale-100"
-				To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-			-->
+	<transition name="modal">
+		<div class="fixed z-100 inset-0 overflow-y-auto" v-if="show">
 			<div
-				class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle"
-				role="dialog"
-				aria-modal="true"
-				aria-labelledby="modal-headline"
+				class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
 			>
-				<slot></slot>
+				<div class="fixed inset-0">
+					<div class="absolute inset-0 bg-gray-900 opacity-75" @click="closeModal(false)"></div>
+				</div>
+
+				<!-- This element is to trick the browser into centering the modal contents. -->
+				<span
+					class="hidden sm:inline-block sm:align-middle sm:h-screen"
+				></span>
+				&#8203;
 			</div>
 		</div>
-	</div>
+	</transition>
 </template>

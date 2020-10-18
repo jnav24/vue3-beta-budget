@@ -35,11 +35,13 @@ export default defineComponent({
 
 		const selectedCategory = ref('banks');
 		const categories = computed(() => typeStore.bills);
+		const showModal = ref(false);
 
 		return {
 			categories,
 			budget,
 			selectedCategory,
+			showModal,
 			loading,
 		};
 	},
@@ -47,7 +49,8 @@ export default defineComponent({
 </script>
 
 <template>
-	<ExpenseModal />
+	<ExpenseModal v-model:show="showModal" />
+
 	<BudgetEditSummary
 		v-if="budget && budget.expenses"
 		:date="budget.budget_cycle"
@@ -55,6 +58,7 @@ export default defineComponent({
 	/>
 
 	<div class="container mx-auto py-6 px-4 sm:px-0">
+		<button @click="showModal = true">test</button>
 		<Select
 			class="block md:hidden"
 			:items="categories"
