@@ -22,6 +22,9 @@ export default defineComponent({
 
 <template>
 	<Modal :show="show" @close="closeModal($event)">
-		huh?
+		<div class="w-300">
+			<h1>Come One!</h1>
+			<p>let's go</p>
+		</div>
 	</Modal>
 </template>
