@@ -1,9 +1,11 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
+import ExpenseForm from '@/components/partials/ExpenseForm.vue';
 import Modal from '@/components/modals/Modal.vue';
 
 export default defineComponent({
 	components: {
+		ExpenseForm,
 		Modal,
 	},
 	props: {
@@ -22,9 +24,8 @@ export default defineComponent({
 
 <template>
 	<Modal :show="show" @close="closeModal($event)">
-		<div class="w-300">
-			<h1>Come One!</h1>
-			<p>let's go</p>
+		<div class="w-100">
+			<ExpenseForm />
 		</div>
 	</Modal>
 </template>

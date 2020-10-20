@@ -34,7 +34,7 @@ export default defineComponent({
 		const expired = ref(false);
 		const form = reactive({
 			verify: {
-				rules: ['required', 'max:6', 'alpha-numeric'],
+				rules: ['required', 'max:6'],
 				value: '',
 			},
 		});
