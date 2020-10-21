@@ -2,6 +2,7 @@
 import { computed, defineComponent } from 'vue';
 import BanIcon from '@/components/ui-elements/icons/BanIcon.vue';
 import BudgetTableHeaders from '@/components/partials/BudgetTableHeaders.vue';
+import Button from '@/components/ui-elements/form/Button.vue';
 import Card from '@/components/ui-elements/card/Card.vue';
 import CardContent from '@/components/ui-elements/card/CardContent.vue';
 import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
@@ -27,6 +28,7 @@ export default defineComponent({
 	components: {
 		BanIcon,
 		BudgetTableHeaders,
+		Button,
 		Card,
 		CardHeader,
 		CardContent,
@@ -169,12 +171,13 @@ export default defineComponent({
 						class="flex flex-row items-center"
 						v-if="header === 'actions'"
 					>
-						<div class="rounded-full p-2 bg-secondary w-8 mr-2">
+						<Button color="secondary" fab>
 							<EditIcon class="w-4 h-4" />
-						</div>
-						<div class="rounded-full p-2 bg-danger w-8">
+						</Button>
+
+						<Button color="danger" fab>
 							<BanIcon class="w-4 h-4 text-white" />
-						</div>
+						</Button>
 					</div>
 
 					<div
