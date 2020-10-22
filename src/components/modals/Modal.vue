@@ -1,8 +1,12 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 
 export default defineComponent({
 	props: {
+		setClose: {
+			default: false,
+			type: Boolean,
+		},
 		show: {
 			required: true,
 			type: Boolean,
@@ -15,6 +19,11 @@ export default defineComponent({
 			showContent.value = false;
 			setTimeout(() => emit('close', false), 200);
 		};
+
+		watch(
+			() => props.setClose,
+			n => n && closeModal()
+		);
 
 		return {
 			closeModal,
