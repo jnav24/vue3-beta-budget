@@ -28,6 +28,7 @@ module.exports = {
 				'100': '25rem',
 				'150': '38rem',
 				'200': '50rem',
+				'250': '63rem',
 				'300': '75rem',
 			},
 			zIndex: {
