@@ -41,7 +41,7 @@ export default defineComponent({
 			},
 			do_not_track: {
 				rules: [],
-				value: '',
+				value: false,
 			},
 			due_date: {
 				rules: [],
@@ -103,6 +103,7 @@ export default defineComponent({
 
 		<template v-if="editMode">
 			<Checkbox
+				class="pl-4 my-6"
 				label="Calculate this purchase in your totals?"
 				:rules="form.do_not_track.rules"
 				v-model:value="form.do_not_track.value"
@@ -120,13 +121,14 @@ export default defineComponent({
 					:rules="form.paid_date.rules"
 					v-model:value="form.paid_date.value"
 				/>
-
-				<Textarea
-					label="Notes"
-					:rules="form.notes.rules"
-					v-model:value="form.notes.value"
-				/>
 			</div>
+
+			<Textarea
+				class="px-4"
+				label="Notes"
+				:rules="form.notes.rules"
+				v-model:value="form.notes.value"
+			/>
 		</template>
 
 		<div

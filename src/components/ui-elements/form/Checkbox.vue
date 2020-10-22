@@ -22,7 +22,7 @@ export default defineComponent({
 		},
 		value: {
 			required: true,
-			type: String,
+			type: Boolean,
 		},
 	},
 	setup(props, { emit }) {
@@ -44,11 +44,11 @@ export default defineComponent({
 			return null;
 		});
 
-		const updateValue = (inputValue: string) => {
+		const updateValue = () => {
 			if (FormContext) {
-				FormContext.validateField(labelId.value, inputValue);
+				FormContext.validateField(labelId.value, !props.value);
 			}
-			emit('update:value', inputValue);
+			emit('update:value', !props.value);
 		};
 
 		return {
@@ -62,9 +62,21 @@ export default defineComponent({
 
 <template>
 	<div class="flex flex-row items-center">
-		<Button class="w-4 h-4" @on-click="updateValue()">
+		<Button
+			checkbox
+			@on-click="updateValue()"
+			v-if="!value"
+		>
+			<CheckIcon class="w-4 h-4 text-white" />
+		</Button>
+		<Button
+			checkbox
+			@on-click="updateValue()"
+			color="primary"
+			v-if="value"
+		>
 			<CheckIcon class="w-4 h-4" />
 		</Button>
-		<Label :error="error" :labelId="labelId" :label="label" />
+		<Label class="ml-2" :error="error" :labelId="labelId" :label="label" />
 	</div>
 </template>

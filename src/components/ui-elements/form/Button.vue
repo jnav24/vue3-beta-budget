@@ -14,6 +14,10 @@ export default defineComponent({
 			default: 'default',
 			type: String,
 		},
+		checkbox: {
+			default: false,
+			type: Boolean,
+		},
 		fab: {
 			default: false,
 			type: Boolean,
@@ -51,7 +55,8 @@ export default defineComponent({
 			'bg-danger hover:bg-opacity-85 active:bg-dark-danger':
 				buttonColor === 'danger' && !isDisabled,
 			'rounded-full p-2 mr-2': fab,
-			'py-3 px-6 rounded-md text-sm mr-2': !fab,
+			'p-1 rounded-md': checkbox,
+			'py-3 px-6 rounded-md text-sm mr-2': !fab && !checkbox,
 			'bg-gray-400 text-gray-700 cursor-text': isDisabled,
 		}"
 		:disabled="isDisabled"

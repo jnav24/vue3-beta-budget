@@ -3,11 +3,13 @@ import { computed, defineComponent, nextTick, ref, watch } from 'vue';
 import { useTypesStore } from '@/store';
 import useUtils from '@/hooks/useUtils';
 import BankExpenseForm from '@/components/forms/BankExpenseForm.vue';
+import CommonExpenseForm from '@/components/forms/CommonExpenseForm.vue';
 import SideBar from '@/components/partials/SideBar.vue';
 
 export default defineComponent({
 	components: {
 		BankExpenseForm,
+		CommonExpenseForm,
 		SideBar,
 	},
 	props: {
@@ -72,6 +74,7 @@ export default defineComponent({
 				</h2>
 
 				<BankExpenseForm />
+				<CommonExpenseForm :edit-mode="editMode" />
 			</div>
 		</article>
 	</div>
