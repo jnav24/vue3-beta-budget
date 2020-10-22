@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, defineComponent, onMounted, onUnmounted, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import ExpenseForm from '@/components/partials/ExpenseForm.vue';
 import Modal from '@/components/modals/Modal.vue';
 import { BudgetExpense } from '@/store/budget';
@@ -24,8 +24,8 @@ export default defineComponent({
 	setup(props, { emit }) {
 		const setClose = ref(false);
 
-		const setCloseModal = (e: boolean) => {
-			setClose.value = !e;
+		const setCloseModal = () => {
+			setClose.value = true;
 			setTimeout(() => (setClose.value = false), 1000);
 		};
 
@@ -44,7 +44,7 @@ export default defineComponent({
 		<div :class="{ 'w-150': editMode, 'w-300': !editMode }">
 			<ExpenseFormProvider
 				:data="data"
-				@close-modal="setCloseModal($event)"
+				@close-modal="setCloseModal()"
 			>
 				<ExpenseForm :edit-mode="editMode" />
 			</ExpenseFormProvider>

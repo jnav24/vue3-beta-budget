@@ -16,7 +16,7 @@ export default defineComponent({
 				// save data and update the state
 			}
 
-			emit('close-modal', false);
+			emit('close-modal');
 		};
 
 		provide(ExpenseFormContext, {
