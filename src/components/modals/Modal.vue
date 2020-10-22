@@ -4,7 +4,7 @@ import { defineComponent, ref } from 'vue';
 export default defineComponent({
 	props: {
 		show: {
-			require: true,
+			required: true,
 			type: Boolean,
 		},
 	},
