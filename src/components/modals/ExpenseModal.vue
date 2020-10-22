@@ -42,10 +42,7 @@ export default defineComponent({
 <template>
 	<Modal :show="show" :set-close="setClose" @close="closeModal($event)">
 		<div :class="{ 'w-150': editMode, 'w-300': !editMode }">
-			<ExpenseFormProvider
-				:data="data"
-				@close-modal="setCloseModal()"
-			>
+			<ExpenseFormProvider :data="data" @close-modal="setCloseModal()">
 				<ExpenseForm :edit-mode="editMode" />
 			</ExpenseFormProvider>
 		</div>
