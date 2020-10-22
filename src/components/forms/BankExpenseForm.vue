@@ -80,7 +80,7 @@ export default defineComponent({
 			class="flex flex-row justify-end items-center mt-8 bg-gray-100 pr-2 py-2"
 		>
 			<Button @on-click="closeModal(false)">Cancel</Button>
-			<Button color="secondary" @on-click="closeModal(true)">
+			<Button color="secondary" @on-click="closeModal(true)" :is-disabled="!valid">
 				Submit
 			</Button>
 		</div>
