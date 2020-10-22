@@ -1,7 +1,10 @@
 <script lang="ts">
 import { defineComponent, inject, onMounted, reactive, ref } from 'vue';
 import Button from '@/components/ui-elements/form/Button.vue';
-import { ExpenseFormContext } from '@/components/modals/ExpenseFormProvider';
+import {
+	ExpenseFormContext,
+	ExpenseFormContextType,
+} from '@/components/modals/ExpenseFormProvider';
 import Form from '@/components/ui-elements/form/Form';
 import Input from '@/components/ui-elements/form/Input.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
@@ -14,7 +17,9 @@ export default defineComponent({
 		Select,
 	},
 	setup() {
-		const ExpenseContext = inject<any>(ExpenseFormContext);
+		const ExpenseContext = inject<ExpenseFormContextType>(
+			ExpenseFormContext
+		);
 		const form = reactive({
 			amount: {
 				rules: ['required'],
@@ -32,22 +37,20 @@ export default defineComponent({
 		const valid = ref(false);
 
 		onMounted(() => {
-			if (Object.keys(ExpenseContext.data).length) {
+			if (ExpenseContext && Object.keys(ExpenseContext.data).length) {
 				form.amount.value = ExpenseContext.data.amount;
 				form.name.value = ExpenseContext.data.name;
 			}
 		});
 
 		const closeModal = (submit: boolean) => {
-			if (submit) {
-				ExpenseContext.closeModal({
-					amount: form.amount.value,
-					name: form.name.value,
-					type: form.type.value,
-				});
-			} else {
-				ExpenseContext.closeModal();
+			let data: Record<string, string> = {};
+
+			if (submit && ExpenseContext) {
+				data = ExpenseContext.extractFormValues(form);
 			}
+
+			ExpenseContext?.closeModal(data);
 		};
 
 		return { closeModal, form, valid };

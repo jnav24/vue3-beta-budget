@@ -3,6 +3,12 @@ import { BudgetExpense } from '@/store/budget';
 
 export const ExpenseFormContext = Symbol('Expense Form Provider');
 
+export type ExpenseFormContextType = {
+	data: BudgetExpense,
+	closeModal: (data: Record<string, string>) => void,
+	extractFormValues: (form: any) => Record<string, string>,
+};
+
 export default defineComponent({
 	props: {
 		data: {
@@ -19,9 +25,16 @@ export default defineComponent({
 			emit('close-modal');
 		};
 
+		const extractFormValues = (form: any) => {
+			const result: Record<string, string> = {};
+			Object.keys(form).forEach(value => result[value] = form[value].value);
+			return result;
+		};
+
 		provide(ExpenseFormContext, {
 			data: props.data,
 			closeModal,
+			extractFormValues,
 		});
 	},
 	render() {
