@@ -55,7 +55,9 @@ export default defineComponent({
 
 		<article class="flex-1 bg-white" ref="formContent">
 			<h2 class="text-2xl text-gray-700 font-body mb-4 px-4 pt-2">
-				Edit {{ selectedTitle }} Expense
+				<template v-if="editMode">Edit</template>
+				<template v-if="!editMode">Add</template>
+				{{ selectedTitle }} Expense
 			</h2>
 
 			<BankExpenseForm />

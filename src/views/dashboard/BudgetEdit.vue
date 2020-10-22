@@ -72,10 +72,10 @@ export default defineComponent({
 		v-if="budget && budget.expenses"
 		:date="budget.budget_cycle"
 		:expenses="budget.expenses"
+		@add-expense="showModal = true"
 	/>
 
 	<div class="container mx-auto py-6 px-4 sm:px-0">
-		<button @click="showModal = true">test</button>
 		<Select
 			class="block md:hidden"
 			:items="categories"

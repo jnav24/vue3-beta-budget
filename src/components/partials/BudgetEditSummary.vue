@@ -26,7 +26,7 @@ export default defineComponent({
 			type: Object as () => Record<string, Array<BudgetExpense>>,
 		},
 	},
-	setup(props) {
+	setup(props, { emit }) {
 		const { formatDollar } = useCurrency();
 		const { formatDate } = useTimestamp();
 		const { arrayColumn } = useUtils();
@@ -65,6 +65,7 @@ export default defineComponent({
 		});
 
 		return {
+			addExpense: () => emit('add-expense'),
 			cycle,
 			disableSave,
 			isGain: computed(() => !totalSaved.value.includes('-')),
@@ -110,7 +111,11 @@ export default defineComponent({
 						{{ cycle }}
 					</p>
 
-					<Button color="secondary" class="w-full sm:w-auto">
+					<Button
+						color="secondary"
+						class="w-full sm:w-auto"
+						@on-click="addExpense()"
+					>
 						<AddIcon class="w-5 h-5" />
 						<span class="ml-2">Add Expense</span>
 					</Button>

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import ExpenseForm from '@/components/partials/ExpenseForm.vue';
 import Modal from '@/components/modals/Modal.vue';
 import { BudgetExpense } from '@/store/budget';
@@ -23,6 +23,7 @@ export default defineComponent({
 	},
 	setup(props, { emit }) {
 		return {
+			editMode: computed(() => !!Object.keys(props.data).length),
 			closeModal: (e: boolean) => emit('update:show', e),
 		};
 	},
@@ -31,9 +32,9 @@ export default defineComponent({
 
 <template>
 	<Modal :show="show" @close="closeModal($event)">
-		<div class="w-100">
+		<div :class="{ 'w-150': editMode, 'w-300': !editMode }">
 			<ExpenseFormProvider :data="data" @close-modal="closeModal($event)">
-				<ExpenseForm :edit-mode="Object.keys(data).length"/>
+				<ExpenseForm :edit-mode="editMode" />
 			</ExpenseFormProvider>
 		</div>
 	</Modal>

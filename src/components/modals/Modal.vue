@@ -11,18 +11,20 @@ export default defineComponent({
 	setup(props, { emit }) {
 		const showContent = ref(false);
 
+		const closeModal = () => {
+			showContent.value = false;
+			setTimeout(() => emit('close', false), 200);
+		};
+
 		return {
-			closeModal: (e: boolean) => {
-				showContent.value = false;
-				setTimeout(() => emit('close', e), 200);
-			},
+			closeModal,
 			showContent,
 		};
 	},
 });
 </script>
 
-<style>
+<style scoped>
 .modal-enter-active,
 .modal-leave-active {
 	@apply transition-opacity duration-500 ease-out;
@@ -112,7 +114,7 @@ export default defineComponent({
 				<div class="fixed inset-0">
 					<div
 						class="absolute inset-0 bg-black opacity-75"
-						@click="closeModal(false)"
+						@click="closeModal()"
 					></div>
 				</div>
 
