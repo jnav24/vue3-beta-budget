@@ -46,7 +46,7 @@ export default defineComponent({
 			type: Array as () => Partial<ExpenseType>,
 		},
 	},
-	setup(props) {
+	setup(props, { emit }) {
 		const { getHeaders } = useBudgetTable();
 		const { ucFirst } = useUtils();
 		const { formatDollar } = useCurrency();
@@ -120,7 +120,11 @@ export default defineComponent({
 			return '';
 		};
 
-		return { categoryHeader, getExpenseValue, ucFirst };
+		const showExpenseModal = (item: BudgetExpense) => {
+			emit('show-expense-modal', item);
+		};
+
+		return { categoryHeader, getExpenseValue, showExpenseModal, ucFirst };
 	},
 });
 </script>
@@ -171,7 +175,11 @@ export default defineComponent({
 						class="flex flex-row items-center"
 						v-if="header === 'actions'"
 					>
-						<Button color="secondary" fab>
+						<Button
+							color="secondary"
+							fab
+							@on-click="showExpenseModal(item)"
+						>
 							<EditIcon class="w-4 h-4" />
 						</Button>
 

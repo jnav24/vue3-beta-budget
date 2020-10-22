@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, onMounted, ref, watch } from 'vue';
 import BudgetEditSummary from '@/components/partials/BudgetEditSummary.vue';
 import BudgetEditTable from '@/components/tables/BudgetEditTable.vue';
 import ExpenseModal from '@/components/modals/ExpenseModal.vue';
@@ -7,6 +7,7 @@ import Select from '@/components/ui-elements/form/Select.vue';
 import SideBar from '@/components/partials/SideBar.vue';
 import { useBudgetStore, useTypesStore } from '@/store';
 import { useRoute } from 'vue-router';
+import { BudgetExpense } from '@/store/budget';
 
 export default defineComponent({
 	components: {
@@ -33,14 +34,30 @@ export default defineComponent({
 			loading.value = false;
 		});
 
+		const expenseData = ref({});
 		const selectedCategory = ref('banks');
 		const categories = computed(() => typeStore.bills);
 		const showModal = ref(false);
 
+		const showExpenseModal = (e: BudgetExpense) => {
+			if (e) {
+				expenseData.value = e;
+			}
+			showModal.value = true;
+		};
+
+		watch(showModal, n => {
+			if (!n) {
+				expenseData.value = {};
+			}
+		});
+
 		return {
 			categories,
 			budget,
+			expenseData,
 			selectedCategory,
+			showExpenseModal,
 			showModal,
 			loading,
 		};
@@ -49,7 +66,7 @@ export default defineComponent({
 </script>
 
 <template>
-	<ExpenseModal v-model:show="showModal" />
+	<ExpenseModal v-model:show="showModal" :data="expenseData" />
 
 	<BudgetEditSummary
 		v-if="budget && budget.expenses"
@@ -79,6 +96,7 @@ export default defineComponent({
 				<BudgetEditTable
 					:category="selectedCategory"
 					:data="budget.expenses"
+					@show-expense-modal="showExpenseModal($event)"
 				/>
 			</div>
 		</div>

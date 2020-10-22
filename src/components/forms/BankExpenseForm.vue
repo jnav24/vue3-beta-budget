@@ -1,10 +1,10 @@
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref } from 'vue';
+import { defineComponent, inject, onMounted, reactive, ref } from 'vue';
 import Button from '@/components/ui-elements/form/Button.vue';
+import { ExpenseFormContext } from '@/components/modals/ExpenseFormProvider';
 import Form from '@/components/ui-elements/form/Form';
 import Input from '@/components/ui-elements/form/Input.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
-import { BudgetExpense } from '@/store/budget';
 
 export default defineComponent({
 	components: {
@@ -13,13 +13,8 @@ export default defineComponent({
 		Input,
 		Select,
 	},
-	props: {
-		data: {
-			default: () => ({}),
-			type: Object as () => BudgetExpense,
-		},
-	},
-	setup(props) {
+	setup() {
+		const ExpenseContext = inject<any>(ExpenseFormContext);
 		const form = reactive({
 			amount: {
 				rules: ['required'],
@@ -37,13 +32,25 @@ export default defineComponent({
 		const valid = ref(false);
 
 		onMounted(() => {
-			if (Object.keys(props.data).length) {
-				form.amount.value = props.data.amount;
-				form.name.value = props.data.name;
+			if (Object.keys(ExpenseContext.data).length) {
+				form.amount.value = ExpenseContext.data.amount;
+				form.name.value = ExpenseContext.data.name;
 			}
 		});
 
-		return { form, valid };
+		const closeModal = (submit: boolean) => {
+			if (submit) {
+				ExpenseContext.closeModal({
+					amount: form.amount.value,
+					name: form.name.value,
+					type: form.type.value,
+				});
+			} else {
+				ExpenseContext.closeModal();
+			}
+		};
+
+		return { closeModal, form, valid };
 	},
 });
 </script>
@@ -69,8 +76,10 @@ export default defineComponent({
 		<div
 			class="flex flex-row justify-end items-center mt-8 bg-gray-100 pr-2 py-2"
 		>
-			<Button>Cancel</Button>
-			<Button color="secondary">Submit</Button>
+			<Button @on-click="closeModal(false)">Cancel</Button>
+			<Button color="secondary" @on-click="closeModal(true)">
+				Submit
+			</Button>
 		</div>
 	</Form>
 </template>

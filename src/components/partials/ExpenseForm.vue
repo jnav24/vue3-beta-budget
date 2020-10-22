@@ -4,7 +4,6 @@ import { useTypesStore } from '@/store';
 import useUtils from '@/hooks/useUtils';
 import BankExpenseForm from '@/components/forms/BankExpenseForm.vue';
 import SideBar from '@/components/partials/SideBar.vue';
-import { BudgetExpense } from '@/store/budget';
 
 export default defineComponent({
 	components: {
@@ -12,21 +11,20 @@ export default defineComponent({
 		SideBar,
 	},
 	props: {
-		data: {
-			default: () => ({}),
-			type: Object as () => BudgetExpense,
+		editMode: {
+			required: true,
+			type: Boolean,
 		},
 		type: {
 			required: true,
 			type: String,
 		},
 	},
-	setup(props) {
+	setup() {
 		const typeStore = useTypesStore();
 		const { toTitleCase } = useUtils();
 
 		const categories = computed(() => typeStore.bills);
-		const editMode = Object.keys(props.data).length;
 		const formContent = ref(null);
 		const selectedCategory = ref('banks');
 		const selectedTitle = computed(() =>
@@ -35,7 +33,6 @@ export default defineComponent({
 
 		return {
 			categories,
-			editMode,
 			formContent,
 			selectedCategory,
 			selectedTitle,
@@ -46,7 +43,7 @@ export default defineComponent({
 
 <template>
 	<div class="flex flex-row">
-		<aside class="w-1/4 px-2 bg-gray-100 overflow-auto" v-if="editMode">
+		<aside class="w-1/4 px-2 bg-gray-100 overflow-auto" v-if="!editMode">
 			<SideBar
 				title="Categories"
 				:items="categories"
