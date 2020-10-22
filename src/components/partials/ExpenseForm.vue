@@ -30,7 +30,7 @@ export default defineComponent({
 
 		nextTick(() => (selectedCategory.value = 'banks'));
 
-		watch(selectedCategory, n => {
+		watch(selectedCategory, () => {
 			formHeight.value = (formContent.value as any)?.offsetHeight;
 		});
 
