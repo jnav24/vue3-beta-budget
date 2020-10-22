@@ -66,7 +66,11 @@ export default defineComponent({
 </script>
 
 <template>
-	<ExpenseModal v-model:show="showModal" :data="expenseData" />
+	<ExpenseModal
+		v-model:show="showModal"
+		:data="expenseData"
+		:type="selectedCategory"
+	/>
 
 	<BudgetEditSummary
 		v-if="budget && budget.expenses"
