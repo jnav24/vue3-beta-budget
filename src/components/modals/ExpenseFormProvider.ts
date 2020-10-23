@@ -1,4 +1,4 @@
-import { defineComponent, provide } from 'vue';
+import { defineComponent, provide, ref } from 'vue';
 import { BudgetExpense } from '@/store/budget';
 
 export const ExpenseFormContext = Symbol('Expense Form Provider');
@@ -6,6 +6,8 @@ export const ExpenseFormContext = Symbol('Expense Form Provider');
 export type ExpenseFormContextType = {
 	data: BudgetExpense,
 	closeModal: (data: Record<string, string>) => void,
+	currentType: any,
+	editMode: any,
 	extractFormValues: (form: any) => Record<string, string>,
 };
 
@@ -17,6 +19,7 @@ export default defineComponent({
 		},
 	},
 	setup(props, { emit }) {
+		const currentType = ref('');
 		const closeModal = (data = {}) => {
 			if (Object.keys(data).length) {
 				// save data and update the state
@@ -24,6 +27,7 @@ export default defineComponent({
 
 			emit('close-modal');
 		};
+		const editMode = ref(false);
 
 		const extractFormValues = (form: any) => {
 			const result: Record<string, string> = {};
@@ -34,6 +38,8 @@ export default defineComponent({
 		provide(ExpenseFormContext, {
 			data: props.data,
 			closeModal,
+			currentType,
+			editMode,
 			extractFormValues,
 		});
 	},
