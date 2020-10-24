@@ -1,15 +1,18 @@
 import { computed, defineComponent, provide, ref } from 'vue';
 import { BudgetExpense } from '@/store/budget';
 import { ComputedRef, Ref } from '@vue/reactivity';
+import { CommonExpenseTypeInterface, useTypesStore } from '@/store';
+import { BillTypesInterface, TypesStateInterface } from '@/store/types';
 
 export const ExpenseFormContext = Symbol('Expense Form Provider');
 
 export type ExpenseFormContextType = {
 	data: BudgetExpense;
 	closeModal: (data: Record<string, string>) => void;
-	currentType: Ref<string>;
+	currentType: Ref<keyof TypesStateInterface>;
 	editMode: ComputedRef<boolean>;
 	extractFormValues: (form: any) => Record<string, string>;
+	typeList: ComputedRef<CommonExpenseTypeInterface[] | BillTypesInterface[]>;
 };
 
 export default defineComponent({
@@ -24,10 +27,12 @@ export default defineComponent({
 		},
 		type: {
 			required: true,
-			type: String,
+			type: String as () => keyof TypesStateInterface,
 		},
 	},
 	setup(props, { emit }) {
+		const typeStore = useTypesStore();
+
 		const currentType = ref(props.type);
 		const closeModal = (data = {}) => {
 			if (Object.keys(data).length) {
@@ -37,6 +42,7 @@ export default defineComponent({
 			emit('close-modal');
 		};
 		const editMode = computed(() => props.editMode);
+		const typeList = computed(() => typeStore[currentType.value] ?? []);
 
 		const extractFormValues = (form: any) => {
 			const result: Record<string, string> = {};
@@ -52,6 +58,7 @@ export default defineComponent({
 			currentType,
 			editMode,
 			extractFormValues,
+			typeList,
 		});
 	},
 	render() {
