@@ -57,7 +57,7 @@ export default defineComponent({
 		});
 
 		const isValueSelected = computed(
-			() => props.value && props.value.length
+			() => props.value && (Number(props.value) > 0 || props.value.length)
 		);
 
 		const getPlaceholder = computed(() => {
