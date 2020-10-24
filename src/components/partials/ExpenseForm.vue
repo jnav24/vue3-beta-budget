@@ -62,8 +62,9 @@ export default defineComponent({
 
 <template>
 	<div class="flex flex-row">
+		<!-- @todo side bar is not updating properly between credit card and others -->
 		<aside
-			class="w-1/4 px-2 bg-gray-100 overflow-auto"
+			class="w-1/4 px-2 bg-gray-100 overflow-auto rounded-l-md"
 			v-if="!editMode"
 			:style="`height: ${formHeight}px`"
 		>
@@ -76,7 +77,7 @@ export default defineComponent({
 			/>
 		</aside>
 
-		<article class="flex-1 bg-white">
+		<article class="flex-1 bg-white rounded-md overflow-hidden">
 			<div ref="formContent">
 				<h2 class="text-2xl text-gray-700 font-body mb-4 px-4 pt-2">
 					<template v-if="editMode">Edit</template>
@@ -86,12 +87,17 @@ export default defineComponent({
 					Expense
 				</h2>
 
-				<!-- @todo show/hide forms -->
-				<BankExpenseForm />
-				<CommonExpenseForm v-if="formType === 'banks11'" />
-				<CreditCardExpenseForm v-if="formType === 'banks11'" />
-				<IncomeExpenseForm v-if="formType === 'banks11'" />
-				<MiscellaneousExpenseForm v-if="formType === 'banks11'" />
+				<BankExpenseForm
+					v-if="['banks', 'investments'].includes(formType)"
+				/>
+				<CreditCardExpenseForm
+					v-else-if="['credit-cards'].includes(formType)"
+				/>
+				<IncomeExpenseForm v-else-if="['incomes'].includes(formType)" />
+				<MiscellaneousExpenseForm
+					v-else-if="['miscellaneous'].includes(formType)"
+				/>
+				<CommonExpenseForm v-else />
 			</div>
 		</article>
 	</div>
