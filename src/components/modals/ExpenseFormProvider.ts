@@ -1,13 +1,13 @@
-import { computed, defineComponent, provide } from 'vue';
+import { computed, defineComponent, provide, ref } from 'vue';
 import { BudgetExpense } from '@/store/budget';
-import { ComputedRef } from '@vue/reactivity';
+import { ComputedRef, Ref } from '@vue/reactivity';
 
 export const ExpenseFormContext = Symbol('Expense Form Provider');
 
 export type ExpenseFormContextType = {
 	data: BudgetExpense;
 	closeModal: (data: Record<string, string>) => void;
-	currentType: ComputedRef<string>;
+	currentType: Ref<string>;
 	editMode: ComputedRef<boolean>;
 	extractFormValues: (form: any) => Record<string, string>;
 };
@@ -28,7 +28,7 @@ export default defineComponent({
 		},
 	},
 	setup(props, { emit }) {
-		const currentType = computed(() => props.type);
+		const currentType = ref(props.type);
 		const closeModal = (data = {}) => {
 			if (Object.keys(data).length) {
 				// save data and update the state

@@ -1,26 +1,35 @@
 <script lang="ts">
-import { computed, defineComponent, nextTick, ref, watch } from 'vue';
+import { computed, defineComponent, inject, nextTick, ref, watch } from 'vue';
 import { useTypesStore } from '@/store';
 import useUtils from '@/hooks/useUtils';
 import BankExpenseForm from '@/components/forms/BankExpenseForm.vue';
 import CommonExpenseForm from '@/components/forms/CommonExpenseForm.vue';
+import CreditCardExpenseForm from '@/components/forms/CreditCardExpenseForm.vue';
+import IncomeExpenseForm from '@/components/forms/IncomeExpenseForm.vue';
+import MiscellaneousExpenseForm from '@/components/forms/MiscellaneousExpenseForm.vue';
 import SideBar from '@/components/partials/SideBar.vue';
+import {
+	ExpenseFormContext,
+	ExpenseFormContextType,
+} from '@/components/modals/ExpenseFormProvider';
 
 export default defineComponent({
 	components: {
 		BankExpenseForm,
 		CommonExpenseForm,
+		CreditCardExpenseForm,
+		IncomeExpenseForm,
+		MiscellaneousExpenseForm,
 		SideBar,
-	},
-	props: {
-		editMode: {
-			required: true,
-			type: Boolean,
-		},
 	},
 	setup() {
 		const typeStore = useTypesStore();
 		const { toTitleCase } = useUtils();
+
+		const ExpenseContext = inject<ExpenseFormContextType>(
+			ExpenseFormContext,
+			{} as ExpenseFormContextType
+		);
 
 		const categories = computed(() => typeStore.bills);
 		const formContent = ref(null);
@@ -33,6 +42,7 @@ export default defineComponent({
 		nextTick(() => (selectedCategory.value = 'banks'));
 
 		watch(selectedCategory, () => {
+			ExpenseContext.currentType.value = selectedCategory.value;
 			formHeight.value = (formContent.value as any)?.offsetHeight;
 		});
 
@@ -40,6 +50,7 @@ export default defineComponent({
 			categories,
 			formContent,
 			formHeight,
+			formType: ExpenseContext.currentType,
 			selectedCategory,
 			selectedTitle,
 		};
@@ -73,8 +84,12 @@ export default defineComponent({
 					Expense
 				</h2>
 
-				<BankExpenseForm />
-				<CommonExpenseForm :edit-mode="editMode" />
+				<!-- @todo show/hide forms -->
+				<BankExpenseForm v-if="formType === 'banks11'" />
+				<CommonExpenseForm v-if="formType === 'banks11'" />
+				<CreditCardExpenseForm v-if="formType === 'banks11'" />
+				<IncomeExpenseForm v-if="formType === 'banks11'" />
+				<MiscellaneousExpenseForm />
 			</div>
 		</article>
 	</div>
