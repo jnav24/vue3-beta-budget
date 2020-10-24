@@ -35,6 +35,7 @@ export default defineComponent({
 		const categories = computed(() => typeStore.bills);
 		const formContent = ref(null);
 		const formHeight = ref(0);
+		const formType = ExpenseContext.currentType;
 		const selectedCategory = ref('' as keyof TypesStateInterface);
 		const selectedTitle = computed(() =>
 			toTitleCase(selectedCategory.value)
@@ -44,7 +45,10 @@ export default defineComponent({
 
 		watch(selectedCategory, () => {
 			ExpenseContext.currentType.value = selectedCategory.value;
-			formHeight.value = (formContent.value as any)?.offsetHeight;
+
+			nextTick(() => {
+				formHeight.value = (formContent.value as any)?.offsetHeight;
+			});
 		});
 
 		return {
@@ -52,7 +56,7 @@ export default defineComponent({
 			editMode: ExpenseContext.editMode,
 			formContent,
 			formHeight,
-			formType: ExpenseContext.currentType,
+			formType,
 			selectedCategory,
 			selectedTitle,
 		};
@@ -62,7 +66,6 @@ export default defineComponent({
 
 <template>
 	<div class="flex flex-row">
-		<!-- @todo side bar is not updating properly between credit card and others -->
 		<aside
 			class="w-1/4 px-2 bg-gray-100 overflow-auto rounded-l-md"
 			v-if="!editMode"
