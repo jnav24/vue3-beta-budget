@@ -20,6 +20,10 @@ export default defineComponent({
 			required: true,
 			type: Boolean,
 		},
+		type: {
+			required: true,
+			type: String,
+		},
 	},
 	setup(props, { emit }) {
 		const setClose = ref(false);
@@ -42,8 +46,13 @@ export default defineComponent({
 <template>
 	<Modal :show="show" :set-close="setClose" @close="closeModal($event)">
 		<div :class="{ 'w-200': editMode, 'w-250': !editMode }">
-			<ExpenseFormProvider :data="data" @close-modal="setCloseModal()">
-				<ExpenseForm :edit-mode="editMode" />
+			<ExpenseFormProvider
+				:data="data"
+				:edit-mode="editMode"
+				:type="type"
+				@close-modal="setCloseModal()"
+			>
+				<ExpenseForm />
 			</ExpenseFormProvider>
 		</div>
 	</Modal>
