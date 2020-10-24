@@ -12,6 +12,7 @@ import {
 	ExpenseFormContext,
 	ExpenseFormContextType,
 } from '@/components/modals/ExpenseFormProvider';
+import { TypesStateInterface } from '@/store/types';
 
 export default defineComponent({
 	components: {
@@ -34,7 +35,7 @@ export default defineComponent({
 		const categories = computed(() => typeStore.bills);
 		const formContent = ref(null);
 		const formHeight = ref(0);
-		const selectedCategory = ref('');
+		const selectedCategory = ref('' as keyof TypesStateInterface);
 		const selectedTitle = computed(() =>
 			toTitleCase(selectedCategory.value)
 		);
@@ -48,6 +49,7 @@ export default defineComponent({
 
 		return {
 			categories,
+			editMode: ExpenseContext.editMode,
 			formContent,
 			formHeight,
 			formType: ExpenseContext.currentType,
@@ -85,11 +87,11 @@ export default defineComponent({
 				</h2>
 
 				<!-- @todo show/hide forms -->
-				<BankExpenseForm v-if="formType === 'banks11'" />
+				<BankExpenseForm />
 				<CommonExpenseForm v-if="formType === 'banks11'" />
 				<CreditCardExpenseForm v-if="formType === 'banks11'" />
 				<IncomeExpenseForm v-if="formType === 'banks11'" />
-				<MiscellaneousExpenseForm />
+				<MiscellaneousExpenseForm v-if="formType === 'banks11'" />
 			</div>
 		</article>
 	</div>
