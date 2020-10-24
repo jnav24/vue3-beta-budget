@@ -1,5 +1,7 @@
 import useUtils from './useUtils';
 
+class DimeError extends Error {}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function validateEmail(email: string): boolean {
 	return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -51,14 +53,29 @@ function validateNumeric(value: string): boolean {
 	return /^\d+$/.test(value);
 }
 
+function validateFunctionParam(fun: string, num: string) {
+	if (!validateNumeric(num)) {
+		throw new DimeError(`The param for the validation rule, ${fun}, must be numeric`);
+	}
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function validateMax(value: string, characters: string) {
+	validateFunctionParam('max', characters);
 	return value.length <= Number(characters);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function validateMin(value: string, characters: string) {
+	validateFunctionParam('min', characters);
 	return value.length >= Number(characters);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function validateFloat(value: string, num: string) {
+	validateFunctionParam('float', num);
+	const regex = '^\\d+(\\.\\d{' + num + '})$';
+	return new RegExp(regex).test(value);
 }
 
 export default function useFormValidation() {
@@ -72,6 +89,7 @@ export default function useFormValidation() {
 		lower: 'Field must contain a lowercase letter',
 		match: 'Field must match with `##REPLACE##`',
 		numeric: 'Field can only contain numbers',
+		float: 'Field must be numeric with ##REPLACE## decimals',
 	};
 
 	const setMessage = (message: string, rep: string) => {
@@ -95,6 +113,10 @@ export default function useFormValidation() {
 				? eval(func)(value, validationParam)
 				: eval(func)(value);
 		} catch (err) {
+			if (err instanceof DimeError) {
+				throw err.message;
+			}
+
 			throw `Function for type '${validationType}', does not exist`;
 		}
 	};
