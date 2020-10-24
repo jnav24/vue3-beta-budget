@@ -139,7 +139,7 @@ export default defineComponent({
 					leave-active-class="animated fadeOutDown"
 				>
 					<div
-						class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle"
+						class="inline-block align-bottom bg-white rounded-lg text-left shadow-xl transform transition-all sm:my-8 sm:align-middle"
 						role="dialog"
 						aria-modal="true"
 						aria-labelledby="modal-headline"

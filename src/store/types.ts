@@ -79,7 +79,7 @@ export const useTypesStore = createStore({
 	},
 });
 
-type BillTypesInterface = {
+export type BillTypesInterface = {
 	id: number;
 	name: string;
 	slug: string;
@@ -94,7 +94,7 @@ export type CommonExpenseTypeInterface = {
 	slug: string;
 };
 
-type TypesStateInterface = {
+export type TypesStateInterface = {
 	banks: CommonExpenseTypeInterface[];
 	bills: BillTypesInterface[];
 	childcare: CommonExpenseTypeInterface[];
