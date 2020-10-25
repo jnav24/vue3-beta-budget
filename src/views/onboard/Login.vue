@@ -15,7 +15,7 @@ export default defineComponent({
 		LoaderIcon,
 	},
 	setup() {
-		const { logUserIn } = useUserStore();
+		const userStore = useUserStore();
 		const { push } = useRouter();
 		const disableSubmit = ref(false);
 		const error = reactive({
@@ -38,7 +38,7 @@ export default defineComponent({
 
 		const login = async () => {
 			disableSubmit.value = true;
-			const response = await logUserIn({
+			const response = await userStore.logUserIn({
 				username: form.email.value,
 				password: form.password.value,
 			});

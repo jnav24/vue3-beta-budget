@@ -9,8 +9,8 @@ export default function useRouteMiddleware() {
 		from: RouteLocationNormalized;
 	}) => {
 		try {
-			const { isLoggedIn } = useUserStore();
-			const response: HttpResponse = await isLoggedIn();
+			const userStore = useUserStore();
+			const response: HttpResponse = await userStore.isLoggedIn();
 
 			if (response.success) {
 				context.next();
@@ -32,8 +32,8 @@ export default function useRouteMiddleware() {
 		from: RouteLocationNormalized;
 	}) => {
 		try {
-			const { isLoggedIn } = useUserStore();
-			const response: HttpResponse = await isLoggedIn();
+			const userStore = useUserStore();
+			const response: HttpResponse = await userStore.isLoggedIn();
 
 			if (response.success) {
 				context.next({ name: 'home' });

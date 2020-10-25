@@ -147,10 +147,10 @@ const routes: Array<RouteRecordRaw> = [
 					defineComponent({
 						setup() {
 							const { push } = useRouter();
-							const { logout } = useUserStore();
+							const userStore = useUserStore();
 
 							onBeforeMount(() => {
-								logout();
+								userStore.logout();
 								push({ name: 'login' });
 							});
 						},
