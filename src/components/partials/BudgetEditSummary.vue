@@ -33,7 +33,9 @@ export default defineComponent({
 <template>
 	<div class="bg-dark-primary w-full">
 		<div class="container mx-auto py-8">
-			<div class="flex flex-col sm:flex-row justify-start sm:justify-between items-start sm:items-center px-4 sm:px-0">
+			<div
+				class="flex flex-col sm:flex-row justify-start sm:justify-between items-start sm:items-center px-4 sm:px-0"
+			>
 				<div class="space-y-0">
 					<p class="text-gray-300 uppercase">
 						<!-- @todo say `Total Loss` on negative -->
@@ -44,15 +46,23 @@ export default defineComponent({
 					</p>
 				</div>
 
-				<div class="text-right flex flex-col sm:flex-row mt-6 sm:mt-0 items-start sm:items-center space-y-2 sm:space-y-0 w-full sm:w-auto">
-					<p class="text-gray-300 text-base sm:text-xl pr-4">Aug. 2020</p>
+				<div
+					class="text-right flex flex-col sm:flex-row mt-6 sm:mt-0 items-start sm:items-center space-y-2 sm:space-y-0 w-full sm:w-auto"
+				>
+					<p class="text-gray-300 text-base sm:text-xl pr-4">
+						Aug. 2020
+					</p>
 
 					<Button color="secondary" class="w-full sm:w-auto">
 						<AddIcon class="w-5 h-5" />
 						<span class="ml-2">Add Expense</span>
 					</Button>
 
-					<Button color="primary" class="w-full sm:w-auto" :is-disabled="disableSave">
+					<Button
+						color="primary"
+						class="w-full sm:w-auto"
+						:is-disabled="disableSave"
+					>
 						<SaveIcon class="w-5 h-5" />
 						<span class="ml-2">Save</span>
 					</Button>

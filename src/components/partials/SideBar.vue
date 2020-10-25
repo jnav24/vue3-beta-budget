@@ -11,7 +11,7 @@ export default defineComponent({
 		},
 		items: {
 			required: true,
-			type: () => Array as () => LinkItems,
+			type: Array as () => LinkItems,
 		},
 		selectedItem: {
 			required: true,

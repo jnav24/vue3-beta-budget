@@ -38,8 +38,8 @@ export default defineComponent({
 		const averageEarned = ref('0.00');
 		const averageSaved = ref('0.00');
 		const averageSpent = ref('0.00');
-		const savedYtd = ref(0);
-		const spentYtd = ref(0);
+		const savedYtd = ref('0');
+		const spentYtd = ref('0');
 		const totalEarned = ref('0.00');
 		const totalSaved = ref('0.00');
 		const totalSpent = ref('0.00');
@@ -173,11 +173,11 @@ export default defineComponent({
 				savedYtd.value = getYtd(
 					currentBudget.saved[0],
 					currentBudget.saved[currentBudget.saved.length - 1]
-				);
+				).toString();
 				spentYtd.value = getYtd(
 					currentBudget.spent[0],
 					currentBudget.spent[currentBudget.spent.length - 1]
-				);
+				).toString();
 				totalEarned.value = formatDollar(earned);
 				totalSaved.value = formatDollar(saved);
 				totalSpent.value = formatDollar(spent);

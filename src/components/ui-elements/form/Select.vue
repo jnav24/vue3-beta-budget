@@ -13,7 +13,7 @@ export default defineComponent({
 	},
 	props: {
 		label: {
-			default: null,
+			default: '',
 			type: String,
 		},
 		rules: {
@@ -50,7 +50,7 @@ export default defineComponent({
 
 		onMounted(() => {
 			(dropDownItems.value as any).classList.add('h-0', 'py-0');
-			if (props.label && !!FormContext) {
+			if (props.label.length && !!FormContext) {
 				labelId.value = FormContext.setupForm(props.label, props.rules);
 				FormContext.validateField(labelId.value, props.value);
 			}
@@ -112,7 +112,7 @@ export default defineComponent({
 
 <template>
 	<div>
-		<Label :error="error" :labelId="labelId" :label="label" />
+		<Label v-if="label" :error="error" :labelId="labelId" :label="label" />
 		<div
 			class="border-solid border cursor-pointer px-2 py-2 mt-2 rounded-md flex items-center justify-between outline-none transform relative bg-white"
 			:class="{
