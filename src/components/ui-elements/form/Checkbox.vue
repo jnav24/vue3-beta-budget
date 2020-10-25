@@ -62,19 +62,10 @@ export default defineComponent({
 
 <template>
 	<div class="flex flex-row items-center">
-		<Button
-			checkbox
-			@on-click="updateValue()"
-			v-if="!value"
-		>
+		<Button checkbox @on-click="updateValue()" v-if="!value">
 			<CheckIcon class="w-4 h-4 text-white" />
 		</Button>
-		<Button
-			checkbox
-			@on-click="updateValue()"
-			color="primary"
-			v-if="value"
-		>
+		<Button checkbox @on-click="updateValue()" color="primary" v-if="value">
 			<CheckIcon class="w-4 h-4" />
 		</Button>
 		<Label class="ml-2" :error="error" :labelId="labelId" :label="label" />

@@ -55,7 +55,9 @@ function validateNumeric(value: string): boolean {
 
 function validateFunctionParam(fun: string, num: string) {
 	if (!validateNumeric(num)) {
-		throw new DimeError(`The param for the validation rule, ${fun}, must be numeric`);
+		throw new DimeError(
+			`The param for the validation rule, ${fun}, must be numeric`
+		);
 	}
 }
 
