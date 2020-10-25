@@ -1,4 +1,4 @@
-import { createStore } from 'pinia';
+import { defineStore } from 'pinia';
 import useUtils from '@/hooks/useUtils';
 
 type TemplateState = {
@@ -9,7 +9,7 @@ type TemplateState = {
 	};
 };
 
-export const useTemplateStore = createStore({
+export const useTemplateStore = defineStore({
 	id: 'template',
 	state: (): TemplateState => ({
 		canSave: false,

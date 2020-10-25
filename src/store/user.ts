@@ -1,4 +1,4 @@
-import { createStore } from 'pinia';
+import { defineStore } from 'pinia';
 import useHttp, { HttpResponse } from '@/hooks/useHttp';
 import useSession from '@/hooks/useSession';
 
@@ -36,7 +36,7 @@ type UserState = {
 
 const cookieName = process.env.VUE_APP_TOKEN;
 
-export const useUserStore = createStore({
+export const useUserStore = defineStore({
 	id: 'user',
 	state: (): UserState => ({
 		login: {} as LoginType,

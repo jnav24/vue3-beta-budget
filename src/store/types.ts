@@ -1,6 +1,6 @@
-import { createStore } from 'pinia';
+import { defineStore } from 'pinia';
 
-export const useTypesStore = createStore({
+export const useTypesStore = defineStore({
 	id: 'types',
 	state: (): TypesStateInterface => ({
 		banks: [],

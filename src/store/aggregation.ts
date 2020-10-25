@@ -1,7 +1,7 @@
-import { createStore } from 'pinia';
+import { defineStore } from 'pinia';
 import useHttp from '@/hooks/useHttp';
 
-export const useAggregationStore = createStore({
+export const useAggregationStore = defineStore({
 	id: 'aggregation',
 
 	state: (): AggregationState => ({

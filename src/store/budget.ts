@@ -1,4 +1,4 @@
-import { createStore } from 'pinia';
+import { defineStore } from 'pinia';
 
 type BudgetState = {
 	list: Array<BudgetList>;
@@ -11,7 +11,7 @@ type BudgetList = {
 	saved?: string;
 };
 
-export const useBudgetStore = createStore({
+export const useBudgetStore = defineStore({
 	id: 'budget',
 	state: (): BudgetState => ({
 		list: [],
