@@ -35,13 +35,17 @@ export default defineComponent({
 		const categories = computed(() => typeStore.bills);
 		const formContent = ref(null);
 		const formHeight = ref(0);
-		const formType = ExpenseContext.currentType;
+		const formType = computed(() => ExpenseContext.currentType.value);
 		const selectedCategory = ref('' as keyof TypesStateInterface);
 		const selectedTitle = computed(() =>
 			toTitleCase(selectedCategory.value)
 		);
 
-		nextTick(() => (selectedCategory.value = 'banks'));
+		nextTick(() => {
+			if (!ExpenseContext.editMode.value) {
+				selectedCategory.value = 'banks';
+			}
+		});
 
 		watch(selectedCategory, () => {
 			ExpenseContext.currentType.value = selectedCategory.value;

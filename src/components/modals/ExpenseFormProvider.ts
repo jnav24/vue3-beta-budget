@@ -1,4 +1,4 @@
-import { computed, defineComponent, provide, ref } from 'vue';
+import { computed, defineComponent, provide, ref, watchEffect } from 'vue';
 import { BudgetExpense } from '@/store/budget';
 import { ComputedRef, Ref } from '@vue/reactivity';
 import { CommonExpenseTypeInterface, useTypesStore } from '@/store';
@@ -34,6 +34,9 @@ export default defineComponent({
 		const typeStore = useTypesStore();
 
 		const currentType = ref(props.type);
+
+		watchEffect(() => (currentType.value = props.type));
+
 		const closeModal = (data = {}) => {
 			if (Object.keys(data).length) {
 				// save data and update the state
