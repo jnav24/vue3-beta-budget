@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, inject, reactive, ref } from 'vue';
+import { defineComponent, inject, onBeforeMount, reactive, ref } from 'vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import Checkbox from '@/components/ui-elements/form/Checkbox.vue';
 import {
@@ -20,15 +20,10 @@ export default defineComponent({
 		Select,
 		Textarea,
 	},
-	props: {
-		editMode: {
-			required: true,
-			type: Boolean,
-		},
-	},
 	setup() {
 		const ExpenseContext = inject<ExpenseFormContextType>(
-			ExpenseFormContext
+			ExpenseFormContext,
+			{} as ExpenseFormContextType
 		);
 		const form = reactive({
 			amount: {
@@ -61,10 +56,25 @@ export default defineComponent({
 			},
 			type: {
 				rules: ['required'],
-				value: '',
+				value: 0,
 			},
 		});
 		const valid = ref(false);
+
+		onBeforeMount(() => {
+			if (Object.keys(ExpenseContext.data).length) {
+				form.amount.value = ExpenseContext.data.amount;
+				form.confirmation.value =
+					ExpenseContext.data.confirmation || '';
+				form.do_not_track.value =
+					!!ExpenseContext.data.do_not_track || false;
+				form.due_date.value = ExpenseContext.data.due_date || '';
+				form.name.value = ExpenseContext.data.name;
+				form.notes.value = ExpenseContext.data.notes || '';
+				form.paid_date.value = ExpenseContext.data.paid_date || '';
+				form.type.value = ExpenseContext.getTypeId();
+			}
+		});
 
 		const closeModal = (submit: boolean) => {
 			let data: Record<string, string> = {};
@@ -76,7 +86,13 @@ export default defineComponent({
 			ExpenseContext?.closeModal(data);
 		};
 
-		return { closeModal, form, valid };
+		return {
+			closeModal,
+			editMode: ExpenseContext.editMode,
+			form,
+			types: ExpenseContext.typeList,
+			valid,
+		};
 	},
 });
 </script>
@@ -96,9 +112,22 @@ export default defineComponent({
 				v-model:value="form.amount.value"
 			/>
 
-			<Select label="Type" :items="[]" />
+			<Select
+				label="Account Type"
+				:items="types"
+				item-label="name"
+				item-value="id"
+				:rules="form.type.rules"
+				v-model:value="form.type.value"
+			/>
 
-			<Select label="Due Date" :items="[]" v-if="!editMode" />
+			<Select
+				label="Due Date"
+				:items="[]"
+				v-if="!editMode"
+				:rules="form.due_date.rules"
+				v-model:value="form.due_date.value"
+			/>
 		</div>
 
 		<template v-if="editMode">
