@@ -12,6 +12,7 @@ export type ExpenseFormContextType = {
 	currentType: Ref<keyof TypesStateInterface>;
 	editMode: ComputedRef<boolean>;
 	extractFormValues: (form: any) => Record<string, string>;
+	getTypeId: () => number;
 	typeList: ComputedRef<CommonExpenseTypeInterface[] | BillTypesInterface[]>;
 };
 
@@ -55,12 +56,24 @@ export default defineComponent({
 			return result;
 		};
 
+		const getTypeKey = () => {
+			return Object.keys(props.data)
+				.filter(key => /[a-z]*_type_[a-z]*/.exec(key))
+				.shift();
+		};
+
+		const getTypeId = () => {
+			const keyName = getTypeKey();
+			return keyName ? props.data[keyName as keyof BudgetExpense] : 0;
+		};
+
 		provide(ExpenseFormContext, {
 			data: props.data,
 			closeModal,
 			currentType,
 			editMode,
 			extractFormValues,
+			getTypeId,
 			typeList,
 		});
 	},

@@ -41,7 +41,7 @@ export default defineComponent({
 			if (Object.keys(ExpenseContext.data).length) {
 				form.amount.value = ExpenseContext.data.amount;
 				form.name.value = ExpenseContext.data.name;
-				form.type.value = (ExpenseContext.data as any).bank_type_id;
+				form.type.value = ExpenseContext.getTypeId();
 			}
 		});
 
@@ -76,7 +76,7 @@ export default defineComponent({
 			/>
 
 			<Select
-				label="Bank Type"
+				label="Account Type"
 				:items="types"
 				item-label="name"
 				item-value="id"
