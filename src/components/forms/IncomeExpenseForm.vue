@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, inject, onMounted, reactive, ref } from 'vue';
+import { defineComponent, inject, onBeforeMount, reactive, ref } from 'vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import {
 	ExpenseFormContext,
@@ -16,15 +16,10 @@ export default defineComponent({
 		Input,
 		Select,
 	},
-	props: {
-		editMode: {
-			required: true,
-			type: Boolean,
-		},
-	},
 	setup() {
 		const ExpenseContext = inject<ExpenseFormContextType>(
-			ExpenseFormContext
+			ExpenseFormContext,
+			{} as ExpenseFormContextType
 		);
 		const form = reactive({
 			amount: {
@@ -41,15 +36,17 @@ export default defineComponent({
 			},
 			type: {
 				rules: ['required'],
-				value: '',
+				value: 0,
 			},
 		});
 		const valid = ref(false);
 
-		onMounted(() => {
+		onBeforeMount(() => {
 			if (ExpenseContext && Object.keys(ExpenseContext.data).length) {
 				form.amount.value = ExpenseContext.data.amount;
 				form.name.value = ExpenseContext.data.name;
+				form.paid_date.value = ExpenseContext.data.paid_date || '';
+				form.type.value = ExpenseContext.getTypeId();
 			}
 		});
 
@@ -63,7 +60,13 @@ export default defineComponent({
 			ExpenseContext?.closeModal(data);
 		};
 
-		return { closeModal, form, valid };
+		return {
+			closeModal,
+			editMode: ExpenseContext.editMode,
+			form,
+			types: ExpenseContext.typeList,
+			valid,
+		};
 	},
 });
 </script>
@@ -83,7 +86,15 @@ export default defineComponent({
 				v-model:value="form.amount.value"
 			/>
 
-			<Select v-if="!editMode" label="Income Type" :items="[]" />
+			<Select
+				v-if="!editMode"
+				label="Account Type"
+				:items="types"
+				item-label="name"
+				item-value="id"
+				:rules="form.type.rules"
+				v-model:value="form.type.value"
+			/>
 
 			<Input
 				v-if="editMode"
