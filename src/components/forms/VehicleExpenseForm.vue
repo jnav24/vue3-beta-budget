@@ -79,7 +79,6 @@ export default defineComponent({
 		);
 
 		onBeforeMount(() => {
-			console.log(ExpenseContext.data);
 			if (Object.keys(ExpenseContext.data).length) {
 				form.amount.value = ExpenseContext.data.amount;
 				form.balance.value = ExpenseContext.data.balance || '';
