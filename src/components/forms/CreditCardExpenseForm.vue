@@ -121,7 +121,6 @@ export default defineComponent({
 			editMode: ExpenseContext.editMode,
 			form,
 			types: ExpenseContext.typeList,
-			type: ExpenseContext.currentType,
 			valid,
 		};
 	},

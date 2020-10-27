@@ -7,6 +7,7 @@ import CommonExpenseForm from '@/components/forms/CommonExpenseForm.vue';
 import CreditCardExpenseForm from '@/components/forms/CreditCardExpenseForm.vue';
 import IncomeExpenseForm from '@/components/forms/IncomeExpenseForm.vue';
 import MiscellaneousExpenseForm from '@/components/forms/MiscellaneousExpenseForm.vue';
+import VehicleExpenseForm from '@/components/forms/VehicleExpenseForm.vue';
 import SideBar from '@/components/partials/SideBar.vue';
 import {
 	ExpenseFormContext,
@@ -22,6 +23,7 @@ export default defineComponent({
 		IncomeExpenseForm,
 		MiscellaneousExpenseForm,
 		SideBar,
+		VehicleExpenseForm,
 	},
 	setup() {
 		const typeStore = useTypesStore();
@@ -104,6 +106,7 @@ export default defineComponent({
 				<MiscellaneousExpenseForm
 					v-else-if="['miscellaneous'].includes(formType)"
 				/>
+				<VehicleExpenseForm v-else-if="['vehicles'].includes(formType)" />
 				<CommonExpenseForm v-else />
 			</div>
 		</article>
