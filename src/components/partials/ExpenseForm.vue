@@ -106,7 +106,9 @@ export default defineComponent({
 				<MiscellaneousExpenseForm
 					v-else-if="['miscellaneous'].includes(formType)"
 				/>
-				<VehicleExpenseForm v-else-if="['vehicles'].includes(formType)" />
+				<VehicleExpenseForm
+					v-else-if="['vehicles'].includes(formType)"
+				/>
 				<CommonExpenseForm v-else />
 			</div>
 		</article>

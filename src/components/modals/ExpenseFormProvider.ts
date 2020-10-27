@@ -48,7 +48,12 @@ export default defineComponent({
 			emit('close-modal');
 		};
 		const editMode = computed(() => props.editMode);
-		const typeList = computed(() => typeStore[camelCase(currentType.value) as keyof TypesStateInterface] ?? []);
+		const typeList = computed(
+			() =>
+				typeStore[
+					camelCase(currentType.value) as keyof TypesStateInterface
+				] ?? []
+		);
 
 		const extractFormValues = (form: any) => {
 			const result: Record<string, string> = {};
