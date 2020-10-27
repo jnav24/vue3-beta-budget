@@ -130,6 +130,14 @@ export default function useFormValidation() {
 		let tempValid = true;
 		let error = null;
 
+		if (
+			!Object.values(rules).includes('required') &&
+			!Object.keys(rules).includes('required') &&
+			(!inputValue || !inputValue.trim().length)
+		) {
+			return { error, valid: tempValid };
+		}
+
 		for (const [key, value] of Object.entries(rules)) {
 			const isNumeric = validateNumeric(key);
 			const type = isNumeric ? value : key;
