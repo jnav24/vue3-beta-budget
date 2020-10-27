@@ -3,6 +3,7 @@ import { BudgetExpense } from '@/store/budget';
 import { ComputedRef, Ref } from '@vue/reactivity';
 import { CommonExpenseTypeInterface, useTypesStore } from '@/store';
 import { BillTypesInterface, TypesStateInterface } from '@/store/types';
+import useUtils from '@/hooks/useUtils';
 
 export const ExpenseFormContext = Symbol('Expense Form Provider');
 
@@ -33,6 +34,7 @@ export default defineComponent({
 	},
 	setup(props, { emit }) {
 		const typeStore = useTypesStore();
+		const { camelCase } = useUtils();
 
 		const currentType = ref(props.type);
 
@@ -46,7 +48,7 @@ export default defineComponent({
 			emit('close-modal');
 		};
 		const editMode = computed(() => props.editMode);
-		const typeList = computed(() => typeStore[currentType.value] ?? []);
+		const typeList = computed(() => typeStore[camelCase(currentType.value) as keyof TypesStateInterface] ?? []);
 
 		const extractFormValues = (form: any) => {
 			const result: Record<string, string> = {};

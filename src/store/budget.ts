@@ -11,14 +11,19 @@ export type BudgetExpense = {
 	budget_id: number;
 	name: string;
 	amount: string;
+	apr?: string;
 	balance?: string;
 	confirmation?: string;
 	due_date?: string;
+	exp_month?: string;
+	exp_year?: string;
+	last_4?: string;
 	paid_date?: string;
 	initial_pay_date?: string;
 	user_vehicle_id?: number;
 	do_not_track?: number;
 	notes?: string;
+	limit?: string;
 };
 
 type BudgetList = {
