@@ -17,7 +17,7 @@ import Form from '@/components/ui-elements/form/Form';
 import Input from '@/components/ui-elements/form/Input.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
 import Textarea from '@/components/ui-elements/form/Textarea.vue';
-import { useUserStore } from '@/store';
+import { useUserStore, useTypesStore } from '@/store';
 
 export default defineComponent({
 	components: {
@@ -34,6 +34,7 @@ export default defineComponent({
 			{} as ExpenseFormContextType
 		);
 		const userStore = useUserStore();
+		const typeStore = useTypesStore();
 
 		const form = reactive({
 			amount: {
@@ -55,6 +56,10 @@ export default defineComponent({
 			due_date: {
 				rules: [],
 				value: '1',
+			},
+			mileage: {
+				rules: [],
+				value: '',
 			},
 			notes: {
 				rules: [],
@@ -88,11 +93,16 @@ export default defineComponent({
 					!!ExpenseContext.data.do_not_track || false;
 				form.due_date.value = ExpenseContext.data.due_date || '';
 				form.vehicle.value = ExpenseContext.data.user_vehicle_id || 0;
+				form.mileage.value = ExpenseContext.data.mileage || '';
 				form.notes.value = ExpenseContext.data.notes || '';
 				form.paid_date.value = ExpenseContext.data.paid_date || '';
 				form.type.value = ExpenseContext.getTypeId();
 			}
 		});
+
+		const typeName = computed(() =>
+			typeStore.getTypeById('vehicles', form.type.value)
+		);
 
 		const closeModal = (submit: boolean) => {
 			let data: Record<string, string> = {};
@@ -108,6 +118,7 @@ export default defineComponent({
 			closeModal,
 			editMode: ExpenseContext.editMode,
 			form,
+			typeName,
 			types: ExpenseContext.typeList,
 			valid,
 			vehicles,
@@ -145,6 +156,13 @@ export default defineComponent({
 				label="Account Balance"
 				:rules="form.balance.rules"
 				v-model:value="form.balance.value"
+			/>
+
+			<Input
+				v-if="typeName === 'gas'"
+				label="Mileage"
+				:rules="form.mileage.rules"
+				v-model:value="form.mileage.value"
 			/>
 
 			<Select label="Due Date" :items="[]" v-if="!editMode" />

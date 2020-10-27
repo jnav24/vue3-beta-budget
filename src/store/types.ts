@@ -76,6 +76,10 @@ export const useTypesStore = createStore({
 
 			return null;
 		},
+
+		getTypeById(type: keyof TypesStateInterface, id: number): string | undefined {
+			return this[type].filter(obj => obj.id === id)?.shift()?.slug;
+		},
 	},
 });
 

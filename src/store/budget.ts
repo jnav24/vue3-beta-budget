@@ -22,6 +22,7 @@ export type BudgetExpense = {
 	initial_pay_date?: string;
 	user_vehicle_id?: number;
 	do_not_track?: number;
+	mileage?: string;
 	notes?: string;
 	limit?: string;
 };
