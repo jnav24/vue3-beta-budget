@@ -45,6 +45,19 @@ export const useUserStore = createStore({
 		vehicles: [],
 	}),
 
+	getters: {
+		vehicleList() {
+			console.log(this.vehicles);
+			return this.vehicles.map(vehicle => {
+				return {
+					active: vehicle.active,
+					label: `${vehicle.make} ${vehicle.model}`,
+					value: vehicle.id,
+				};
+			});
+		},
+	},
+
 	actions: {
 		resetUser() {
 			this.login = {} as LoginType;
