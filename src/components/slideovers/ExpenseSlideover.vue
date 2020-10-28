@@ -2,9 +2,13 @@
 import { computed, defineComponent, ref } from 'vue';
 import Slideover from '@/components/slideovers/Slideover.vue';
 import { BudgetExpense } from '@/store/budget';
+import ExpenseForm from '@/components/partials/ExpenseForm.vue';
+import ExpenseFormProvider from '@/components/modals/ExpenseFormProvider';
 
 export default defineComponent({
 	components: {
+		ExpenseForm,
+		ExpenseFormProvider,
 		Slideover,
 	},
 	props: {
@@ -41,6 +45,13 @@ export default defineComponent({
 
 <template>
 	<Slideover :show="show" :set-close="setClose" @close="closeModal($event)">
-		<h1>Hello motto</h1>
+		<ExpenseFormProvider
+			:data="data"
+			:edit-mode="editMode"
+			:type="type"
+			@close-modal="setCloseModal()"
+		>
+			<ExpenseForm />
+		</ExpenseFormProvider>
 	</Slideover>
 </template>
