@@ -76,7 +76,12 @@ export default defineComponent({
 		:type="selectedCategory"
 	/>
 
-	<ExpenseSlideover class="block lg:hidden" />
+	<ExpenseSlideover
+		class="block lg:hidden"
+		v-model:show="showModal"
+		:data="expenseData"
+		:type="selectedCategory"
+	/>
 
 	<BudgetEditSummary
 		v-if="budget && budget.expenses"

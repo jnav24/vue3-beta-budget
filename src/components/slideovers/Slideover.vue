@@ -30,8 +30,20 @@ export default defineComponent({
 });
 </script>
 
+<style scoped>
+.slideover-enter-active,
+.slideover-leave-active {
+	@apply transition-opacity duration-500 ease-out;
+}
+
+.slideover-enter-from,
+.slideover-leave-to {
+	@apply opacity-0;
+}
+</style>
+
 <template>
-	<transition name="modal" @enter="showContent = true">
+	<transition name="slideover" @enter="showContent = true">
 		<div class="fixed z-100 inset-0 overflow-hidden" v-if="show">
 			<div class="absolute inset-0 overflow-hidden">
 				<div
