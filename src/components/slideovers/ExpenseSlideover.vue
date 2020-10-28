@@ -1,16 +1,46 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import Slideover from '@/components/slideovers/Slideover.vue';
+import { BudgetExpense } from '@/store/budget';
 
 export default defineComponent({
 	components: {
 		Slideover,
 	},
+	props: {
+		data: {
+			default: () => ({}),
+			type: Object as () => BudgetExpense,
+		},
+		show: {
+			required: true,
+			type: Boolean,
+		},
+		type: {
+			required: true,
+			type: String,
+		},
+	},
+	setup(props, { emit }) {
+		const setClose = ref(false);
+
+		const setCloseModal = () => {
+			setClose.value = true;
+			setTimeout(() => (setClose.value = false), 1000);
+		};
+
+		return {
+			closeModal: (e: boolean) => emit('update:show', e),
+			editMode: computed(() => !!Object.keys(props.data).length),
+			setClose,
+			setCloseModal,
+		};
+	},
 });
 </script>
 
 <template>
-	<Slideover>
+	<Slideover :show="show" :set-close="setClose" @close="closeModal($event)">
 		<h1>Hello motto</h1>
 	</Slideover>
 </template>

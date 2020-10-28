@@ -142,7 +142,7 @@ export default defineComponent({
 						class="inline-block align-bottom bg-white rounded-lg text-left shadow-xl transform transition-all sm:my-8 sm:align-middle"
 						role="dialog"
 						aria-modal="true"
-						aria-labelledby="modal-headline"
+						aria-labelledby="modal-content"
 						v-show="showContent"
 					>
 						<slot></slot>
