@@ -3,6 +3,7 @@ import { computed, defineComponent, onMounted, ref, watch } from 'vue';
 import BudgetEditSummary from '@/components/partials/BudgetEditSummary.vue';
 import BudgetEditTable from '@/components/tables/BudgetEditTable.vue';
 import ExpenseModal from '@/components/modals/ExpenseModal.vue';
+import ExpenseSlideover from '@/components/slideovers/ExpenseSlideover.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
 import SideBar from '@/components/partials/SideBar.vue';
 import { useBudgetStore, useTypesStore } from '@/store';
@@ -14,6 +15,7 @@ export default defineComponent({
 		BudgetEditSummary,
 		BudgetEditTable,
 		ExpenseModal,
+		ExpenseSlideover,
 		SideBar,
 		Select,
 	},
@@ -66,11 +68,15 @@ export default defineComponent({
 </script>
 
 <template>
+	<!-- @todo create a date picker component -->
 	<ExpenseModal
+		class="hidden lg:block"
 		v-model:show="showModal"
 		:data="expenseData"
 		:type="selectedCategory"
 	/>
+
+	<ExpenseSlideover class="block lg:hidden" />
 
 	<BudgetEditSummary
 		v-if="budget && budget.expenses"
