@@ -31,6 +31,13 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.animated {
+	-webkit-animation-duration: 0.3s;
+	animation-duration: 0.3s;
+	-webkit-animation-fill-mode: both;
+	animation-fill-mode: both;
+}
+
 .slideover-enter-active,
 .slideover-leave-active {
 	@apply transition-opacity duration-500 ease-out;
@@ -39,6 +46,36 @@ export default defineComponent({
 .slideover-enter-from,
 .slideover-leave-to {
 	@apply opacity-0;
+}
+
+@keyframes slideOutRight {
+	from {
+		transform: translate3d(0, 0, 0);
+	}
+
+	to {
+		visibility: hidden;
+		transform: translate3d(100%, 0, 0);
+	}
+}
+
+.slideOutRight {
+	animation-name: slideOutRight;
+}
+
+@keyframes slideInRight {
+	from {
+		transform: translate3d(100%, 0, 0);
+		visibility: visible;
+	}
+
+	to {
+		transform: translate3d(0, 0, 0);
+	}
+}
+
+.slideInRight {
+	animation-name: slideInRight;
 }
 </style>
 
@@ -56,9 +93,9 @@ export default defineComponent({
 				>
 					<div class="relative w-screen max-w-md">
 						<transition
-							name="modal-slideUp"
-							enter-active-class="animated fadeInUp"
-							leave-active-class="animated fadeOutDown"
+							name="slideover-panel"
+							enter-active-class="animated slideInRight"
+							leave-active-class="animated slideOutRight"
 						>
 							<div
 								class="h-full flex flex-col space-y-6 py-6 bg-white shadow-xl overflow-y-scroll"
