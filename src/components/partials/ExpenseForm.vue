@@ -93,7 +93,9 @@ export default defineComponent({
 				ref="formContent"
 				class="flex flex-col min-h-screen lg:min-h-0"
 			>
-				<h2 class="text-2xl text-gray-700 font-body mb-4 px-4 pt-2">
+				<h2
+					class="text-2xl text-gray-700 font-body mb-4 px-4 pt-2 absolute lg:relative top-0 left-0 w-full bg-white"
+				>
 					<template v-if="editMode">Edit</template>
 					<template v-if="!editMode">
 						Add {{ selectedTitle }}

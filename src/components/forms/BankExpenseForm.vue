@@ -62,27 +62,29 @@ export default defineComponent({
 
 <template>
 	<Form v-model:valid="valid">
-		<div class="grid grid-cols-2 gap-4 px-4 flex-grow">
-			<Input
-				label="Name"
-				:rules="form.name.rules"
-				v-model:value="form.name.value"
-			/>
+		<div class="flex-1 overflow-auto pt-16 lg:pt-0 pb-20 lg:pb-0">
+			<div class="grid grid-cols-2 gap-4 px-4">
+				<Input
+					label="Name"
+					:rules="form.name.rules"
+					v-model:value="form.name.value"
+				/>
 
-			<Input
-				label="Amount"
-				:rules="form.amount.rules"
-				v-model:value="form.amount.value"
-			/>
+				<Input
+					label="Amount"
+					:rules="form.amount.rules"
+					v-model:value="form.amount.value"
+				/>
 
-			<Select
-				label="Account Type"
-				:items="types"
-				item-label="name"
-				item-value="id"
-				:rules="form.type.rules"
-				v-model:value="form.type.value"
-			/>
+				<Select
+					label="Account Type"
+					:items="types"
+					item-label="name"
+					item-value="id"
+					:rules="form.type.rules"
+					v-model:value="form.type.value"
+				/>
+			</div>
 		</div>
 
 		<div

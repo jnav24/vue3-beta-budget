@@ -129,103 +129,105 @@ export default defineComponent({
 
 <template>
 	<Form v-model:valid="valid">
-		<div class="grid grid-cols-2 gap-4 px-4">
-			<Input
-				label="Name"
-				:rules="form.name.rules"
-				v-model:value="form.name.value"
-			/>
-
-			<Input
-				label="Amount"
-				:rules="form.amount.rules"
-				v-model:value="form.amount.value"
-			/>
-
-			<Select
-				label="Account Type"
-				:items="types"
-				item-label="name"
-				item-value="id"
-				:rules="form.type.rules"
-				v-model:value="form.type.value"
-			/>
-
-			<Input
-				label="Account Balance"
-				:rules="form.balance.rules"
-				v-model:value="form.balance.value"
-			/>
-
-			<Select label="Due Date" :items="[]" v-if="!editMode" />
-		</div>
-
-		<div class="grid grid-cols-2 gap-4 px-4 mt-2">
-			<Input
-				label="Credit Limit"
-				:rules="form.limit.rules"
-				v-model:value="form.limit.value"
-			/>
-
-			<Input
-				label="APR"
-				:rules="form.apr.rules"
-				v-model:value="form.apr.value"
-			/>
-		</div>
-
-		<div class="grid grid-cols-3 gap-4 px-4">
-			<Input
-				label="Last 4 Digits of Credit Card"
-				:rules="form.last_4.rules"
-				v-model:value="form.last_4.value"
-			/>
-
-			<Input
-				label="Expiration Month"
-				:rules="form.exp_month.rules"
-				v-model:value="form.exp_month.value"
-			/>
-
-			<Input
-				label="Expiration Year"
-				:rules="form.exp_year.rules"
-				v-model:value="form.exp_year.value"
-			/>
-		</div>
-
-		<template v-if="editMode">
-			<Checkbox
-				class="pl-4 my-6"
-				label="Do not track this expense"
-				:rules="form.do_not_track.rules"
-				v-model:value="form.do_not_track.value"
-			/>
-
+		<div class="flex-1 overflow-auto pt-16 lg:pt-0 pb-20 lg:pb-0">
 			<div class="grid grid-cols-2 gap-4 px-4">
 				<Input
-					label="Confirmation"
-					:rules="form.confirmation.rules"
-					v-model:value="form.confirmation.value"
+					label="Name"
+					:rules="form.name.rules"
+					v-model:value="form.name.value"
 				/>
 
 				<Input
-					label="Paid Date"
-					:rules="form.paid_date.rules"
-					v-model:value="form.paid_date.value"
+					label="Amount"
+					:rules="form.amount.rules"
+					v-model:value="form.amount.value"
+				/>
+
+				<Select
+					label="Account Type"
+					:items="types"
+					item-label="name"
+					item-value="id"
+					:rules="form.type.rules"
+					v-model:value="form.type.value"
+				/>
+
+				<Input
+					label="Account Balance"
+					:rules="form.balance.rules"
+					v-model:value="form.balance.value"
+				/>
+
+				<Select label="Due Date" :items="[]" v-if="!editMode" />
+			</div>
+
+			<div class="grid grid-cols-2 gap-4 px-4 mt-2">
+				<Input
+					label="Credit Limit"
+					:rules="form.limit.rules"
+					v-model:value="form.limit.value"
+				/>
+
+				<Input
+					label="APR"
+					:rules="form.apr.rules"
+					v-model:value="form.apr.value"
 				/>
 			</div>
 
-			<Textarea
-				class="px-4"
-				label="Notes"
-				:rules="form.notes.rules"
-				v-model:value="form.notes.value"
-			/>
-		</template>
+			<div class="grid grid-cols-3 gap-4 px-4">
+				<Input
+					label="Last 4 Digits of Credit Card"
+					:rules="form.last_4.rules"
+					v-model:value="form.last_4.value"
+				/>
+
+				<Input
+					label="Expiration Month"
+					:rules="form.exp_month.rules"
+					v-model:value="form.exp_month.value"
+				/>
+
+				<Input
+					label="Expiration Year"
+					:rules="form.exp_year.rules"
+					v-model:value="form.exp_year.value"
+				/>
+			</div>
+
+			<template v-if="editMode">
+				<Checkbox
+					class="pl-4 my-6"
+					label="Do not track this expense"
+					:rules="form.do_not_track.rules"
+					v-model:value="form.do_not_track.value"
+				/>
+
+				<div class="grid grid-cols-2 gap-4 px-4">
+					<Input
+						label="Confirmation"
+						:rules="form.confirmation.rules"
+						v-model:value="form.confirmation.value"
+					/>
+
+					<Input
+						label="Paid Date"
+						:rules="form.paid_date.rules"
+						v-model:value="form.paid_date.value"
+					/>
+				</div>
+
+				<Textarea
+					class="px-4"
+					label="Notes"
+					:rules="form.notes.rules"
+					v-model:value="form.notes.value"
+				/>
+			</template>
+		</div>
 
 		<div
-			class="flex flex-row justify-end items-center mt-8 bg-gray-100 pr-2 py-2"
+			class="flex flex-row justify-end items-center mt-8 bg-gray-100 pr-2 py-2 absolute lg:relative bottom-0 left-0 w-full lg:w-auto"
 		>
 			<Button @on-click="closeModal(false)">Cancel</Button>
 			<Button
