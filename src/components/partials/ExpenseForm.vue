@@ -9,6 +9,7 @@ import IncomeExpenseForm from '@/components/forms/IncomeExpenseForm.vue';
 import MiscellaneousExpenseForm from '@/components/forms/MiscellaneousExpenseForm.vue';
 import VehicleExpenseForm from '@/components/forms/VehicleExpenseForm.vue';
 import SideBar from '@/components/partials/SideBar.vue';
+import Select from '@/components/ui-elements/form/Select.vue';
 import {
 	ExpenseFormContext,
 	ExpenseFormContextType,
@@ -22,6 +23,7 @@ export default defineComponent({
 		CreditCardExpenseForm,
 		IncomeExpenseForm,
 		MiscellaneousExpenseForm,
+		Select,
 		SideBar,
 		VehicleExpenseForm,
 	},
@@ -73,7 +75,7 @@ export default defineComponent({
 <template>
 	<div class="flex flex-row">
 		<aside
-			class="w-1/4 px-2 bg-gray-100 overflow-auto rounded-l-md"
+			class="w-1/4 px-2 bg-gray-100 overflow-auto rounded-l-md hidden lg:block"
 			v-if="!editMode"
 			:style="`height: ${formHeight}px`"
 		>
@@ -87,7 +89,10 @@ export default defineComponent({
 		</aside>
 
 		<article class="flex-1 bg-white rounded-md overflow-hidden">
-			<div ref="formContent">
+			<div
+				ref="formContent"
+				class="flex flex-col min-h-screen lg:min-h-0"
+			>
 				<h2 class="text-2xl text-gray-700 font-body mb-4 px-4 pt-2">
 					<template v-if="editMode">Edit</template>
 					<template v-if="!editMode">
@@ -95,6 +100,16 @@ export default defineComponent({
 					</template>
 					Expense
 				</h2>
+
+				<Select
+					v-if="!editMode"
+					class="block lg:hidden mx-4 mb-6"
+					label="Categories"
+					:items="categories"
+					item-value="slug"
+					item-label="name"
+					v-model:value="selectedCategory"
+				/>
 
 				<BankExpenseForm
 					v-if="['banks', 'investments'].includes(formType)"

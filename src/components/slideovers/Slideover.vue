@@ -89,7 +89,7 @@ export default defineComponent({
 				></div>
 
 				<section
-					class="absolute inset-y-0 right-0 pl-10 max-w-full flex"
+					class="absolute inset-y-0 right-0 pl-0 md:pl-10 max-w-full flex"
 				>
 					<div class="relative w-screen max-w-md">
 						<transition
@@ -98,7 +98,7 @@ export default defineComponent({
 							leave-active-class="animated slideOutRight"
 						>
 							<div
-								class="h-full flex flex-col space-y-6 py-6 bg-white shadow-xl overflow-y-scroll"
+								class="h-full flex flex-col bg-white shadow-xl overflow-y-scroll"
 								role="dialog"
 								aria-modal="true"
 								aria-labelledby="slideover-content"

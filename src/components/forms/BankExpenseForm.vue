@@ -62,7 +62,7 @@ export default defineComponent({
 
 <template>
 	<Form v-model:valid="valid">
-		<div class="grid grid-cols-2 gap-4 px-4">
+		<div class="grid grid-cols-2 gap-4 px-4 flex-grow">
 			<Input
 				label="Name"
 				:rules="form.name.rules"
