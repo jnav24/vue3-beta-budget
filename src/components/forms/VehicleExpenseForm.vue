@@ -129,77 +129,79 @@ export default defineComponent({
 
 <template>
 	<Form v-model:valid="valid">
-		<div class="grid grid-cols-2 gap-4 px-4">
-			<Select
-				label="Vehicle"
-				:items="vehicles"
-				:rules="form.vehicle.rules"
-				v-model:value="form.vehicle.value"
-			/>
-
-			<Input
-				label="Amount"
-				:rules="form.amount.rules"
-				v-model:value="form.amount.value"
-			/>
-
-			<Select
-				label="Account Type"
-				:items="types"
-				item-label="name"
-				item-value="id"
-				:rules="form.type.rules"
-				v-model:value="form.type.value"
-			/>
-
-			<Input
-				label="Account Balance"
-				:rules="form.balance.rules"
-				v-model:value="form.balance.value"
-			/>
-
-			<Input
-				v-if="typeName === 'gas'"
-				label="Mileage"
-				:rules="form.mileage.rules"
-				v-model:value="form.mileage.value"
-			/>
-
-			<Select label="Due Date" :items="[]" v-if="!editMode" />
-		</div>
-
-		<template v-if="editMode">
-			<Checkbox
-				class="pl-4 my-6"
-				label="Do not track this expense"
-				:rules="form.do_not_track.rules"
-				v-model:value="form.do_not_track.value"
-			/>
-
+		<div class="flex-1 overflow-auto pt-16 lg:pt-0 pb-20 lg:pb-0">
 			<div class="grid grid-cols-2 gap-4 px-4">
-				<Input
-					label="Confirmation"
-					:rules="form.confirmation.rules"
-					v-model:value="form.confirmation.value"
+				<Select
+					label="Vehicle"
+					:items="vehicles"
+					:rules="form.vehicle.rules"
+					v-model:value="form.vehicle.value"
 				/>
 
 				<Input
-					label="Paid Date"
-					:rules="form.paid_date.rules"
-					v-model:value="form.paid_date.value"
+					label="Amount"
+					:rules="form.amount.rules"
+					v-model:value="form.amount.value"
 				/>
+
+				<Select
+					label="Account Type"
+					:items="types"
+					item-label="name"
+					item-value="id"
+					:rules="form.type.rules"
+					v-model:value="form.type.value"
+				/>
+
+				<Input
+					label="Account Balance"
+					:rules="form.balance.rules"
+					v-model:value="form.balance.value"
+				/>
+
+				<Input
+					v-if="typeName === 'gas'"
+					label="Mileage"
+					:rules="form.mileage.rules"
+					v-model:value="form.mileage.value"
+				/>
+
+				<Select label="Due Date" :items="[]" v-if="!editMode" />
 			</div>
 
-			<Textarea
-				class="px-4"
-				label="Notes"
-				:rules="form.notes.rules"
-				v-model:value="form.notes.value"
-			/>
-		</template>
+			<template v-if="editMode">
+				<Checkbox
+					class="pl-4 my-6"
+					label="Do not track this expense"
+					:rules="form.do_not_track.rules"
+					v-model:value="form.do_not_track.value"
+				/>
+
+				<div class="grid grid-cols-2 gap-4 px-4">
+					<Input
+						label="Confirmation"
+						:rules="form.confirmation.rules"
+						v-model:value="form.confirmation.value"
+					/>
+
+					<Input
+						label="Paid Date"
+						:rules="form.paid_date.rules"
+						v-model:value="form.paid_date.value"
+					/>
+				</div>
+
+				<Textarea
+					class="px-4"
+					label="Notes"
+					:rules="form.notes.rules"
+					v-model:value="form.notes.value"
+				/>
+			</template>
+		</div>
 
 		<div
-			class="flex flex-row justify-end items-center mt-8 bg-gray-100 pr-2 py-2"
+			class="flex flex-row justify-end items-center mt-8 bg-gray-100 pr-2 py-2 absolute lg:relative bottom-0 left-0 w-full lg:w-auto"
 		>
 			<Button @on-click="closeModal(false)">Cancel</Button>
 			<Button
