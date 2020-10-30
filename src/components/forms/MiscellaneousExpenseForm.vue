@@ -83,7 +83,13 @@ export default defineComponent({
 			ExpenseContext?.closeModal(data);
 		};
 
-		return { closeModal, editMode: ExpenseContext.editMode, form, valid };
+		return {
+			closeModal,
+			dates: ExpenseContext?.dates ?? [],
+			editMode: ExpenseContext.editMode,
+			form,
+			valid,
+		};
 	},
 });
 </script>
@@ -108,7 +114,7 @@ export default defineComponent({
 
 				<Select
 					label="Due Date"
-					:items="[]"
+					:items="dates"
 					v-if="!editMode"
 					:rules="form.due_date.rules"
 					v-model:value="form.due_date.value"

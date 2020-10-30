@@ -120,6 +120,7 @@ export default defineComponent({
 
 		return {
 			closeModal,
+			dates: ExpenseContext?.dates ?? [],
 			editMode: ExpenseContext.editMode,
 			form,
 			types: ExpenseContext.typeList,
@@ -162,7 +163,14 @@ export default defineComponent({
 					v-model:value="form.balance.value"
 				/>
 
-				<Select label="Due Date" :items="[]" v-if="!editMode" />
+				<Select
+					class="mb-4"
+					label="Due Date"
+					:items="dates"
+					v-if="!editMode"
+					:rules="form.due_date.rules"
+					v-model:value="form.due_date.value"
+				/>
 			</div>
 
 			<div class="grid grid-cols-2 gap-4 px-4 mt-2">

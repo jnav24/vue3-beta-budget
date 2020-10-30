@@ -118,6 +118,7 @@ export default defineComponent({
 
 		return {
 			closeModal,
+			dates: ExpenseContext?.dates ?? [],
 			editMode: ExpenseContext.editMode,
 			form,
 			typeName,
@@ -170,7 +171,13 @@ export default defineComponent({
 					v-model:value="form.mileage.value"
 				/>
 
-				<Select label="Due Date" :items="[]" v-if="!editMode" />
+				<Select
+					label="Due Date"
+					:items="dates"
+					v-if="!editMode"
+					:rules="form.due_date.rules"
+					v-model:value="form.due_date.value"
+				/>
 			</div>
 
 			<template v-if="editMode">

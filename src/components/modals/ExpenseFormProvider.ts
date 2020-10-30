@@ -11,6 +11,7 @@ export type ExpenseFormContextType = {
 	data: BudgetExpense;
 	closeModal: (data: Record<string, string>) => void;
 	currentType: Ref<keyof TypesStateInterface>;
+	dates: Array<{ label: number; value: number }>;
 	editMode: ComputedRef<boolean>;
 	extractFormValues: (form: any) => Record<string, string>;
 	getTypeId: () => number;
@@ -78,6 +79,10 @@ export default defineComponent({
 			data: props.data,
 			closeModal,
 			currentType,
+			dates: Array.from(Array(31).keys()).map((num: number) => ({
+				label: num + 1,
+				value: num + 1,
+			})),
 			editMode,
 			extractFormValues,
 			getTypeId,
