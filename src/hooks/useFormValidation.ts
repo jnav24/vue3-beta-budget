@@ -133,7 +133,7 @@ export default function useFormValidation() {
 		if (
 			!Object.values(rules).includes('required') &&
 			!Object.keys(rules).includes('required') &&
-			(!inputValue || !inputValue.trim().length)
+			(!inputValue || !inputValue.toString().trim().length)
 		) {
 			return { error, valid: tempValid };
 		}
