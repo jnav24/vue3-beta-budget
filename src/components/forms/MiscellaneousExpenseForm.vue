@@ -2,6 +2,7 @@
 import { defineComponent, inject, onBeforeMount, reactive, ref } from 'vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import Checkbox from '@/components/ui-elements/form/Checkbox.vue';
+import DatePicker from '@/components/ui-elements/form/DatePicker.vue';
 import {
 	ExpenseFormContext,
 	ExpenseFormContextType,
@@ -15,6 +16,7 @@ export default defineComponent({
 	components: {
 		Button,
 		Checkbox,
+		DatePicker,
 		Form,
 		Input,
 		Select,
@@ -126,7 +128,7 @@ export default defineComponent({
 						v-model:value="form.confirmation.value"
 					/>
 
-					<Input
+					<DatePicker
 						label="Paid Date"
 						:rules="form.paid_date.rules"
 						v-model:value="form.paid_date.value"

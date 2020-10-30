@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent, inject, onBeforeMount, reactive, ref } from 'vue';
 import Button from '@/components/ui-elements/form/Button.vue';
+import DatePicker from '@/components/ui-elements/form/DatePicker.vue';
 import {
 	ExpenseFormContext,
 	ExpenseFormContextType,
@@ -12,6 +13,7 @@ import Select from '@/components/ui-elements/form/Select.vue';
 export default defineComponent({
 	components: {
 		Button,
+		DatePicker,
 		Form,
 		Input,
 		Select,
@@ -97,7 +99,7 @@ export default defineComponent({
 					v-model:value="form.type.value"
 				/>
 
-				<Input
+				<DatePicker
 					v-if="editMode"
 					label="Paid Date"
 					:rules="form.paid_date.rules"
