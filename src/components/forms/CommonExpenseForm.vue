@@ -101,7 +101,9 @@ export default defineComponent({
 
 <template>
 	<Form v-model:valid="valid">
-		<div class="flex-1 overflow-auto pt-16 lg:pt-0 pb-20 lg:pb-0">
+		<div
+			class="flex-1 overflow-auto lg:overflow-visible pt-16 lg:pt-0 pb-20 lg:pb-0"
+		>
 			<div class="grid grid-cols-2 gap-4 px-4">
 				<Input
 					label="Name"
