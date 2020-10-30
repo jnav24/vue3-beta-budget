@@ -90,7 +90,7 @@ export default defineComponent({
 		</div>
 
 		<div
-			class="flex flex-row justify-end items-center mt-8 bg-gray-100 pr-2 py-2"
+			class="flex flex-row justify-end items-center mt-8 bg-gray-100 pr-2 py-2 rounded-b-lg"
 		>
 			<Button @on-click="closeModal(false)">Cancel</Button>
 			<Button
