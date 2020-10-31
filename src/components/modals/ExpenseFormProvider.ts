@@ -43,7 +43,10 @@ export default defineComponent({
 
 		const closeModal = (data = {}) => {
 			if (Object.keys(data).length) {
-				// save data and update the state
+				emit('close-modal', {
+					...props.data,
+					...data,
+				});
 			}
 
 			emit('close-modal');
@@ -56,14 +59,6 @@ export default defineComponent({
 				] ?? []
 		);
 
-		const extractFormValues = (form: any) => {
-			const result: Record<string, string> = {};
-			Object.keys(form).forEach(
-				value => (result[value] = form[value].value)
-			);
-			return result;
-		};
-
 		const getTypeKey = () => {
 			return Object.keys(props.data)
 				.filter(key => /[a-z]*_type_[a-z]*/.exec(key))
@@ -73,6 +68,15 @@ export default defineComponent({
 		const getTypeId = () => {
 			const keyName = getTypeKey();
 			return keyName ? props.data[keyName as keyof BudgetExpense] : 0;
+		};
+
+		const extractFormValues = (form: any) => {
+			const result: Record<string, string> = {};
+			Object.keys(form).forEach(value => {
+				const key = value === 'type' ? getTypeKey() ?? value : value;
+				result[key] = form[value].value;
+			});
+			return result;
 		};
 
 		provide(ExpenseFormContext, {

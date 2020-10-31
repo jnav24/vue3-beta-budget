@@ -1,5 +1,12 @@
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref, watch } from 'vue';
+import {
+	computed,
+	defineComponent,
+	onMounted,
+	ref,
+	watch,
+	watchEffect,
+} from 'vue';
 import BudgetEditSummary from '@/components/partials/BudgetEditSummary.vue';
 import BudgetEditTable from '@/components/tables/BudgetEditTable.vue';
 import ExpenseModal from '@/components/modals/ExpenseModal.vue';
@@ -8,7 +15,7 @@ import Select from '@/components/ui-elements/form/Select.vue';
 import SideBar from '@/components/partials/SideBar.vue';
 import { useBudgetStore, useTypesStore } from '@/store';
 import { useRoute } from 'vue-router';
-import { BudgetExpense } from '@/store/budget';
+import { BudgetExpense, BudgetList } from '@/store/budget';
 
 export default defineComponent({
 	components: {
@@ -26,9 +33,7 @@ export default defineComponent({
 			params: { id },
 		} = useRoute();
 
-		const budget = computed(() =>
-			budgetStore.list.find(item => item.id === Number(id))
-		);
+		const budget = ref({} as BudgetList);
 		const loading = ref(true);
 
 		onMounted(async () => {
@@ -48,11 +53,34 @@ export default defineComponent({
 			showModal.value = true;
 		};
 
+		const updateLocalBudget = (data: BudgetExpense) => {
+			console.log(data);
+			console.log(budget.value);
+			let index = -1;
+
+			if (budget.value && budget.value.expenses) {
+				index = budget.value.expenses[selectedCategory.value].findIndex(
+					(expense: BudgetExpense) => expense.id === data.id
+				);
+
+				if (index > -1) {
+					budget.value.expenses[selectedCategory.value][index] = data;
+				}
+			}
+		};
+
 		watch(showModal, n => {
 			if (!n) {
 				expenseData.value = {};
 			}
 		});
+
+		watchEffect(
+			() =>
+				(budget.value =
+					budgetStore.list.find(item => item.id === Number(id)) ??
+					({} as BudgetList))
+		);
 
 		return {
 			categories,
@@ -61,6 +89,7 @@ export default defineComponent({
 			selectedCategory,
 			showExpenseModal,
 			showModal,
+			updateLocalBudget,
 			loading,
 		};
 	},
@@ -68,12 +97,13 @@ export default defineComponent({
 </script>
 
 <template>
-	<!-- @todo create a date picker component -->
+	<!-- @todo emit updated data from ExpenseModal and ExpenseSlideover and update the local budget state -->
 	<ExpenseModal
 		class="hidden lg:block"
 		v-model:show="showModal"
 		:data="expenseData"
 		:type="selectedCategory"
+		@update-budget="updateLocalBudget($event)"
 	/>
 
 	<ExpenseSlideover
@@ -83,6 +113,7 @@ export default defineComponent({
 		:type="selectedCategory"
 	/>
 
+	<!-- @todo add emit to save button; when clicked send local budget state to budgetStore.updateBudget() -->
 	<BudgetEditSummary
 		v-if="budget && budget.expenses"
 		:date="budget.budget_cycle"

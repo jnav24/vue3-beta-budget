@@ -27,11 +27,11 @@ export type BudgetExpense = {
 	limit?: string;
 };
 
-type BudgetList = {
+export type BudgetList = {
 	id: number;
 	name: string;
 	budget_cycle: string;
-	expenses?: Record<string, BudgetExpense>;
+	expenses?: Record<string, Array<BudgetExpense>>;
 	saved?: string;
 };
 
@@ -104,8 +104,24 @@ export const useBudgetStore = createStore({
 			// ...
 		},
 
-		async updateBudget() {
-			// ...
+		async updateBudget(payload: BudgetList) {
+			// @todo save edit budget goes here
+			const { postAuth } = useHttp();
+			const data = {
+				path: 'budgets',
+				params: {
+					id: payload.id,
+					name: payload.name,
+					cycle: payload.budget_cycle,
+					expenses: payload.expenses,
+				},
+			};
+
+			const response = await postAuth(data);
+
+			if (response.success) {
+				// @todo update this.list with new budget
+			}
 		},
 	},
 });
