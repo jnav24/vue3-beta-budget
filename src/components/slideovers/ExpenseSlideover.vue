@@ -1,7 +1,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue';
 import Slideover from '@/components/slideovers/Slideover.vue';
-import { BudgetExpense } from '@/store/budget';
+import { BudgetExpense, BudgetList } from '@/store/budget';
 import ExpenseForm from '@/components/partials/ExpenseForm.vue';
 import ExpenseFormProvider from '@/components/modals/ExpenseFormProvider';
 
@@ -28,7 +28,11 @@ export default defineComponent({
 	setup(props, { emit }) {
 		const setClose = ref(false);
 
-		const setCloseModal = () => {
+		const setCloseModal = (budget?: BudgetList) => {
+			if (budget && Object.keys(budget).length) {
+				emit('update-budget', budget);
+			}
+
 			setClose.value = true;
 			setTimeout(() => (setClose.value = false), 1000);
 		};
@@ -49,7 +53,7 @@ export default defineComponent({
 			:data="data"
 			:edit-mode="editMode"
 			:type="type"
-			@close-modal="setCloseModal()"
+			@close-modal="setCloseModal($event)"
 		>
 			<ExpenseForm />
 		</ExpenseFormProvider>

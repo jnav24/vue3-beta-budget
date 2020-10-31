@@ -54,8 +54,6 @@ export default defineComponent({
 		};
 
 		const updateLocalBudget = (data: BudgetExpense) => {
-			console.log(data);
-			console.log(budget.value);
 			let index = -1;
 
 			if (budget.value && budget.value.expenses) {
@@ -97,7 +95,6 @@ export default defineComponent({
 </script>
 
 <template>
-	<!-- @todo emit updated data from ExpenseModal and ExpenseSlideover and update the local budget state -->
 	<ExpenseModal
 		class="hidden lg:block"
 		v-model:show="showModal"
@@ -111,6 +108,7 @@ export default defineComponent({
 		v-model:show="showModal"
 		:data="expenseData"
 		:type="selectedCategory"
+		@update-budget="updateLocalBudget($event)"
 	/>
 
 	<!-- @todo add emit to save button; when clicked send local budget state to budgetStore.updateBudget() -->
