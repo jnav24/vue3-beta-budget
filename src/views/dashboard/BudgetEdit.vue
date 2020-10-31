@@ -34,6 +34,7 @@ export default defineComponent({
 		} = useRoute();
 
 		const budget = ref({} as BudgetList);
+		const disableSave = ref(true);
 		const loading = ref(true);
 
 		onMounted(async () => {
@@ -63,6 +64,7 @@ export default defineComponent({
 
 				if (index > -1) {
 					budget.value.expenses[selectedCategory.value][index] = data;
+					disableSave.value = false;
 				}
 			}
 		};
@@ -83,6 +85,7 @@ export default defineComponent({
 		return {
 			categories,
 			budget,
+			disableSave,
 			expenseData,
 			selectedCategory,
 			showExpenseModal,
@@ -115,6 +118,7 @@ export default defineComponent({
 	<BudgetEditSummary
 		v-if="budget && budget.expenses"
 		:date="budget.budget_cycle"
+		:disable-save="disableSave"
 		:expenses="budget.expenses"
 		@add-expense="showModal = true"
 	/>

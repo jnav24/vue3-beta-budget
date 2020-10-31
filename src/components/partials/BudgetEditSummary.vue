@@ -21,6 +21,10 @@ export default defineComponent({
 			required: true,
 			type: String,
 		},
+		disableSave: {
+			default: true,
+			type: Boolean,
+		},
 		expenses: {
 			required: true,
 			type: Object as () => Record<string, Array<BudgetExpense>>,
@@ -31,7 +35,6 @@ export default defineComponent({
 		const { formatDate } = useTimestamp();
 		const { arrayColumn } = useUtils();
 		const cycle = formatDate('MMM yyyy', props.date);
-		const disableSave = ref(true);
 		const totalBanked = ref('0.00');
 		const totalEarned = ref('0.00');
 		const totalInvested = ref('0.00');
@@ -67,7 +70,6 @@ export default defineComponent({
 		return {
 			addExpense: () => emit('add-expense'),
 			cycle,
-			disableSave,
 			isGain: computed(() => !totalSaved.value.includes('-')),
 			totalBanked,
 			totalEarned,
