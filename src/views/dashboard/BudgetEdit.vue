@@ -47,6 +47,11 @@ export default defineComponent({
 		const categories = computed(() => typeStore.bills);
 		const showModal = ref(false);
 
+		const saveBudget = () => {
+			budgetStore.updateBudget(budget.value);
+			disableSave.value = true;
+		};
+
 		const showExpenseModal = (e: BudgetExpense) => {
 			if (e) {
 				expenseData.value = e;
@@ -87,6 +92,7 @@ export default defineComponent({
 			budget,
 			disableSave,
 			expenseData,
+			saveBudget,
 			selectedCategory,
 			showExpenseModal,
 			showModal,
@@ -114,13 +120,13 @@ export default defineComponent({
 		@update-budget="updateLocalBudget($event)"
 	/>
 
-	<!-- @todo add emit to save button; when clicked send local budget state to budgetStore.updateBudget() -->
 	<BudgetEditSummary
 		v-if="budget && budget.expenses"
 		:date="budget.budget_cycle"
 		:disable-save="disableSave"
 		:expenses="budget.expenses"
 		@add-expense="showModal = true"
+		@save-budget="saveBudget()"
 	/>
 
 	<div class="container mx-auto py-6 px-4 sm:px-0">

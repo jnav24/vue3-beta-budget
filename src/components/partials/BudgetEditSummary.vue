@@ -71,6 +71,7 @@ export default defineComponent({
 			addExpense: () => emit('add-expense'),
 			cycle,
 			isGain: computed(() => !totalSaved.value.includes('-')),
+			saveBudget: () => emit('save-budget'),
 			totalBanked,
 			totalEarned,
 			totalInvested,
@@ -126,6 +127,7 @@ export default defineComponent({
 						color="primary"
 						class="w-full sm:w-auto"
 						:is-disabled="disableSave"
+						@on-click="saveBudget()"
 					>
 						<SaveIcon class="w-5 h-5" />
 						<span class="ml-2">Save</span>
