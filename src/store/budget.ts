@@ -105,8 +105,7 @@ export const useBudgetStore = createStore({
 		},
 
 		async updateBudget(payload: BudgetList) {
-			// @todo save edit budget goes here
-			const { postAuth } = useHttp();
+			const { postAuth, getDataFromResponse } = useHttp();
 			const data = {
 				path: 'budgets',
 				params: {
@@ -120,7 +119,20 @@ export const useBudgetStore = createStore({
 			const response = await postAuth(data);
 
 			if (response.success) {
-				// @todo update this.list with new budget
+				const data: BudgetList = getDataFromResponse(response);
+				const index = this.list.findIndex(item => item.id === data.id);
+
+				if (index > -1) {
+					const temp = [
+						...this.list,
+					];
+					temp[index] = data;
+					this.patch({
+						list: [
+							...temp,
+						],
+					})
+				}
 			}
 		},
 	},

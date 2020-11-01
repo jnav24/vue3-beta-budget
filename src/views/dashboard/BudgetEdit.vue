@@ -68,6 +68,7 @@ export default defineComponent({
 				);
 
 				if (index > -1) {
+					// @todo compare new data with current to see if there was a change
 					budget.value.expenses[selectedCategory.value][index] = data;
 					disableSave.value = false;
 				}
@@ -80,12 +81,14 @@ export default defineComponent({
 			}
 		});
 
-		watchEffect(
-			() =>
-				(budget.value =
+		watchEffect(() => {
+			budget.value = JSON.parse(
+				JSON.stringify(
 					budgetStore.list.find(item => item.id === Number(id)) ??
-					({} as BudgetList))
-		);
+						({} as BudgetList)
+				)
+			);
+		});
 
 		return {
 			categories,
