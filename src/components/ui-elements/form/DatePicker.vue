@@ -1,13 +1,16 @@
 <script lang="ts">
 import { computed, defineComponent, inject, onMounted, ref } from 'vue';
 import { FormProvider } from '@/components/ui-elements/form/Form';
+import Button from '@/components/ui-elements/form/Button.vue';
 import Label from '@/components/ui-elements/form/Label.vue';
 import CalendarIcon from '@/components/ui-elements/icons/CalendarIcon.vue';
 import ChevronLeftIcon from '@/components/ui-elements/icons/ChevronLeftIcon.vue';
 import ChevronRightIcon from '@/components/ui-elements/icons/ChevronRightIcon.vue';
+import useTimestamp from '@/hooks/useTimestamp';
 
 export default defineComponent({
 	components: {
+		Button,
 		CalendarIcon,
 		ChevronLeftIcon,
 		ChevronRightIcon,
@@ -28,6 +31,11 @@ export default defineComponent({
 		},
 	},
 	setup(props, { emit }) {
+		const { addMonth, formatDate } = useTimestamp();
+		const dateCounter = ref(0);
+		const dateHeader = computed(() =>
+			formatDate('MMMM yyyy', addMonth(dateCounter.value).toISOString())
+		);
 		const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 		const labelId = ref<string>('');
 		const FormContext = inject<any>(FormProvider, undefined);
@@ -56,6 +64,8 @@ export default defineComponent({
 		};
 
 		return {
+			dateCounter,
+			dateHeader,
 			days,
 			error,
 			labelId,
@@ -107,9 +117,17 @@ export default defineComponent({
 				<div
 					class="flex flex-row items-center justify-between text-gray-700"
 				>
-					<ChevronLeftIcon class="w-4 h-4" />
-					<span class="text-sm">October 2020</span>
-					<ChevronRightIcon class="w-4 h-4" />
+					<Button fab @click="dateCounter--">
+						<ChevronLeftIcon class="cursor-pointer w-4 h-4" />
+					</Button>
+					<span class="text-sm">{{ dateHeader }}</span>
+					<Button
+						fab
+						@click="dateCounter++"
+						class="translate-x-2 transform"
+					>
+						<ChevronRightIcon class="cursor-pointer w-4 h-4" />
+					</Button>
 				</div>
 
 				<div class="grid-cols-7 gap-1 grid">
