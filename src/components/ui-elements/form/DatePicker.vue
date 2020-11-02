@@ -58,8 +58,12 @@ export default defineComponent({
 			)
 		);
 		const days = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-		const daysList = computed(() =>
-			Array.from(
+		const daysList = computed(() => {
+			const buffer = Array.from(
+				Array(days.indexOf(dayBegins.value)).keys(),
+				num => 60 + num
+			);
+			const daysOfTheMonth = Array.from(
 				Array(
 					+formatDate(
 						'd',
@@ -68,17 +72,10 @@ export default defineComponent({
 						).toISOString()
 					)
 				).keys()
-			)
-		);
-		console.log(daysList.value);
-		console.log(
-			formatDate(
-				'd',
-				getEndDayOfMonth(
-					addMonth(dateCounter.value).toISOString()
-				).toISOString()
-			)
-		);
+			);
+
+			return buffer.concat(daysOfTheMonth);
+		});
 		const labelId = ref<string>('');
 		const FormContext = inject<any>(FormProvider, undefined);
 		const selected = ref(true);
@@ -186,13 +183,15 @@ export default defineComponent({
 				</div>
 
 				<div class="grid-cols-7 gap-1 grid">
-					<button
-						class="text-gray-600 text-sm mb-2"
-						v-for="(date, index) in daysList"
-						:key="index"
-					>
-						{{ date + 1 }}
-					</button>
+					<div v-for="(date, index) in daysList" :key="index">
+						<span v-if="date > 31">&nbsp;</span>
+						<button
+							v-if="date < 32"
+							class="text-gray-600 text-sm mb-2 text-center w-full border-0"
+						>
+							{{ date + 1 }}
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>
