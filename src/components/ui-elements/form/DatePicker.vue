@@ -31,12 +31,54 @@ export default defineComponent({
 		},
 	},
 	setup(props, { emit }) {
-		const { addMonth, formatDate } = useTimestamp();
+		const {
+			addMonth,
+			formatDate,
+			getEndDayOfMonth,
+			getStartDayOfMonth,
+		} = useTimestamp();
 		const dateCounter = ref(0);
 		const dateHeader = computed(() =>
 			formatDate('MMMM yyyy', addMonth(dateCounter.value).toISOString())
 		);
-		const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+		const dayBegins = computed(() =>
+			formatDate(
+				'EEEEEE',
+				getStartDayOfMonth(
+					addMonth(dateCounter.value).toISOString()
+				).toISOString()
+			)
+		);
+		const dayEnds = computed(() =>
+			formatDate(
+				'EEEEEE',
+				getEndDayOfMonth(
+					addMonth(dateCounter.value).toISOString()
+				).toISOString()
+			)
+		);
+		const days = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+		const daysList = computed(() =>
+			Array.from(
+				Array(
+					+formatDate(
+						'd',
+						getEndDayOfMonth(
+							addMonth(dateCounter.value).toISOString()
+						).toISOString()
+					)
+				).keys()
+			)
+		);
+		console.log(daysList.value);
+		console.log(
+			formatDate(
+				'd',
+				getEndDayOfMonth(
+					addMonth(dateCounter.value).toISOString()
+				).toISOString()
+			)
+		);
 		const labelId = ref<string>('');
 		const FormContext = inject<any>(FormProvider, undefined);
 		const selected = ref(true);
@@ -66,7 +108,10 @@ export default defineComponent({
 		return {
 			dateCounter,
 			dateHeader,
+			dayBegins,
+			dayEnds,
 			days,
+			daysList,
 			error,
 			labelId,
 			selected,
@@ -130,7 +175,7 @@ export default defineComponent({
 					</Button>
 				</div>
 
-				<div class="grid-cols-7 gap-1 grid">
+				<div class="grid-cols-7 gap-1 grid my-2">
 					<span
 						class="text-center text-sm text-gray-500"
 						v-for="(day, index) in days"
@@ -140,7 +185,15 @@ export default defineComponent({
 					</span>
 				</div>
 
-				<div class="grid-cols-7 gap-1 grid"></div>
+				<div class="grid-cols-7 gap-1 grid">
+					<button
+						class="text-gray-600 text-sm mb-2"
+						v-for="(date, index) in daysList"
+						:key="index"
+					>
+						{{ date + 1 }}
+					</button>
+				</div>
 			</div>
 		</div>
 		<span v-if="error" class="text-sm text-red-600">{{ error }}</span>
