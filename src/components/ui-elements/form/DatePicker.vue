@@ -26,6 +26,7 @@ export default defineComponent({
 	setup(props, { emit }) {
 		const labelId = ref<string>('');
 		const FormContext = inject<any>(FormProvider, undefined);
+		const selected = ref(false);
 
 		onMounted(() => {
 			if (props.label && !!FormContext) {
@@ -52,7 +53,12 @@ export default defineComponent({
 		return {
 			error,
 			labelId,
+			selected,
 			updateValue,
+			updateValueOnBlur: (e: string) => {
+				selected.value = false;
+				updateValue(e);
+			},
 		};
 	},
 });
@@ -64,6 +70,7 @@ export default defineComponent({
 		<div class="relative mt-2">
 			<div
 				class="absolute left-0 top-0 flex flex-col items-center justify-center h-full w-10 bg-gray-600 rounded-l-md"
+				@click="selected = !selected"
 			>
 				<CalendarIcon class="w-5 h-5 text-white" />
 			</div>
@@ -77,11 +84,20 @@ export default defineComponent({
 				type="text"
 				:value="value"
 				:autocomplete="type !== 'password' ? 'on' : 'off'"
-				@blur="updateValue($event.target.value)"
+				@click="selected = !selected"
+				@blur="updateValueOnBlur($event.target.value)"
 				@input="updateValue($event.target.value)"
 				:aria-labelledby="labelId"
 				readonly
 			/>
+
+			<div
+				class="bg-white absolute left-0 bottom-0 w-64 h-64 shadow-2xl z-50 origin-top-left transform translate-y-64 transition ease-out duration-200"
+				:class="{
+					'scale-100 opacity-100': selected,
+					'scale-0 opacity-0': !selected,
+				}"
+			></div>
 		</div>
 		<span v-if="error" class="text-sm text-red-600">{{ error }}</span>
 	</div>
