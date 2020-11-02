@@ -123,15 +123,11 @@ export const useBudgetStore = createStore({
 				const index = this.list.findIndex(item => item.id === data.id);
 
 				if (index > -1) {
-					const temp = [
-						...this.list,
-					];
+					const temp = [...this.list];
 					temp[index] = data;
 					this.patch({
-						list: [
-							...temp,
-						],
-					})
+						list: [...temp],
+					});
 				}
 			}
 		},
