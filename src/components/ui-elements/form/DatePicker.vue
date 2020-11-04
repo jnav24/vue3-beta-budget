@@ -176,7 +176,7 @@ export default defineComponent({
 			/>
 
 			<div
-				class="bg-white p-4 absolute left-0 bottom-0 w-64 h-64 shadow-2xl z-50 origin-top-left transform translate-y-64 transition ease-out duration-200"
+				class="bg-white px-4 py-3 absolute left-0 top-0 w-64 min-h-64 shadow-2xl z-50 origin-top-left transform translate-y-12 transition ease-out duration-200"
 				:class="{
 					'scale-100 opacity-100': selected,
 					'scale-0 opacity-0': !selected,
@@ -213,7 +213,11 @@ export default defineComponent({
 						<span v-if="date > 31">&nbsp;</span>
 						<button
 							v-if="date < 32"
-							class="text-gray-600 text-sm mb-2 text-center w-full border-0"
+							class="text-sm py-1 rounded-full text-center w-full border-0"
+							:class="{
+								'text-gray-600 bg-white hover:bg-gray-200': true,
+								'text-white bg-primary': false,
+							}"
 						>
 							{{ date + 1 }}
 						</button>
