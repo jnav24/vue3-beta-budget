@@ -1,5 +1,12 @@
 <script lang="ts">
-import { computed, defineComponent, inject, onMounted, ref } from 'vue';
+import {
+	computed,
+	defineComponent,
+	inject,
+	onMounted,
+	ref,
+	watchEffect,
+} from 'vue';
 import { FormProvider } from '@/components/ui-elements/form/Form';
 import Button from '@/components/ui-elements/form/Button.vue';
 import Label from '@/components/ui-elements/form/Label.vue';
@@ -41,6 +48,7 @@ export default defineComponent({
 		const dateHeader = computed(() =>
 			formatDate('MMMM yyyy', addMonth(dateCounter.value).toISOString())
 		);
+		const datePicker = ref(null);
 		const dayBegins = computed(() =>
 			formatDate(
 				'EEEEEE',
@@ -78,12 +86,36 @@ export default defineComponent({
 		});
 		const labelId = ref<string>('');
 		const FormContext = inject<any>(FormProvider, undefined);
-		const selected = ref(true);
+		const selected = ref(false);
 
 		onMounted(() => {
 			if (props.label && !!FormContext) {
 				labelId.value = FormContext.setupForm(props.label, props.rules);
 				FormContext.validateField(labelId.value, props.value, true);
+			}
+		});
+
+		const setSelected = () => {
+			selected.value = false;
+		};
+
+		watchEffect(() => {
+			if (datePicker.value) {
+				if (selected.value) {
+					(datePicker.value as any).addEventListener(
+						'click',
+						(e: any) => e.stopPropagation()
+					);
+					setTimeout(() => {
+						document.body.addEventListener('click', setSelected);
+					}, 200);
+				} else {
+					(datePicker.value as any).removeEventListener(
+						'click',
+						(e: any) => e.stopPropagation()
+					);
+					document.body.removeEventListener('click', setSelected);
+				}
 			}
 		});
 
@@ -105,6 +137,7 @@ export default defineComponent({
 		return {
 			dateCounter,
 			dateHeader,
+			datePicker,
 			dayBegins,
 			dayEnds,
 			days,
@@ -113,10 +146,6 @@ export default defineComponent({
 			labelId,
 			selected,
 			updateValue,
-			updateValueOnBlur: (e: string) => {
-				selected.value = false;
-				updateValue(e);
-			},
 		};
 	},
 });
@@ -125,10 +154,9 @@ export default defineComponent({
 <template>
 	<div>
 		<Label :error="error" :labelId="labelId" :label="label" />
-		<div class="relative mt-2">
+		<div class="relative mt-2" ref="datePicker">
 			<div
 				class="absolute left-0 top-0 flex flex-col items-center justify-center h-full w-10 bg-gray-600 rounded-l-md"
-				@click="selected = !selected"
 			>
 				<CalendarIcon class="w-5 h-5 text-white" />
 			</div>
@@ -143,8 +171,6 @@ export default defineComponent({
 				:value="value"
 				:autocomplete="type !== 'password' ? 'on' : 'off'"
 				@click="selected = !selected"
-				@blur="updateValueOnBlur($event.target.value)"
-				@input="updateValue($event.target.value)"
 				:aria-labelledby="labelId"
 				readonly
 			/>
