@@ -98,10 +98,6 @@ export default defineComponent({
 				labelId.value = FormContext.setupForm(props.label, props.rules);
 				FormContext.validateField(labelId.value, props.value, true);
 			}
-
-			if (isNaN(new Date(props.value).getTime())) {
-				emit('update:value', formatTimeZone('yyyy-MM-dd', 'UTC'));
-			}
 		});
 
 		const setSelected = () => {
