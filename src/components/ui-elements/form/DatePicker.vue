@@ -41,14 +41,18 @@ export default defineComponent({
 		const {
 			addMonth,
 			formatDate,
+			formatTimeZone,
 			getEndDayOfMonth,
 			getStartDayOfMonth,
 		} = useTimestamp();
 		const dateCounter = ref(0);
 		const dateHeader = computed(() =>
-			formatDate('MMMM yyyy', addMonth(dateCounter.value).toISOString())
+			formatDate('yyyy-MM-dd', addMonth(dateCounter.value).toISOString())
 		);
 		const datePicker = ref(null);
+		const dateTemplate = computed(() =>
+			formatDate('yyyy-MM', dateHeader.value)
+		);
 		const dayBegins = computed(() =>
 			formatDate(
 				'EEEEEE',
@@ -87,6 +91,7 @@ export default defineComponent({
 		const labelId = ref<string>('');
 		const FormContext = inject<any>(FormProvider, undefined);
 		const selected = ref(false);
+		const today = formatTimeZone('yyyy-MM-dd');
 
 		onMounted(() => {
 			if (props.label && !!FormContext) {
@@ -127,7 +132,20 @@ export default defineComponent({
 			return null;
 		});
 
-		const updateValue = (inputValue: string) => {
+		const setDay = (day: number) => day < 10 ? `0${day}` : day;
+
+		const isSelected = (day: number) => {
+			const result = `${dateTemplate.value}-${setDay(day)}`;
+			return props.value === result;
+		};
+
+		const isToday = (day: number) => {
+			const result = `${formatTimeZone('yyyy-MM', 'UTC')}-${setDay(day)}`;
+			return today === result && dateCounter.value === 0;
+		};
+
+		const updateValue = (day: number) => {
+			const inputValue = `${dateTemplate.value}-${setDay(day)}`;
 			if (FormContext) {
 				FormContext.validateField(labelId.value, inputValue);
 			}
@@ -143,6 +161,10 @@ export default defineComponent({
 			days,
 			daysList,
 			error,
+			formatDate,
+			formatTimeZone,
+			isSelected,
+			isToday,
 			labelId,
 			selected,
 			updateValue,
@@ -162,13 +184,13 @@ export default defineComponent({
 			</div>
 			<input
 				:id="labelId"
-				class="w-full p-2 border rounded outline-none"
+				class="w-full py-2 pl-12 pr-2 text-gray-500 border rounded outline-none"
 				:class="{
 					'border-gray-300 focus:border-primary': !error,
 					'border-red-600': error,
 				}"
 				type="text"
-				:value="value"
+				:value="formatTimeZone('yyyy-MM-dd', 'UTC', value)"
 				:autocomplete="type !== 'password' ? 'on' : 'off'"
 				@click="selected = !selected"
 				:aria-labelledby="labelId"
@@ -188,7 +210,9 @@ export default defineComponent({
 					<Button fab @click="dateCounter--">
 						<ChevronLeftIcon class="cursor-pointer w-4 h-4" />
 					</Button>
-					<span class="text-sm">{{ dateHeader }}</span>
+					<span class="text-sm">
+						{{ formatDate('MMMM yyyy', dateHeader) }}
+					</span>
 					<Button
 						fab
 						@click="dateCounter++"
@@ -213,11 +237,14 @@ export default defineComponent({
 						<span v-if="date > 31">&nbsp;</span>
 						<button
 							v-if="date < 32"
-							class="text-sm py-1 rounded-full text-center w-full border-0"
+							class="text-sm py-1 rounded-full text-center w-full"
 							:class="{
-								'text-gray-600 bg-white hover:bg-gray-200': true,
-								'text-white bg-primary': false,
+								'text-gray-600 bg-white hover:bg-gray-200 border-0': false, //!isSelected(date) && !isToday(date),
+								'text-white bg-primary border-0':
+									isSelected(date + 1) || isToday(date + 1),
+								'text-primary border border-primary': false, // isToday(date + 1) && !isSelected(date + 1),
 							}"
+							@click="updateValue(date + 1)"
 						>
 							{{ date + 1 }}
 						</button>
