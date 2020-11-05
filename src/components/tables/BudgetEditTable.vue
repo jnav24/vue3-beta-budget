@@ -50,7 +50,7 @@ export default defineComponent({
 		const { getHeaders } = useBudgetTable();
 		const { ucFirst } = useUtils();
 		const { formatDollar } = useCurrency();
-		const { formatDate } = useTimestamp();
+		const { formatTimeZone } = useTimestamp();
 		const userStore = useUserStore();
 		const typesStore = useTypesStore();
 		const headers: Record<string, Array<string>> = {
@@ -100,7 +100,7 @@ export default defineComponent({
 
 			if ((item as any)[header]) {
 				if (header === 'paid_date') {
-					return formatDate(dateFormat, item['paid_date']);
+					return formatTimeZone(dateFormat, 'UTC', item['paid_date']);
 				}
 
 				return (item as any)[header];
@@ -113,7 +113,11 @@ export default defineComponent({
 
 			if (header === 'date') {
 				if (item['initial_pay_date']) {
-					return formatDate(dateFormat, item['initial_pay_date']);
+					return formatTimeZone(
+						dateFormat,
+						'UTC',
+						item['initial_pay_date']
+					);
 				}
 			}
 
