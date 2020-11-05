@@ -98,6 +98,10 @@ export default defineComponent({
 				labelId.value = FormContext.setupForm(props.label, props.rules);
 				FormContext.validateField(labelId.value, props.value, true);
 			}
+
+			if (isNaN(new Date(props.value).getTime())) {
+				emit('update:value', formatTimeZone('yyyy-MM-dd', 'UTC'));
+			}
 		});
 
 		const setSelected = () => {
@@ -132,7 +136,7 @@ export default defineComponent({
 			return null;
 		});
 
-		const setDay = (day: number) => day < 10 ? `0${day}` : day;
+		const setDay = (day: number) => (day < 10 ? `0${day}` : day);
 
 		const isSelected = (day: number) => {
 			const result = `${dateTemplate.value}-${setDay(day)}`;
@@ -240,10 +244,13 @@ export default defineComponent({
 							v-if="date < 32"
 							class="text-sm py-1 rounded-full text-center w-full focus:outline-none focus:shadow-outline"
 							:class="{
-								'text-gray-600 bg-white hover:bg-gray-200 border-0': false, //!isSelected(date) && !isToday(date),
-								'text-white bg-primary border-0':
-									isSelected(date + 1) || isToday(date + 1),
-								'text-primary border border-primary': false, // isToday(date + 1) && !isSelected(date + 1),
+								'text-gray-600 bg-white hover:bg-gray-200 border-0':
+									!isSelected(date + 1) && !isToday(date + 1),
+								'text-white bg-primary border-0': isSelected(
+									date + 1
+								),
+								'text-primary shadow-inner bg-gray-200':
+									isToday(date + 1) && !isSelected(date + 1),
 							}"
 							@click="updateValue(date + 1)"
 						>
