@@ -47,7 +47,6 @@ export const useUserStore = createStore({
 
 	getters: {
 		vehicleList() {
-			console.log(this.vehicles);
 			return this.vehicles.map(vehicle => {
 				return {
 					active: vehicle.active,
