@@ -145,6 +145,7 @@ export default defineComponent({
 		};
 
 		const updateValue = (day: number) => {
+			selected.value = false;
 			const inputValue = `${dateTemplate.value}-${setDay(day)}`;
 			if (FormContext) {
 				FormContext.validateField(labelId.value, inputValue);
@@ -237,7 +238,7 @@ export default defineComponent({
 						<span v-if="date > 31">&nbsp;</span>
 						<button
 							v-if="date < 32"
-							class="text-sm py-1 rounded-full text-center w-full"
+							class="text-sm py-1 rounded-full text-center w-full focus:outline-none focus:shadow-outline"
 							:class="{
 								'text-gray-600 bg-white hover:bg-gray-200 border-0': false, //!isSelected(date) && !isToday(date),
 								'text-white bg-primary border-0':
