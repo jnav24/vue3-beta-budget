@@ -140,7 +140,7 @@ export default defineComponent({
 
 		const isSelected = (day: number) => {
 			const result = `${dateTemplate.value}-${setDay(day)}`;
-			return props.value === result;
+			return formatTimeZone('yyyy-MM-dd', 'UTC', props.value) === result;
 		};
 
 		const isToday = (day: number) => {
