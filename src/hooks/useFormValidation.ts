@@ -80,6 +80,12 @@ function validateFloat(value: string, num: string) {
 	return new RegExp(regex).test(value);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function validateGt(value: string, num: string) {
+	validateFunctionParam('float', num);
+	return Number(value) > Number(num);
+}
+
 export default function useFormValidation() {
 	const defaultErrorMessages: Record<string, string> = {
 		required: 'Field is required',
@@ -92,6 +98,7 @@ export default function useFormValidation() {
 		match: 'Field must match with `##REPLACE##`',
 		numeric: 'Field can only contain numbers',
 		float: 'Field must be numeric with ##REPLACE## decimals',
+		gt: 'Field must be greater than ##REPLACE##',
 	};
 
 	const setMessage = (message: string, rep: string) => {
