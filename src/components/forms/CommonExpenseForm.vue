@@ -29,7 +29,7 @@ export default defineComponent({
 		);
 		const form = reactive({
 			amount: {
-				rules: ['required'],
+				rules: ['required', 'float:2'],
 				value: '',
 			},
 			confirmation: {
@@ -57,7 +57,7 @@ export default defineComponent({
 				value: '',
 			},
 			type: {
-				rules: ['required'],
+				rules: ['required', 'gt:0'],
 				value: 0,
 			},
 		});
@@ -171,7 +171,11 @@ export default defineComponent({
 			class="flex flex-row justify-end items-center mt-8 bg-gray-100 pr-2 py-2 absolute lg:relative bottom-0 left-0 w-full lg:w-auto rounded-b-lg"
 		>
 			<Button @on-click="closeModal(false)">Cancel</Button>
-			<Button color="secondary" @on-click="closeModal(true)">
+			<Button
+				:is-disabled="!valid"
+				color="secondary"
+				@on-click="closeModal(true)"
+			>
 				Submit
 			</Button>
 		</div>
