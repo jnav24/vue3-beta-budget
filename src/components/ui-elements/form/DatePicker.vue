@@ -100,9 +100,7 @@ export default defineComponent({
 			}
 		});
 
-		const setSelected = () => {
-			selected.value = false;
-		};
+		const setSelected = () => (selected.value = false);
 
 		watchEffect(() => {
 			if (datePicker.value) {

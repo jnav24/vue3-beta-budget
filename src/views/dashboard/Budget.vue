@@ -220,18 +220,16 @@ export default defineComponent({
 							${{ formatDollar(item.saved.replace('-', '')) }}
 						</div>
 						<div>
-							<button
-								class="bg-secondary hover:bg-opacity-85 active:bg-dark-primary focus:outline-none focus:shadow-outline rounded-full p-2 mr-2"
-								@click="goToEditPage(item.id)"
+							<Button
+								color="secondary"
+								fab
+								@on-click="goToEditPage(item.id)"
 							>
-								<EditIcon class="text-white w-5 h-5" />
-							</button>
-
-							<button
-								class="bg-danger hover:bg-opacity-85 active:bg-dark-danger focus:outline-none focus:shadow-outline rounded-full p-2"
-							>
-								<BanIcon class="text-white w-5 h-5" />
-							</button>
+								<EditIcon class="w-4 h-4" />
+							</Button>
+							<Button color="danger" fab>
+								<BanIcon class="w-4 h-4 text-white" />
+							</Button>
 						</div>
 					</div>
 				</CardContent>
