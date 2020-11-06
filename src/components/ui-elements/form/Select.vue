@@ -45,7 +45,7 @@ export default defineComponent({
 		const error = ref(false);
 		const selected = ref(false);
 		const dropDownItems = ref(null);
-		const labelId = ref(null);
+		const labelId = ref<string>('');
 		const FormContext = inject<any>(FormProvider, undefined);
 
 		onMounted(() => {
@@ -81,6 +81,7 @@ export default defineComponent({
 
 		const blurEvent = () => {
 			selected.value = false;
+			setValue(props.value);
 		};
 
 		watch(selected, n => {
