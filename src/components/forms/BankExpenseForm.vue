@@ -31,7 +31,7 @@ export default defineComponent({
 				value: '',
 			},
 			type: {
-				rules: ['required'],
+				rules: ['required', 'gt:0'],
 				value: 0,
 			},
 		});

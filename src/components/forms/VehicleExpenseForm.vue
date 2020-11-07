@@ -72,11 +72,11 @@ export default defineComponent({
 				value: '',
 			},
 			type: {
-				rules: ['required'],
+				rules: ['required', 'gt:2'],
 				value: 0,
 			},
 			vehicle: {
-				rules: ['required'],
+				rules: ['required', 'gt:2'],
 				value: 0,
 			},
 		});

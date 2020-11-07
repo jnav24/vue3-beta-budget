@@ -25,7 +25,7 @@ export default defineComponent({
 		);
 		const form = reactive({
 			amount: {
-				rules: ['required'],
+				rules: ['required', 'float:2'],
 				value: '',
 			},
 			name: {
@@ -37,7 +37,7 @@ export default defineComponent({
 				value: '',
 			},
 			type: {
-				rules: ['required'],
+				rules: ['required', 'gt:2'],
 				value: 0,
 			},
 		});
