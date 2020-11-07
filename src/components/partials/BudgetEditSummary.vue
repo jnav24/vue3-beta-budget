@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent } from 'vue';
 import AddIcon from '@/components/ui-elements/icons/AddIcon.vue';
 import BudgetEditTotal from '@/components/partials/BudgetEditTotal.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
@@ -35,11 +35,6 @@ export default defineComponent({
 		const { formatDate } = useTimestamp();
 		const { arrayColumn } = useUtils();
 		const cycle = formatDate('MMM yyyy', props.date);
-		const totalBanked = ref('0.00');
-		const totalEarned = ref('0.00');
-		const totalInvested = ref('0.00');
-		const totalSaved = ref('0.00');
-		const totalSpent = ref('0.00');
 
 		const generateTotals = (list: Array<BudgetExpense>) => {
 			const amounts = arrayColumn('amount', list as any);
@@ -48,18 +43,26 @@ export default defineComponent({
 			);
 		};
 
-		onMounted(() => {
+		const totalBanked = computed(() =>
+			generateTotals(props.expenses['banks'] ?? '0.00')
+		);
+		const totalEarned = computed(() =>
+			generateTotals(props.expenses['incomes'] ?? '0.00')
+		);
+		const totalInvested = computed(() =>
+			generateTotals(props.expenses['investments'] ?? '0.00')
+		);
+		const totalSpent = computed(() => {
 			const spentList: Array<BudgetExpense> = [];
 			Object.keys(props.expenses)
 				.filter(
 					type => !['banks', 'incomes', 'investments'].includes(type)
 				)
 				.forEach(key => spentList.push(...props.expenses[key]));
-			totalSpent.value = generateTotals(spentList);
-			totalBanked.value = generateTotals(props.expenses['banks']);
-			totalEarned.value = generateTotals(props.expenses['incomes']);
-			totalInvested.value = generateTotals(props.expenses['investments']);
-			totalSaved.value = formatDollar(
+			return generateTotals(spentList);
+		});
+		const totalSaved = computed(() => {
+			return formatDollar(
 				(
 					Number(totalEarned.value.replace(',', '')) -
 					Number(totalSpent.value.replace(',', ''))
