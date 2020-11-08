@@ -3,10 +3,12 @@ import {
 	computed,
 	defineComponent,
 	onMounted,
+	reactive,
 	ref,
 	watch,
 	watchEffect,
 } from 'vue';
+import Alert from '@/components/ui-elements/Alert.vue';
 import BudgetEditSummary from '@/components/partials/BudgetEditSummary.vue';
 import BudgetEditTable from '@/components/tables/BudgetEditTable.vue';
 import ExpenseModal from '@/components/modals/ExpenseModal.vue';
@@ -19,6 +21,7 @@ import { BudgetExpense, BudgetList } from '@/store/budget';
 
 export default defineComponent({
 	components: {
+		Alert,
 		BudgetEditSummary,
 		BudgetEditTable,
 		ExpenseModal,
@@ -33,6 +36,12 @@ export default defineComponent({
 			params: { id },
 		} = useRoute();
 
+		const alert = reactive({
+			hide: true,
+			show: false,
+			message: '',
+			type: '',
+		});
 		const budget = ref({} as BudgetList);
 		const disableSave = ref(true);
 		const loading = ref(true);
@@ -47,9 +56,26 @@ export default defineComponent({
 		const categories = computed(() => typeStore.bills);
 		const showModal = ref(false);
 
-		const saveBudget = () => {
-			budgetStore.updateBudget(budget.value);
+		const saveBudget = async () => {
+			const res = await budgetStore.updateBudget(budget.value);
 			disableSave.value = true;
+
+			if (res.success) {
+				alert.type = 'success';
+				alert.message = 'Budget was saved successfully';
+			} else {
+				alert.type = 'danger';
+				alert.message = 'There was a problem saving the budget.';
+			}
+
+			alert.hide = false;
+			setTimeout(() => {
+				alert.show = true;
+				setTimeout(() => {
+					alert.show = false;
+					setTimeout(() => (alert.hide = true), 275);
+				}, 6000);
+			}, 75);
 		};
 
 		const showExpenseModal = (e: BudgetExpense) => {
@@ -91,6 +117,7 @@ export default defineComponent({
 		});
 
 		return {
+			alert,
 			categories,
 			budget,
 			disableSave,
@@ -132,7 +159,21 @@ export default defineComponent({
 		@save-budget="saveBudget()"
 	/>
 
-	<div class="container mx-auto py-6 px-4 sm:px-0">
+	<div class="container mx-auto py-6 px-4 sm:px-0 relative">
+		<div
+			class="absolute w-full top-0 left-0 transform transition duration-200 ease-in-out"
+			:class="{
+				'-translate-y-12 opacity-100': alert.show,
+				'-translate-y-24 opacity-0': !alert.show,
+			}"
+			v-if="!alert.hide"
+		>
+			<Alert
+				type="success"
+				message="Budget has been saved successfully"
+			/>
+		</div>
+
 		<Select
 			class="block md:hidden"
 			:items="categories"
@@ -140,6 +181,7 @@ export default defineComponent({
 			item-label="name"
 			v-model:value="selectedCategory"
 		/>
+
 		<div class="grid grid-cols-1 md:grid-cols-5 gap-3">
 			<SideBar
 				title="Categories"

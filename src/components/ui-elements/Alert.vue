@@ -1,8 +1,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
+import CheckIcon from '@/components/ui-elements/icons/CheckIcon.vue';
 import WarningIcon from '@/components/ui-elements/icons/WarningIcon.vue';
 
 export default defineComponent({
+	components: {
+		CheckIcon,
+		WarningIcon,
+	},
 	props: {
 		message: {
 			required: true,
@@ -11,9 +16,6 @@ export default defineComponent({
 			default: 'none',
 			required: true,
 		},
-	},
-	components: {
-		WarningIcon,
 	},
 	setup() {
 		const getTypeStyles = (type: string): string => {
@@ -44,6 +46,12 @@ export default defineComponent({
 			v-if="type === 'warn'"
 			class="w-6 h-6 text-yellow-900 mr-4"
 		/>
+		<div class="rounded-full bg-green-700 p-2 w-8 mr-2">
+			<CheckIcon
+				v-if="type === 'success'"
+				class="w-4 h-4 text-white mr-4"
+			/>
+		</div>
 		<span>{{ message }}</span>
 	</div>
 </template>

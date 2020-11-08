@@ -130,6 +130,8 @@ export const useBudgetStore = createStore({
 					});
 				}
 			}
+
+			return { success: response.success, error: response.error };
 		},
 	},
 });
