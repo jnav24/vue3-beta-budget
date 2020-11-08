@@ -19,24 +19,24 @@ export default defineComponent({
 </script>
 
 <template>
-	<div class="container mx-auto">
+	<div class="w-full bg-gray-700">
 		<div
-			class="flex flex-col sm:flex-row justify-between items-center text-3xl border-b border-gray-400 mb-20 py-12 px-4 sm:px-0"
+			class="container mx-auto flex flex-col sm:flex-row justify-between items-center text-3xl border-b border-gray-400 mb-20 py-12 px-4 sm:px-0"
 		>
 			<div class="space-y-2 mr-0 sm:mr-64 mb-8 sm:mb-0">
-				<h1 class="font-body text-gray-700">Budget Template</h1>
-				<p class="text-base font-header text-gray-600">
+				<h1 class="font-body text-white">Budget Template</h1>
+				<p class="text-base font-header text-gray-500">
 					Add all your monthly expenses here! Whenever you create a
 					new budget, the expenses here will automatically show in
 					your new monthly budget. The idea is to not to manually
 					enter the same info more than once.
 				</p>
-				<p class="text-base font-header text-gray-600">
+				<p class="text-base font-header text-gray-500">
 					All you have to do is click on the 'Add Expense' button,
 					select the type of expense, enter the details and save your
 					changes.
 				</p>
-				<p class="text-base font-header text-gray-600">
+				<p class="text-base font-header text-gray-500">
 					If you were to delete an item on this page, all already
 					existing budgets will be unaffected.
 				</p>
@@ -50,7 +50,9 @@ export default defineComponent({
 				<span>Save</span>
 			</Button>
 		</div>
+	</div>
 
+	<div class="container mx-auto">
 		<BudgetTemplateTable
 			v-for="(item, key) in expenses"
 			:key="key"
