@@ -12,6 +12,8 @@ export default defineComponent({
 <template>
 	<Nav />
 
+	<!-- @todo build a flash message -->
+
 	<div class="bg-gray-200 h-screen overflow-y-auto pb-32">
 		<router-view />
 	</div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import BanIcon from '@/components/ui-elements/icons/BanIcon.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import Card from '@/components/ui-elements/card/Card.vue';
@@ -16,7 +16,10 @@ import TrendDownIcon from '@/components/ui-elements/icons/TrendDownIcon.vue';
 import TrendUpIcon from '@/components/ui-elements/icons/TrendUpIcon.vue';
 import { useBudgetStore } from '@/store';
 import { useRouter } from 'vue-router';
+import useCurrency from '@/hooks/useCurrency';
+import useTimestamp from '@/hooks/useTimestamp';
 import useUtils from '@/hooks/useUtils';
+import { useAggregationStore } from '@/store';
 import YTDSummary from '@/components/partials/YTDSummary.vue';
 
 export default defineComponent({
@@ -39,23 +42,27 @@ export default defineComponent({
 	},
 	setup() {
 		const { arrayColumn } = useUtils();
-		const budgetStore = useBudgetStore();
 		const { push } = useRouter();
+		const { formatDate } = useTimestamp();
+		const { formatDollar } = useCurrency();
+		const budgetStore = useBudgetStore();
+		const aggregationStore = useAggregationStore();
+
 		const addBudgetItems = [
 			{ value: '', label: 'Monthly Budget', icon: 'CalendarIcon' },
 			{ value: '', label: 'Blank Budget', icon: 'ArchiveIcon' },
 		];
 		const showAddBudgetNav = ref(false);
-		const budgets = budgetStore.list;
-		const maxSaved = Math.max(
-			...arrayColumn('saved', budgets as any).map(val => Number(val))
-		).toString();
-
-		const years = [
-			{ label: '2020', value: '2020' },
-			{ label: '2019', value: '2019' },
-		];
-		const selectedYear = ref('2020');
+		const budgets = computed(() => budgetStore.sortedBudgets);
+		const selectedYear = ref(formatDate('yyyy'));
+		const maxSaved = computed(() => {
+			return Math.max(
+				...arrayColumn(
+					'saved',
+					(budgets.value as any)[selectedYear.value]
+				).map(val => Number(val))
+			).toString();
+		});
 
 		const goToEditPage = (id: string) =>
 			push({ name: 'budget-edit', params: { id } });
@@ -66,11 +73,12 @@ export default defineComponent({
 			addBudgetItems,
 			showAddBudgetNav,
 			budgets,
+			formatDollar,
 			goToEditPage,
 			goToTemplatePage,
 			maxSaved,
 			selectedYear,
-			years,
+			years: computed(() => aggregationStore.allYears),
 		};
 	},
 });
@@ -187,7 +195,7 @@ export default defineComponent({
 				</CardHeader>
 				<CardContent class="px-0">
 					<div
-						v-for="item in budgets"
+						v-for="item in budgets[selectedYear]"
 						:key="item.id"
 						class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-gray-700 py-4 even:bg-gray-100 items-center"
 					>
@@ -209,21 +217,19 @@ export default defineComponent({
 						</div>
 						<div class="pl-4 sm:pl-0">{{ item.name }}</div>
 						<div class="hidden sm:block">
-							${{ item.saved.replace('-', '') }}
+							${{ formatDollar(item.saved.replace('-', '')) }}
 						</div>
 						<div>
-							<button
-								class="bg-secondary hover:bg-opacity-85 active:bg-dark-primary focus:outline-none focus:shadow-outline rounded-full p-2 mr-2"
-								@click="goToEditPage(item.id)"
+							<Button
+								color="secondary"
+								fab
+								@on-click="goToEditPage(item.id)"
 							>
-								<EditIcon class="text-white w-5 h-5" />
-							</button>
-
-							<button
-								class="bg-danger hover:bg-opacity-85 active:bg-dark-danger focus:outline-none focus:shadow-outline rounded-full p-2"
-							>
-								<BanIcon class="text-white w-5 h-5" />
-							</button>
+								<EditIcon class="w-4 h-4" />
+							</Button>
+							<Button color="danger" fab>
+								<BanIcon class="w-4 h-4 text-white" />
+							</Button>
 						</div>
 					</div>
 				</CardContent>

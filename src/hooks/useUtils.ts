@@ -11,6 +11,29 @@ export default function useUtils() {
 			.filter((value: R[S]) => value);
 	};
 
+	const camelCase = (value: string): string => {
+		const delimList: string[] = ['_', '-'];
+		let result = value;
+
+		delimList.forEach((delim: string) => {
+			if (result.includes(delim)) {
+				const list: string[] = value.split(delim);
+
+				const camel = list.map((word: string, index: number) => {
+					if (index) {
+						word = ucFirst(word);
+					}
+
+					return word;
+				});
+
+				result = camel.join('');
+			}
+		});
+
+		return result;
+	};
+
 	const toTitleCase = (value: string, casing = '-'): string => {
 		return value
 			.split(casing)
@@ -25,5 +48,5 @@ export default function useUtils() {
 		return result;
 	};
 
-	return { arrayColumn, toTitleCase, sortObject, ucFirst };
+	return { arrayColumn, camelCase, toTitleCase, sortObject, ucFirst };
 }

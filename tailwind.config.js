@@ -14,6 +14,9 @@ module.exports = {
 				primary: '#45ADA8',
 				secondary: '#EFC958',
 			},
+			minHeight: {
+				'64': '16rem',
+			},
 			maxHeight: {
 				'48': '12rem',
 			},
@@ -26,6 +29,13 @@ module.exports = {
 			},
 			width: {
 				'100': '25rem',
+				'150': '38rem',
+				'200': '50rem',
+				'250': '63rem',
+				'300': '75rem',
+			},
+			zIndex: {
+				'100': 100,
 			},
 		},
 	},

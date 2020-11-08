@@ -1,6 +1,7 @@
 export default function useCurrency() {
-	const formatDollar = (amount: number) => {
-		return amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+	const formatDollar = (amount: number | string) => {
+		const price = typeof amount === 'string' ? Number(amount) : amount;
+		return price.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 	};
 
 	const getYtd = (start: string | number, end: string | number) => {

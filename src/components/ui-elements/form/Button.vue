@@ -5,6 +5,7 @@ enum ColorEnum {
 	'default',
 	'primary',
 	'secondary',
+	'danger',
 }
 
 export default defineComponent({
@@ -12,6 +13,14 @@ export default defineComponent({
 		color: {
 			default: 'default',
 			type: String,
+		},
+		checkbox: {
+			default: false,
+			type: Boolean,
+		},
+		fab: {
+			default: false,
+			type: Boolean,
 		},
 		isDisabled: {
 			default: false,
@@ -35,7 +44,7 @@ export default defineComponent({
 <template>
 	<button
 		@click="$emit('on-click')"
-		class="focus:outline-none focus:shadow-outline transition duration-150 py-3 px-6 rounded-md text-sm mr-2"
+		class="focus:outline-none focus:shadow-outline transition duration-150"
 		:class="{
 			'bg-white hover:bg-gray-100 active:bg-gray-200 text-gray-700 border-gray-400 border':
 				buttonColor === 'default' && !isDisabled,
@@ -43,6 +52,11 @@ export default defineComponent({
 				buttonColor === 'primary' && !isDisabled,
 			'bg-secondary hover:bg-opacity-85 active:bg-dark-secondary text-gray-700':
 				buttonColor === 'secondary' && !isDisabled,
+			'bg-danger hover:bg-opacity-85 active:bg-dark-danger':
+				buttonColor === 'danger' && !isDisabled,
+			'rounded-full p-2 mr-2': fab,
+			'p-1 rounded-md': checkbox,
+			'py-3 px-6 rounded-md text-sm mr-2': !fab && !checkbox,
 			'bg-gray-400 text-gray-700 cursor-text': isDisabled,
 		}"
 		:disabled="isDisabled"

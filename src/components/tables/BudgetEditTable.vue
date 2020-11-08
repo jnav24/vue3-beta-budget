@@ -1,7 +1,8 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import BanIcon from '@/components/ui-elements/icons/BanIcon.vue';
 import BudgetTableHeaders from '@/components/partials/BudgetTableHeaders.vue';
+import Button from '@/components/ui-elements/form/Button.vue';
 import Card from '@/components/ui-elements/card/Card.vue';
 import CardContent from '@/components/ui-elements/card/CardContent.vue';
 import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
@@ -9,7 +10,11 @@ import CheckIcon from '@/components/ui-elements/icons/CheckIcon.vue';
 import EditIcon from '@/components/ui-elements/icons/EditIcon.vue';
 import WarningIcon from '@/components/ui-elements/icons/WarningIcon.vue';
 import useBudgetTable from '@/hooks/useBudgetTable';
+import useCurrency from '@/hooks/useCurrency';
+import useTimestamp from '@/hooks/useTimestamp';
 import useUtils from '@/hooks/useUtils';
+import { useUserStore, useTypesStore } from '@/store';
+import { BudgetExpense } from '@/store/budget';
 
 type ExpenseType = {
 	name: string;
@@ -23,6 +28,7 @@ export default defineComponent({
 	components: {
 		BanIcon,
 		BudgetTableHeaders,
+		Button,
 		Card,
 		CardHeader,
 		CardContent,
@@ -40,35 +46,26 @@ export default defineComponent({
 			type: Array as () => Partial<ExpenseType>,
 		},
 	},
-	setup(props) {
+	setup(props, { emit }) {
 		const { getHeaders } = useBudgetTable();
 		const { ucFirst } = useUtils();
+		const { formatDollar } = useCurrency();
+		const { formatTimeZone } = useTimestamp();
+		const userStore = useUserStore();
+		const typesStore = useTypesStore();
 		const headers: Record<string, Array<string>> = {
-			common: [
-				'',
-				'name',
-				'type',
-				'amount',
-				'due date/paid date',
-				'actions',
-			],
+			common: ['', 'name', 'type', 'amount', 'paid_date', 'actions'],
 			'credit-cards': [
 				'',
 				'name',
 				'type',
 				'amount',
 				'balance',
-				'due date',
+				'paid_date',
 				'actions',
 			],
-			income: ['name', 'type', 'amount', 'paid date', 'actions'],
-			miscellaneous: [
-				'',
-				'name',
-				'amount',
-				'due date/paid date',
-				'actions',
-			],
+			incomes: ['name', 'type', 'amount', 'date', 'actions'],
+			miscellaneous: ['', 'name', 'amount', 'paid_date', 'actions'],
 			savings: ['name', 'type', 'amount', 'actions'],
 			vehicles: [
 				'',
@@ -76,47 +73,62 @@ export default defineComponent({
 				'type',
 				'amount',
 				'balance',
-				'due date/paid date',
+				'paid_date',
 				'actions',
 			],
 		};
 
-		const categoryHeader = getHeaders(props.category, headers);
+		const categoryHeader = computed(() =>
+			getHeaders(props.category, headers)
+		);
 
-		const getExpenseValue = (
+		const getExpenseValue = <T extends BudgetExpense>(
 			header: string,
-			item: Record<string, string>
-		): string => {
-			if (['amount', 'balance'].includes(header)) {
-				return `$${item[header]}`;
+			item: T
+		): string | null => {
+			const dateFormat = 'MMM d';
+			if (['amount', 'balance'].includes(header as string)) {
+				return `$${formatDollar((item as any)[header])}`;
 			}
 
-			if (item[header]) {
-				return item[header];
+			if (header === 'name' && item.user_vehicle_id) {
+				const vehicle = userStore.getVehicleName(item.user_vehicle_id);
+				return vehicle
+					? `${vehicle.year} ${vehicle.make} ${vehicle.model}`
+					: '';
+			}
+
+			if ((item as any)[header]) {
+				if (header === 'paid_date') {
+					return formatTimeZone(dateFormat, 'UTC', item['paid_date']);
+				}
+
+				return (item as any)[header];
 			}
 
 			if (header === 'type') {
-				return (
-					Object.keys(item)
-						.filter((key: string) => /[a-z]*_type_[a-z]*/.exec(key))
-						.shift() ?? ''
-				);
+				const typeObj = typesStore.getType(item);
+				return typeObj?.name ?? null;
 			}
 
-			if (header === 'due date') {
-				if (item['paid_date']) {
-					return item['paid_date'];
-				}
-
+			if (header === 'date') {
 				if (item['initial_pay_date']) {
-					return item['initial_pay_date'];
+					return formatTimeZone(
+						dateFormat,
+						'UTC',
+						item['initial_pay_date']
+					);
 				}
 			}
 
 			return '';
 		};
 
-		return { categoryHeader, getExpenseValue, ucFirst };
+		const showExpenseModal = (item: BudgetExpense) => {
+			emit('show-expense-modal', item);
+		};
+
+		return { categoryHeader, getExpenseValue, showExpenseModal, ucFirst };
 	},
 });
 </script>
@@ -130,7 +142,7 @@ export default defineComponent({
 		<CardContent>
 			<div
 				v-if="!data[category].length"
-				class="py-32 text-gray-500 flex flex-col items-center justify-center"
+				class="py-8 text-gray-500 flex flex-col items-center justify-center"
 			>
 				<WarningIcon class="w-8 h-8" />
 				<span>{{ ucFirst(category) }} is empty.</span>
@@ -138,7 +150,7 @@ export default defineComponent({
 
 			<div
 				:class="
-					`grid grid-cols-2 sm:grid-cols-${categoryHeader.length} gap-2 text-gray-700 py-4 even:bg-gray-100 items-center`
+					`grid grid-cols-2 sm:grid-cols-${categoryHeader.length} gap-2 text-gray-700 py-4 even:bg-gray-100 items-center text-sm`
 				"
 				v-for="item in data[category]"
 				:key="item.id"
@@ -155,7 +167,10 @@ export default defineComponent({
 					:key="index"
 				>
 					<template v-if="!header.trim().length">
-						<div class="rounded-full p-2 bg-primary w-8 mr-2">
+						<div
+							class="rounded-full p-2 bg-primary w-8 mr-2"
+							v-if="item.confirmation"
+						>
 							<CheckIcon class="w-4 h-4 text-white" />
 						</div>
 					</template>
@@ -164,12 +179,17 @@ export default defineComponent({
 						class="flex flex-row items-center"
 						v-if="header === 'actions'"
 					>
-						<div class="rounded-full p-2 bg-secondary w-8 mr-2">
+						<Button
+							color="secondary"
+							fab
+							@on-click="showExpenseModal(item)"
+						>
 							<EditIcon class="w-4 h-4" />
-						</div>
-						<div class="rounded-full p-2 bg-danger w-8">
+						</Button>
+
+						<Button color="danger" fab>
 							<BanIcon class="w-4 h-4 text-white" />
-						</div>
+						</Button>
 					</div>
 
 					<div

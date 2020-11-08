@@ -127,10 +127,16 @@ export default function useHttp() {
 		success: false,
 	});
 
+	const getDataFromResponse = (response: HttpResponse) => {
+		const data = response.data.data;
+		return data[Object.keys(data)[0]];
+	};
+
 	return {
 		...toRefs(state),
 		get,
 		getAuth,
+		getDataFromResponse,
 		loading,
 		post,
 		postAuth,

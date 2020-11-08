@@ -13,6 +13,14 @@ export default defineComponent({
 			required: true,
 			type: () => Array as () => LinkItems,
 		},
+		itemLabel: {
+			default: 'label',
+			type: String,
+		},
+		itemValue: {
+			default: 'value',
+			type: String,
+		},
 		selectedItem: {
 			required: true,
 			type: String,
@@ -38,13 +46,13 @@ export default defineComponent({
 				:key="int"
 				:class="{
 					'text-gray-500 text-sm hover:text-gray-700 cursor-pointer px-2 py-2':
-						item.value !== selectedItem,
+						item[itemValue] !== selectedItem,
 					'text-gray-700 text-sm cursor-pointer px-2 py-2 bg-gray-300 rounded':
-						item.value === selectedItem,
+						item[itemValue] === selectedItem,
 				}"
-				@click="emitSelected(item.value)"
+				@click="emitSelected(item[itemValue])"
 			>
-				{{ item.label }}
+				{{ item[itemLabel] }}
 			</li>
 		</ul>
 	</div>

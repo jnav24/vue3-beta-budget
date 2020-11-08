@@ -16,10 +16,6 @@ export default defineComponent({
 			default: () => ({}),
 			type: Object,
 		},
-		type: {
-			default: 'text',
-			type: String,
-		},
 		value: {
 			required: true,
 			type: String,
@@ -61,23 +57,19 @@ export default defineComponent({
 </script>
 
 <template>
-	<div class="mb-4">
+	<div>
 		<Label :error="error" :labelId="labelId" :label="label" />
-		<!-- @todo add prop to set autocomplete besides password -->
-		<input
+		<textarea
 			:id="labelId"
 			class="w-full p-2 mt-2 border rounded outline-none"
 			:class="{
 				'border-gray-300 focus:border-primary': !error,
 				'border-red-600': error,
 			}"
-			:type="type"
 			:value="value"
-			:autocomplete="type !== 'password' ? 'on' : 'off'"
 			@blur="updateValue($event.target.value)"
 			@input="updateValue($event.target.value)"
 			:aria-labelledby="labelId"
 		/>
-		<span v-if="error" class="text-sm text-red-600">{{ error }}</span>
 	</div>
 </template>

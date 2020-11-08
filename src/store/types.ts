@@ -1,7 +1,11 @@
 import { createStore } from 'pinia';
+import useHttp from '@/hooks/useHttp';
+import useUtils from '@/hooks/useUtils';
+import { BudgetExpense } from '@/store/budget';
 
 export const useTypesStore = createStore({
 	id: 'types',
+
 	state: (): TypesStateInterface => ({
 		banks: [],
 		bills: [],
@@ -24,56 +28,65 @@ export const useTypesStore = createStore({
 		utilities: [],
 		vehicles: [],
 	}),
+
 	actions: {
 		async getAllBillTypes() {
-			this.banks = [{ id: 4, name: 'Checking', slug: 'checking' }];
-			this.bills = [
-				{
-					id: 4,
-					name: 'Banks',
-					slug: 'banks',
-					created_at: '2019-01-28 05:03:49',
-					updated_at: '2019-01-28 05:03:49',
-					save_type: 1,
-				},
-				{
-					id: 9,
-					name: 'Childcare',
-					slug: 'childcare',
-					created_at: '2020-08-02 18:42:18',
-					updated_at: '2020-08-02 18:42:18',
-					save_type: 0,
-				},
-				{
-					id: 1,
-					name: 'Credit Cards',
-					slug: 'credit-cards',
-					created_at: '2019-01-28 05:03:49',
-					updated_at: '2019-01-28 05:03:49',
-					save_type: 0,
-				},
-				{
-					id: 2,
-					name: 'Incomes',
-					slug: 'incomes',
-					created_at: '2019-01-28 05:03:49',
-					updated_at: '2019-01-28 05:03:49',
-					save_type: 0,
-				},
-				{
-					id: 3,
-					name: 'Vehicles',
-					slug: 'vehicles',
-					created_at: '2019-01-28 05:03:49',
-					updated_at: '2019-01-28 05:03:49',
-					save_type: 0,
-				},
-			];
+			const { getAuth } = useHttp();
+			const { camelCase } = useUtils();
+			const data = { path: 'types/bill' };
+			const response = await getAuth(data);
+
+			if (response.success) {
+				const { bill_types, types } = response.data.data;
+				this.bills = bill_types;
+
+				for (const [typeName, typeList] of Object.entries(types)) {
+					(this as any)[camelCase(typeName)] = typeList;
+				}
+			}
+		},
+
+		getType<T extends BudgetExpense>(
+			item: T
+		): CommonExpenseTypeInterface | null {
+			const mapTypes = {
+				bank: 'banks',
+				credit_card: 'creditCards',
+				investment: 'investments',
+				income: 'incomes',
+				utility: 'utilities',
+				vehicle: 'vehicles',
+			};
+			const type =
+				Object.keys(item)
+					.filter((key: string) => /[a-z]*_type_[a-z]*/.exec(key))
+					.shift() ?? '';
+			const [typeName] = type.split('_type_id');
+			const typeIndex = (this as any)[typeName]
+				? typeName
+				: (mapTypes as any)[typeName] ?? '';
+
+			if (typeIndex.length) {
+				const typeObject = (this as any)[typeIndex].find(
+					(obj: CommonExpenseTypeInterface) =>
+						obj.id === (item as any)[type]
+				);
+				return typeObject ?? null;
+			}
+
+			return null;
+		},
+
+		getTypeById(
+			type: keyof TypesStateInterface,
+			id: number
+		): string | undefined {
+			return this[type].filter(obj => obj.id === id)?.shift()?.slug;
 		},
 	},
 });
 
-type BillTypesInterface = {
+export type BillTypesInterface = {
 	id: number;
 	name: string;
 	slug: string;
@@ -88,7 +101,7 @@ export type CommonExpenseTypeInterface = {
 	slug: string;
 };
 
-type TypesStateInterface = {
+export type TypesStateInterface = {
 	banks: CommonExpenseTypeInterface[];
 	bills: BillTypesInterface[];
 	childcare: CommonExpenseTypeInterface[];

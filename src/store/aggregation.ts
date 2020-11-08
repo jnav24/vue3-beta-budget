@@ -19,7 +19,9 @@ export const useAggregationStore = createStore({
 
 	getters: {
 		allYears() {
-			const yearList: string[] = Object.keys(this.budget);
+			const yearList: string[] = Object.keys(this.budget).sort(
+				(a, b) => Number(b) - Number(a)
+			);
 			const yearObjList: Array<{ value: string; label: string }> = [];
 
 			for (const year of yearList) {

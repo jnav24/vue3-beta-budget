@@ -1,103 +1,137 @@
 import { createStore } from 'pinia';
+import useHttp from '@/hooks/useHttp';
+import useTimestamp from '@/hooks/useTimestamp';
 
 type BudgetState = {
 	list: Array<BudgetList>;
 };
-type BudgetList = {
+
+export type BudgetExpense = {
+	id: number;
+	budget_id: number;
+	name: string;
+	amount: string;
+	apr?: string;
+	balance?: string;
+	confirmation?: string;
+	due_date?: string;
+	exp_month?: string;
+	exp_year?: string;
+	last_4?: string;
+	paid_date?: string;
+	initial_pay_date?: string;
+	user_vehicle_id?: number;
+	do_not_track?: number;
+	mileage?: string;
+	notes?: string;
+	limit?: string;
+};
+
+export type BudgetList = {
 	id: number;
 	name: string;
 	budget_cycle: string;
-	expenses?: any;
+	expenses?: Record<string, Array<BudgetExpense>>;
 	saved?: string;
 };
 
 export const useBudgetStore = createStore({
 	id: 'budget',
+
 	state: (): BudgetState => ({
 		list: [],
 	}),
+
+	getters: {
+		sortedBudgets() {
+			const { formatDate } = useTimestamp();
+			const budgets: Record<string, Array<BudgetList>> = {};
+
+			this.list.forEach(obj => {
+				const year = formatDate('yyyy', obj.budget_cycle);
+
+				if (!budgets[year]) {
+					budgets[year] = [];
+				}
+
+				budgets[year] = [...budgets[year], obj];
+			});
+
+			return budgets;
+		},
+	},
+
 	actions: {
 		async deleteBudget() {
 			// ...
 		},
 
 		async getBudget(id: string) {
-			console.log(id);
-			const expenses = {
-				banks: [
-					{
-						id: 150,
-						name: 'Wells Fargo',
-						amount: '245250.35',
-						bank_type_id: 1,
-						bank_template_id: 31,
-					},
-					{
-						id: 150,
-						name: 'Bank of America',
-						amount: '245250.35',
-						bank_type_id: 1,
-						bank_template_id: 31,
-					},
-				],
-				'credit-cards': [
-					{
-						id: 141,
-						name: 'Visa Black Card',
-						limit: '300000',
-						last_4: '',
-						exp_month: '0',
-						exp_year: '0',
-						apr: '9.49',
-						due_date: 9,
-						credit_card_type_id: 1,
-						paid_date: '2020-02-08 00:00:00',
-						confirmation: 'WXYZ',
-						amount: '200',
-						balance: '12136.05',
-					},
-				],
-				investments: [],
+			const { getAuth, getDataFromResponse } = useHttp();
+			const data = {
+				path: `budgets/${id}`,
 			};
+			const response = await getAuth(data);
 
-			return {
-				id: 83,
-				name: 'April',
-				budget_cycle: '2020-04-01 00:00:00',
-				saved: '52449.50',
-				expenses,
-			};
+			if (response.success) {
+				const data: BudgetList = getDataFromResponse(response);
+				const index = this.list.findIndex(
+					obj => obj.id === Number(data.id)
+				);
+
+				if (index > -1) {
+					this.list[index].expenses = data.expenses;
+				} else {
+					this.list = [...this.list, data];
+				}
+			}
 		},
 
 		async getBudgets() {
-			this.list = [
-				{
-					id: 83,
-					name: 'April',
-					budget_cycle: '2020-04-01 00:00:00',
-					saved: '52449.50',
-				},
-				{
-					id: 82,
-					name: 'March',
-					budget_cycle: '2020-03-01 00:00:00',
-					saved: '52473.50',
-				},
-				{
-					id: 51,
-					name: 'February',
-					budget_cycle: '2020-02-01 00:00:00',
-					saved: '21.30',
-				},
-			];
+			const { getAuth } = useHttp();
+
+			const data = {
+				path: 'budgets',
+			};
+			const response = await getAuth(data);
+
+			if (response.success) {
+				this.list = [...response.data.data.budgets];
+			}
 		},
 
 		async saveBudget() {
 			// ...
 		},
 
-		async updateBudget() {
-			// ...
+		async updateBudget(payload: BudgetList) {
+			const { postAuth, getDataFromResponse } = useHttp();
+			const data = {
+				path: 'budgets',
+				params: {
+					id: payload.id,
+					name: payload.name,
+					cycle: payload.budget_cycle,
+					expenses: payload.expenses,
+				},
+			};
+
+			const response = await postAuth(data);
+
+			if (response.success) {
+				const data: BudgetList = getDataFromResponse(response);
+				const index = this.list.findIndex(item => item.id === data.id);
+
+				if (index > -1) {
+					const temp = [...this.list];
+					temp[index] = data;
+					this.patch({
+						list: [...temp],
+					});
+				}
+			}
+
+			return { success: response.success, error: response.error };
 		},
 	},
 });
