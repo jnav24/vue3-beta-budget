@@ -33,11 +33,11 @@ export default defineComponent({
 				value: '',
 			},
 			paid_date: {
-				rules: ['required'],
+				rules: [],
 				value: '',
 			},
 			type: {
-				rules: ['required', 'gt:2'],
+				rules: ['required', 'gt:0'],
 				value: 0,
 			},
 		});
