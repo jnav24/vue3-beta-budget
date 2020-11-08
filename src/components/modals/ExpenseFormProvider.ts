@@ -71,10 +71,14 @@ export default defineComponent({
 		};
 
 		const extractFormValues = (form: any) => {
-			const result: Record<string, string> = {};
+			const result: Record<string, string | null> = {};
 			Object.keys(form).forEach(value => {
 				const key = value === 'type' ? getTypeKey() ?? value : value;
-				result[key] = form[value].value;
+				if (key === 'paid_date' && !form[value].value.length) {
+					result[key] = null;
+				} else {
+					result[key] = form[value].value;
+				}
 			});
 			return result;
 		};
