@@ -42,7 +42,7 @@ export default defineComponent({
 		EditIcon,
 		WarningIcon,
 	},
-	setup(props) {
+	setup(props, { emit }) {
 		const { getExpenseValue, getHeaders } = useBudgetTable();
 		const { toTitleCase } = useUtils();
 		const headers: Record<string, Array<string>> = {
@@ -78,7 +78,11 @@ export default defineComponent({
 			return name;
 		};
 
+		const addExpense = () =>
+			emit('add-expense', { category: props.category });
+
 		return {
+			addExpense,
 			toTitleCase,
 			getExpenseValue,
 			headers,
@@ -95,7 +99,7 @@ export default defineComponent({
 			<h2 class="text-2xl text-gray-600 font-body">
 				{{ toTitleCase(category) }}
 			</h2>
-			<Button color="secondary">
+			<Button color="secondary" @click="addExpense()">
 				<AddIcon class="w-5 h-5 mr-2" />
 				<span>Add</span>
 			</Button>
