@@ -139,6 +139,7 @@ export default defineComponent({
 		v-model:show="showModal"
 		:data="expenseData"
 		:type="selectedCategory"
+		:hide-sidebar="!!Object.keys(expenseData).length"
 		@update-budget="updateLocalBudget($event)"
 	/>
 
@@ -147,6 +148,7 @@ export default defineComponent({
 		v-model:show="showModal"
 		:data="expenseData"
 		:type="selectedCategory"
+		:hide-sidebar="!!Object.keys(expenseData).length"
 		@update-budget="updateLocalBudget($event)"
 	/>
 
