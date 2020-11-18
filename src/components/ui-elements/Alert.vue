@@ -46,11 +46,11 @@ export default defineComponent({
 			v-if="type === 'warn'"
 			class="w-6 h-6 text-yellow-900 mr-4"
 		/>
-		<div class="rounded-full bg-green-700 p-2 w-8 mr-2">
-			<CheckIcon
-				v-if="type === 'success'"
-				class="w-4 h-4 text-white mr-4"
-			/>
+		<div
+			v-if="type === 'success'"
+			class="rounded-full bg-green-700 p-2 w-8 mr-2"
+		>
+			<CheckIcon class="w-4 h-4 text-white mr-4" />
 		</div>
 		<span>{{ message }}</span>
 	</div>
