@@ -59,6 +59,7 @@ export default defineComponent({
 			formContent,
 			formHeight,
 			formType,
+			hideSidebar: ExpenseContext.hideSidebar,
 			selectedTitle,
 			setCategory,
 		};
@@ -70,7 +71,7 @@ export default defineComponent({
 	<div class="flex flex-row">
 		<aside
 			class="w-1/4 px-2 bg-gray-100 overflow-auto rounded-l-md hidden lg:block"
-			v-if="!editMode"
+			v-if="!hideSidebar"
 			:style="`height: ${formHeight}px`"
 		>
 			<SideBar
@@ -99,7 +100,7 @@ export default defineComponent({
 				</h2>
 
 				<Select
-					v-if="!editMode"
+					v-if="!hideSidebar"
 					class="block lg:hidden mx-4 mb-6"
 					label="Categories"
 					:items="categories"

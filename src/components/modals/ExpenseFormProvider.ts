@@ -15,6 +15,7 @@ export type ExpenseFormContextType = {
 	editMode: ComputedRef<boolean>;
 	extractFormValues: (form: any) => Record<string, string>;
 	getTypeId: () => number;
+	hideSidebar: boolean;
 	typeList: ComputedRef<CommonExpenseTypeInterface[] | BillTypesInterface[]>;
 };
 
@@ -22,6 +23,10 @@ export default defineComponent({
 	props: {
 		editMode: {
 			required: true,
+			type: Boolean,
+		},
+		hideSidebar: {
+			default: false,
 			type: Boolean,
 		},
 		data: {
@@ -52,6 +57,7 @@ export default defineComponent({
 			emit('close-modal');
 		};
 		const editMode = computed(() => props.editMode);
+		const hideSidebar = computed(() => props.hideSidebar);
 		const typeList = computed(
 			() =>
 				typeStore[
@@ -94,6 +100,7 @@ export default defineComponent({
 			editMode,
 			extractFormValues,
 			getTypeId,
+			hideSidebar,
 			typeList,
 		});
 	},
