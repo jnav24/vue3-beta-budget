@@ -1,3 +1,6 @@
+import { useTypesStore } from '@/store';
+import {BudgetExpense} from "@/store/budget";
+
 export default function useBudgetTable() {
 	const getHeaders = (
 		category: string,
@@ -23,6 +26,7 @@ export default function useBudgetTable() {
 		header: string,
 		item: Record<string, string>
 	): string => {
+		const typesStore = useTypesStore();
 		if (['amount', 'balance'].includes(header)) {
 			return `$${item[header]}`;
 		}
@@ -32,11 +36,8 @@ export default function useBudgetTable() {
 		}
 
 		if (header === 'type') {
-			return (
-				Object.keys(item)
-					.filter((key: string) => /[a-z]*_type_[a-z]*/.exec(key))
-					.shift() ?? ''
-			);
+			const typeObj = typesStore.getTypeFromExpenseObject(item as any);
+			return typeObj?.name ?? '';
 		}
 
 		if (header === 'due date') {
