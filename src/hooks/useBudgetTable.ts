@@ -1,5 +1,5 @@
 import { useTypesStore } from '@/store';
-import {BudgetExpense} from "@/store/budget";
+import useCurrency from '@/hooks/useCurrency';
 
 export default function useBudgetTable() {
 	const getHeaders = (
@@ -26,9 +26,11 @@ export default function useBudgetTable() {
 		header: string,
 		item: Record<string, string>
 	): string => {
+		const { formatDollar } = useCurrency();
 		const typesStore = useTypesStore();
+
 		if (['amount', 'balance'].includes(header)) {
-			return `$${item[header]}`;
+			return `$${formatDollar(item[header])}`;
 		}
 
 		if (item[header]) {

@@ -106,7 +106,7 @@ export default defineComponent({
 		</div>
 
 		<Card>
-			<CardHeader class="bg-gray-100">
+			<CardHeader class="bg-gray-100 rounded-t-md">
 				<BudgetTableHeaders :headers="tableHeaders" />
 			</CardHeader>
 
