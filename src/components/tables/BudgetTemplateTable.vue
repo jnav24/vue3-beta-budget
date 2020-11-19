@@ -11,6 +11,7 @@ import EditIcon from '@/components/ui-elements/icons/EditIcon.vue';
 import WarningIcon from '@/components/ui-elements/icons/WarningIcon.vue';
 import useBudgetTable from '@/hooks/useBudgetTable';
 import useUtils from '@/hooks/useUtils';
+import { BudgetExpense } from '@/store/budget';
 
 type ExpenseType = {
 	name: string;
@@ -78,8 +79,8 @@ export default defineComponent({
 			return name;
 		};
 
-		const addExpense = () =>
-			emit('add-expense', { category: props.category });
+		const addExpense = (data?: BudgetExpense) =>
+			emit('add-expense', { category: props.category, expense: data });
 
 		return {
 			addExpense,
@@ -147,12 +148,17 @@ export default defineComponent({
 							class="flex flex-row items-center"
 							v-if="header === 'actions'"
 						>
-							<div class="rounded-full p-2 bg-secondary w-8 mr-2">
+							<Button
+								color="secondary"
+								fab
+								@on-click="addExpense(item)"
+							>
 								<EditIcon class="w-4 h-4" />
-							</div>
-							<div class="rounded-full p-2 bg-danger w-8">
+							</Button>
+
+							<Button color="danger" fab>
 								<BanIcon class="w-4 h-4 text-white" />
-							</div>
+							</Button>
 						</div>
 					</div>
 				</div>
