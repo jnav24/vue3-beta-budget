@@ -5,7 +5,7 @@ import Button from '@/components/ui-elements/form/Button.vue';
 import ExpenseModal from '@/components/modals/ExpenseModal.vue';
 import ExpenseSlideover from '@/components/slideovers/ExpenseSlideover.vue';
 import SaveIcon from '@/components/ui-elements/icons/SaveIcon.vue';
-import { useTemplateStore } from '@/store';
+import { useTemplateStore, useTypesStore } from '@/store';
 import { BudgetExpense } from '@/store/budget';
 
 export default defineComponent({
@@ -18,8 +18,10 @@ export default defineComponent({
 	},
 	setup() {
 		const templateStore = useTemplateStore();
+		const typeStore = useTypesStore();
 
-		const expenses = ref({});
+		const disableSave = ref(true);
+		const expenses = ref<BudgetExpense>({} as BudgetExpense);
 		const expenseData = ref({});
 		const selectedCategory = ref('');
 		const showModal = ref(false);
@@ -46,7 +48,17 @@ export default defineComponent({
 		};
 
 		const updateLocalExpense = (data: BudgetExpense) => {
-			console.log(data);
+			// @todo have to set the type id like bank_type_id and temp_id(?)
+			disableSave.value = true;
+			const result = {
+				...data,
+				[typeStore.getTypeColumnNameFromType(
+					selectedCategory.value
+				)]: (data as any).type,
+			};
+
+			delete (result as any).type;
+			(expenses.value[selectedCategory.value as keyof BudgetExpense] as any).push(result);
 		};
 
 		return {
