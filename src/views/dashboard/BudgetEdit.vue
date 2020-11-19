@@ -86,17 +86,19 @@ export default defineComponent({
 		};
 
 		const updateLocalBudget = (data: BudgetExpense) => {
-			let index = -1;
-
 			if (budget.value && budget.value.expenses) {
-				index = budget.value.expenses[selectedCategory.value].findIndex(
-					(expense: BudgetExpense) => expense.id === data.id
+				disableSave.value = false;
+				const index = budget.value.expenses[
+					selectedCategory.value
+				].findIndex(
+					(expense: BudgetExpense) => expense.id === (data.id ?? -1)
 				);
 
 				if (index > -1) {
 					// @todo compare new data with current to see if there was a change
 					budget.value.expenses[selectedCategory.value][index] = data;
-					disableSave.value = false;
+				} else {
+					budget.value.expenses[selectedCategory.value].push(data);
 				}
 			}
 		};
