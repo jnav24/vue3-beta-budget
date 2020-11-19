@@ -46,7 +46,7 @@ export const useTypesStore = createStore({
 			}
 		},
 
-		getType<T extends BudgetExpense>(
+		getTypeFromExpenseObject<T extends BudgetExpense>(
 			item: T
 		): CommonExpenseTypeInterface | null {
 			const mapTypes = {
@@ -77,7 +77,7 @@ export const useTypesStore = createStore({
 			return null;
 		},
 
-		getTypeById(
+		getSlugById(
 			type: keyof TypesStateInterface,
 			id: number
 		): string | undefined {
