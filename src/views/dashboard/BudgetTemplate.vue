@@ -18,13 +18,17 @@ export default defineComponent({
 		SaveIcon,
 	},
 	setup() {
-		const { generateTempId } = useTimestamp();
+		const { generateTempId, isTempId } = useTimestamp();
 		const templateStore = useTemplateStore();
 		const typeStore = useTypesStore();
 
 		const disableSave = ref(true);
 		const expenses = ref<BudgetExpense>({} as BudgetExpense);
 		const expenseData = ref({});
+		const removeExpenseList: Array<{
+			id: number | string;
+			type: string;
+		}> = [];
 		const selectedCategory = ref('');
 		const showModal = ref(false);
 
@@ -47,6 +51,25 @@ export default defineComponent({
 			}
 			selectedCategory.value = data.category;
 			showModal.value = true;
+		};
+
+		const removeAllExpenses = async () => {
+			// @todo to prevent making multiple calls, make one call to api to remove expenses
+			// @todo ensure you validate user_id before remove expense
+			removeExpenseList.forEach(expense => {
+				if (isTempId(expense.id)) {
+					// ...
+				} else {
+					// ...
+				}
+			});
+		};
+
+		const removeExpenses = (data: { id: number | string; type: string }) =>
+			removeExpenseList.push(data);
+
+		const saveBudgetTemplate = async () => {
+			await removeAllExpenses();
 		};
 
 		const updateLocalExpense = (data: BudgetExpense) => {
@@ -82,6 +105,8 @@ export default defineComponent({
 			expenses,
 			expenseData,
 			openExpense,
+			removeExpenses,
+			saveBudgetTemplate,
 			selectedCategory,
 			showModal,
 			updateLocalExpense,
@@ -135,6 +160,7 @@ export default defineComponent({
 				color="primary"
 				class="w-full sm:w-auto"
 				:is-disabled="disableSave"
+				@click="saveBudgetTemplate()"
 			>
 				<SaveIcon class="w-5 h-5 mr-2" />
 				<span>Save</span>
@@ -149,6 +175,7 @@ export default defineComponent({
 			:category="key"
 			:data="item"
 			@add-expense="openExpense($event)"
+			@remove-expenses="removeExpenses($event)"
 		/>
 	</div>
 </template>

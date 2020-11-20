@@ -87,6 +87,8 @@ export default defineComponent({
 			toTitleCase,
 			getExpenseValue,
 			headers,
+			removeExpense: (id: number | string) =>
+				emit('remove-expenses', { id, type: props.category }),
 			setHeaderName,
 			tableHeaders,
 		};
@@ -156,7 +158,11 @@ export default defineComponent({
 								<EditIcon class="w-4 h-4" />
 							</Button>
 
-							<Button color="danger" fab>
+							<Button
+								color="danger"
+								fab
+								@click="removeExpense(item.id)"
+							>
 								<BanIcon class="w-4 h-4 text-white" />
 							</Button>
 						</div>

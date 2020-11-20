@@ -63,5 +63,9 @@ export const useTemplateStore = createStore({
 				this.templates.expenses = sortObject(data.expenses)
 			}
 		},
+
+		async removeExpense(id: number | string, type: string) {
+			// ...
+		},
 	},
 });

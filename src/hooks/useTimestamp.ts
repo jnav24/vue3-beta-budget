@@ -64,6 +64,10 @@ export default function useTimestamp() {
 		return 'temp_' + generateUnixId();
 	};
 
+	const isTempId = (id: number | string): boolean => {
+		return id.toString().includes('temp_');
+	};
+
 	const getAllMonths = (
 		formatType: 'abbr' | 'full' | 'num' | string
 	): Array<Record<'value' | 'label', string>> => {
@@ -103,6 +107,7 @@ export default function useTimestamp() {
 		generateTempId,
 		getEndDayOfMonth,
 		getAllMonths,
+		isTempId,
 		setDoubleDigits,
 		unix,
 		getStartDayOfMonth,
