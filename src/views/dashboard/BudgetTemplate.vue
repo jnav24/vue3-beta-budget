@@ -23,7 +23,9 @@ export default defineComponent({
 		const typeStore = useTypesStore();
 
 		const disableSave = ref(true);
-		const expenses = ref<BudgetExpense>({} as BudgetExpense);
+		const expenses = ref<Record<string, BudgetExpense[]>>(
+			{} as Record<string, BudgetExpense[]>
+		);
 		const expenseData = ref({});
 		const removeExpenseList: Array<{
 			id: number | string;
@@ -56,36 +58,43 @@ export default defineComponent({
 		const removeAllExpenses = async () => {
 			// @todo to prevent making multiple calls, make one call to api to remove expenses
 			// @todo ensure you validate user_id before remove expense
-			removeExpenseList.forEach(expense => {
+			console.log(removeExpenseList);
+			const expenses = removeExpenseList.filter(expense => {
 				if (isTempId(expense.id)) {
 					// ...
-				} else {
-					// ...
 				}
+
+				return !isTempId(expense.id);
 			});
+
+			templateStore.removeExpense(expenses);
 		};
 
-		const removeExpenses = (data: { id: number | string; type: string }) =>
+		const removeExpenses = (data: {
+			id: number | string;
+			type: string;
+		}) => {
 			removeExpenseList.push(data);
+			console.log(expenses.value);
+			// expenses.value[data.type as keyof BudgetExpense]?.filter(
+			// 	expense => data.id !== expense.id
+			// );
+		};
 
 		const saveBudgetTemplate = async () => {
 			await removeAllExpenses();
 		};
 
 		const updateLocalExpense = (data: BudgetExpense) => {
-			const index = (expenses.value[
-				selectedCategory.value as keyof BudgetExpense
-			] as any).findIndex(
+			const index = expenses.value[selectedCategory.value].findIndex(
 				(expense: BudgetExpense) => expense.id === (data.id ?? -1)
 			);
 			disableSave.value = false;
 
 			if (index > -1) {
-				(expenses.value[
-					selectedCategory.value as keyof BudgetExpense
-				] as any)[index] = data;
+				expenses.value[selectedCategory.value][index] = data;
 			} else {
-				const result = {
+				const result: BudgetExpense = {
 					...data,
 					id: generateTempId(),
 					[typeStore.getTypeColumnNameFromType(
@@ -94,9 +103,7 @@ export default defineComponent({
 				};
 
 				delete (result as any).type;
-				(expenses.value[
-					selectedCategory.value as keyof BudgetExpense
-				] as any).push(result);
+				expenses.value[selectedCategory.value].push(result);
 			}
 		};
 

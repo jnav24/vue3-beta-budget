@@ -100,7 +100,7 @@ export default defineComponent({
 					// @todo compare new data with current to see if there was a change
 					budget.value.expenses[selectedCategory.value][index] = data;
 				} else {
-					const result = {
+					const result: BudgetExpense = {
 						...data,
 						id: generateTempId(),
 						[typeStore.getTypeColumnNameFromType(
@@ -109,9 +109,7 @@ export default defineComponent({
 					};
 
 					delete (result as any).type;
-					(budget.value.expenses[selectedCategory.value] as any).push(
-						result
-					);
+					budget.value.expenses[selectedCategory.value].push(result);
 				}
 			}
 		};

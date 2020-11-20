@@ -60,11 +60,13 @@ export const useTemplateStore = createStore({
 			if (response.success) {
 				const data = getDataFromResponse(response);
 				this.templates.id = data.id;
-				this.templates.expenses = sortObject(data.expenses)
+				this.templates.expenses = sortObject(data.expenses);
 			}
 		},
 
-		async removeExpense(id: number | string, type: string) {
+		async removeExpense(
+			expenses: Array<{ id: number | string; type: string }>
+		) {
 			// ...
 		},
 	},
