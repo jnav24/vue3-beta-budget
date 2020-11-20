@@ -1,4 +1,4 @@
-import { useTypesStore } from '@/store';
+import { useTypesStore, useUserStore } from '@/store';
 import useCurrency from '@/hooks/useCurrency';
 
 export default function useBudgetTable() {
@@ -28,9 +28,17 @@ export default function useBudgetTable() {
 	): string => {
 		const { formatDollar } = useCurrency();
 		const typesStore = useTypesStore();
+		const userStore = useUserStore();
 
 		if (['amount', 'balance'].includes(header)) {
 			return `$${formatDollar(item[header])}`;
+		}
+
+		if (header === 'vehicle' && item.user_vehicle_id) {
+			const vehicle = userStore.getVehicleName(+item.user_vehicle_id);
+			return vehicle
+				? `${vehicle.year} ${vehicle.make} ${vehicle.model}`
+				: '';
 		}
 
 		if (item[header]) {
