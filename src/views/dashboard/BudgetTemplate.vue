@@ -6,6 +6,7 @@ import ExpenseModal from '@/components/modals/ExpenseModal.vue';
 import ExpenseSlideover from '@/components/slideovers/ExpenseSlideover.vue';
 import SaveIcon from '@/components/ui-elements/icons/SaveIcon.vue';
 import { useTemplateStore, useTypesStore } from '@/store';
+import useTimestamp from '@/hooks/useTimestamp';
 import { BudgetExpense } from '@/store/budget';
 
 export default defineComponent({
@@ -17,6 +18,7 @@ export default defineComponent({
 		SaveIcon,
 	},
 	setup() {
+		const { generateTempId } = useTimestamp();
 		const templateStore = useTemplateStore();
 		const typeStore = useTypesStore();
 
@@ -48,17 +50,31 @@ export default defineComponent({
 		};
 
 		const updateLocalExpense = (data: BudgetExpense) => {
-			// @todo have to set the type id like bank_type_id and temp_id(?)
-			disableSave.value = true;
-			const result = {
-				...data,
-				[typeStore.getTypeColumnNameFromType(
-					selectedCategory.value
-				)]: (data as any).type,
-			};
+			const index = (expenses.value[
+				selectedCategory.value as keyof BudgetExpense
+			] as any).findIndex(
+				(expense: BudgetExpense) => expense.id === (data.id ?? -1)
+			);
+			disableSave.value = false;
 
-			delete (result as any).type;
-			(expenses.value[selectedCategory.value as keyof BudgetExpense] as any).push(result);
+			if (index > -1) {
+				(expenses.value[
+					selectedCategory.value as keyof BudgetExpense
+				] as any)[index] = data;
+			} else {
+				const result = {
+					...data,
+					id: generateTempId(),
+					[typeStore.getTypeColumnNameFromType(
+						selectedCategory.value
+					)]: (data as any).type,
+				};
+
+				delete (result as any).type;
+				(expenses.value[
+					selectedCategory.value as keyof BudgetExpense
+				] as any).push(result);
+			}
 		};
 
 		return {

@@ -18,6 +18,7 @@ import SideBar from '@/components/partials/SideBar.vue';
 import { useBudgetStore, useTypesStore } from '@/store';
 import { useRoute } from 'vue-router';
 import { BudgetExpense, BudgetList } from '@/store/budget';
+import useTimestamp from '@/hooks/useTimestamp';
 
 export default defineComponent({
 	components: {
@@ -35,6 +36,7 @@ export default defineComponent({
 		const {
 			params: { id },
 		} = useRoute();
+		const { generateTempId } = useTimestamp();
 
 		const alert = reactive({
 			hide: true,
@@ -98,7 +100,18 @@ export default defineComponent({
 					// @todo compare new data with current to see if there was a change
 					budget.value.expenses[selectedCategory.value][index] = data;
 				} else {
-					budget.value.expenses[selectedCategory.value].push(data);
+					const result = {
+						...data,
+						id: generateTempId(),
+						[typeStore.getTypeColumnNameFromType(
+							selectedCategory.value
+						)]: (data as any).type,
+					};
+
+					delete (result as any).type;
+					(budget.value.expenses[selectedCategory.value] as any).push(
+						result
+					);
 				}
 			}
 		};
