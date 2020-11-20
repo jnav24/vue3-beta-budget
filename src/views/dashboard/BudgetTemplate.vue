@@ -74,11 +74,15 @@ export default defineComponent({
 			id: number | string;
 			type: string;
 		}) => {
+			// @todo add a confirmation modal
 			removeExpenseList.push(data);
-			console.log(expenses.value);
-			// expenses.value[data.type as keyof BudgetExpense]?.filter(
-			// 	expense => data.id !== expense.id
-			// );
+			expenses.value = {
+				...expenses.value,
+				[data.type]: expenses.value[data.type].filter(
+					expense => data.id !== expense.id
+				),
+			};
+			disableSave.value = false;
 		};
 
 		const saveBudgetTemplate = async () => {
