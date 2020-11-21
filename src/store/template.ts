@@ -69,5 +69,9 @@ export const useTemplateStore = createStore({
 		) {
 			// ...
 		},
+
+		async saveTemplate(expenses: Record<string, any[]>) {
+			// ...
+		},
 	},
 });

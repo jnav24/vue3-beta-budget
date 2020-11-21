@@ -56,25 +56,19 @@ export default defineComponent({
 		};
 
 		const removeAllExpenses = async () => {
-			// @todo to prevent making multiple calls, make one call to api to remove expenses
-			// @todo ensure you validate user_id before remove expense
-			console.log(removeExpenseList);
-			const expenses = removeExpenseList.filter(expense => {
-				if (isTempId(expense.id)) {
-					// ...
-				}
+			const expenses = removeExpenseList.filter(
+				expense => !isTempId(expense.id)
+			);
 
-				return !isTempId(expense.id);
-			});
-
-			templateStore.removeExpense(expenses);
+			if (expenses.length) {
+				await templateStore.removeExpense(expenses);
+			}
 		};
 
 		const removeExpenses = (data: {
 			id: number | string;
 			type: string;
 		}) => {
-			// @todo add a confirmation modal
 			removeExpenseList.push(data);
 			expenses.value = {
 				...expenses.value,
@@ -87,6 +81,7 @@ export default defineComponent({
 
 		const saveBudgetTemplate = async () => {
 			await removeAllExpenses();
+			await templateStore.saveTemplate(expenses.value);
 		};
 
 		const updateLocalExpense = (data: BudgetExpense) => {
