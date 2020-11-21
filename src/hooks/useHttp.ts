@@ -118,6 +118,17 @@ export default function useHttp() {
 		});
 	};
 
+	const deleteAuth = async ({ path, params }: URLInterface) => {
+		return getResponse({
+			method: URLMethods.DELETE,
+			path,
+			params: params || {},
+			headers: {
+				Authorization: `Bearer ${getCookie(process.env.VUE_APP_TOKEN)}`,
+			},
+		});
+	};
+
 	const failedResponse = (
 		error = 'Something unexpected has occurred.',
 		data = {}
@@ -134,6 +145,7 @@ export default function useHttp() {
 
 	return {
 		...toRefs(state),
+		deleteAuth,
 		get,
 		getAuth,
 		getDataFromResponse,

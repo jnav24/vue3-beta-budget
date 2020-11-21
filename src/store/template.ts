@@ -67,11 +67,38 @@ export const useTemplateStore = createStore({
 		async removeExpense(
 			expenses: Array<{ id: number | string; type: string }>
 		) {
-			// ...
+			const { deleteAuth } = useHttp();
+
+			const data = {
+				path: 'budget-templates',
+				params: expenses,
+			};
+
+			const response = await deleteAuth(data);
+
+			if (response.success) {
+				expenses.forEach(expense => {
+					this.templates.expenses[
+						expense.type
+					] = this.templates.expenses[expense.type].filter(
+						exp => exp.id !== expense.id
+					);
+				});
+			}
 		},
 
-		async saveTemplate(expenses: Record<string, any[]>) {
-			// ...
+		async saveTemplate(template: { id: number; expenses: Record<string, any[]> }) {
+			const { postAuth, getDataFromResponse } = useHttp();
+			const data = {
+				path: 'budget-templates',
+				params: template,
+			};
+
+			const response = await postAuth(data);
+
+			if (response.success) {
+				this.templates = getDataFromResponse(response);
+			}
 		},
 	},
 });
