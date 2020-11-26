@@ -87,11 +87,14 @@ export const useTemplateStore = createStore({
 			}
 		},
 
-		async saveTemplate(template: { id: number; expenses: Record<string, any[]> }) {
+		async saveTemplate(expenses: Record<string, any[]>) {
 			const { postAuth, getDataFromResponse } = useHttp();
 			const data = {
 				path: 'budget-templates',
-				params: template,
+				params: {
+					id: this.templates.id,
+					expenses,
+				},
 			};
 
 			const response = await postAuth(data);
@@ -99,6 +102,8 @@ export const useTemplateStore = createStore({
 			if (response.success) {
 				this.templates = getDataFromResponse(response);
 			}
+
+			return { success: response.success, error: response.error };
 		},
 	},
 });
