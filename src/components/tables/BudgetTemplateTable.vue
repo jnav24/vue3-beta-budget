@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 import AddIcon from '@/components/ui-elements/icons/AddIcon.vue';
 import BanIcon from '@/components/ui-elements/icons/BanIcon.vue';
 import BudgetTableHeaders from '@/components/partials/BudgetTableHeaders.vue';
@@ -7,10 +7,12 @@ import Button from '@/components/ui-elements/form/Button.vue';
 import Card from '@/components/ui-elements/card/Card.vue';
 import CardContent from '@/components/ui-elements/card/CardContent.vue';
 import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
+import ConfirmationModal from '@/components/modals/ConfirmationModal.vue';
 import EditIcon from '@/components/ui-elements/icons/EditIcon.vue';
 import WarningIcon from '@/components/ui-elements/icons/WarningIcon.vue';
 import useBudgetTable from '@/hooks/useBudgetTable';
 import useUtils from '@/hooks/useUtils';
+import { BudgetExpense } from '@/store/budget';
 
 type ExpenseType = {
 	name: string;
@@ -39,10 +41,11 @@ export default defineComponent({
 		Card,
 		CardContent,
 		CardHeader,
+		ConfirmationModal,
 		EditIcon,
 		WarningIcon,
 	},
-	setup(props) {
+	setup(props, { emit }) {
 		const { getExpenseValue, getHeaders } = useBudgetTable();
 		const { toTitleCase } = useUtils();
 		const headers: Record<string, Array<string>> = {
@@ -71,18 +74,42 @@ export default defineComponent({
 				'actions',
 			],
 		};
-
+		const removeId = ref<string | number | null>(null);
+		const showConfirmModal = ref(false);
 		const tableHeaders = getHeaders(props.category, headers);
+
+		const removeExpense = () =>
+			removeId.value &&
+			emit('remove-expenses', {
+				id: removeId.value,
+				type: props.category,
+			});
+
+		const setDeleteAndShowConfirmation = (id: string | number) => {
+			removeId.value = id;
+			showConfirmModal.value = true;
+		};
 
 		const setHeaderName = (name: string): string => {
 			return name;
 		};
 
+		const addExpense = (data?: BudgetExpense) =>
+			emit('add-expense', { category: props.category, expense: data });
+
+		watch(showConfirmModal, n => {
+			if (!n) removeId.value = null;
+		});
+
 		return {
+			addExpense,
 			toTitleCase,
 			getExpenseValue,
 			headers,
+			removeExpense,
+			setDeleteAndShowConfirmation,
 			setHeaderName,
+			showConfirmModal,
 			tableHeaders,
 		};
 	},
@@ -90,19 +117,24 @@ export default defineComponent({
 </script>
 
 <template>
+	<ConfirmationModal
+		v-model:show="showConfirmModal"
+		@confirm="removeExpense()"
+	/>
+
 	<section class="mb-24 px-4 sm:px-0">
 		<div class="mt-4 flex flex-row items-center justify-between">
 			<h2 class="text-2xl text-gray-600 font-body">
 				{{ toTitleCase(category) }}
 			</h2>
-			<Button color="secondary">
+			<Button color="secondary" @click="addExpense()">
 				<AddIcon class="w-5 h-5 mr-2" />
 				<span>Add</span>
 			</Button>
 		</div>
 
 		<Card>
-			<CardHeader class="bg-gray-100">
+			<CardHeader class="bg-gray-100 rounded-t-md">
 				<BudgetTableHeaders :headers="tableHeaders" />
 			</CardHeader>
 
@@ -143,12 +175,21 @@ export default defineComponent({
 							class="flex flex-row items-center"
 							v-if="header === 'actions'"
 						>
-							<div class="rounded-full p-2 bg-secondary w-8 mr-2">
+							<Button
+								color="secondary"
+								fab
+								@on-click="addExpense(item)"
+							>
 								<EditIcon class="w-4 h-4" />
-							</div>
-							<div class="rounded-full p-2 bg-danger w-8">
+							</Button>
+
+							<Button
+								color="danger"
+								fab
+								@click="setDeleteAndShowConfirmation(item.id)"
+							>
 								<BanIcon class="w-4 h-4 text-white" />
-							</div>
+							</Button>
 						</div>
 					</div>
 				</div>

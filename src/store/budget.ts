@@ -7,7 +7,7 @@ type BudgetState = {
 };
 
 export type BudgetExpense = {
-	id: number;
+	id: number | string;
 	budget_id: number;
 	name: string;
 	amount: string;

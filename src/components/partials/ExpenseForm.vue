@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, defineComponent, inject, nextTick, ref, watch } from 'vue';
+import { computed, defineComponent, inject, nextTick, ref } from 'vue';
 import { useTypesStore } from '@/store';
 import useUtils from '@/hooks/useUtils';
 import BankExpenseForm from '@/components/forms/BankExpenseForm.vue';
@@ -40,23 +40,17 @@ export default defineComponent({
 		const formContent = ref(null);
 		const formHeight = ref(0);
 		const formType = computed(() => ExpenseContext.currentType.value);
-		const selectedCategory = ref('' as keyof TypesStateInterface);
-		const selectedTitle = computed(() =>
-			toTitleCase(selectedCategory.value)
-		);
+		const selectedTitle = computed(() => toTitleCase(formType.value));
 
-		nextTick(() => {
-			if (!ExpenseContext.editMode.value) {
-				selectedCategory.value = 'banks';
-			}
-		});
-
-		watch(selectedCategory, () => {
-			ExpenseContext.currentType.value = selectedCategory.value;
-
+		const setCategory = (category: keyof TypesStateInterface) => {
+			ExpenseContext.currentType.value = category;
 			nextTick(() => {
 				formHeight.value = (formContent.value as any)?.offsetHeight;
 			});
+		};
+
+		nextTick(() => {
+			formHeight.value = (formContent.value as any)?.offsetHeight;
 		});
 
 		return {
@@ -65,8 +59,9 @@ export default defineComponent({
 			formContent,
 			formHeight,
 			formType,
-			selectedCategory,
+			hideSidebar: ExpenseContext.hideSidebar,
 			selectedTitle,
+			setCategory,
 		};
 	},
 });
@@ -76,7 +71,7 @@ export default defineComponent({
 	<div class="flex flex-row">
 		<aside
 			class="w-1/4 px-2 bg-gray-100 overflow-auto rounded-l-md hidden lg:block"
-			v-if="!editMode"
+			v-if="!hideSidebar"
 			:style="`height: ${formHeight}px`"
 		>
 			<SideBar
@@ -84,7 +79,8 @@ export default defineComponent({
 				:items="categories"
 				item-value="slug"
 				item-label="name"
-				v-model:selected-item="selectedCategory"
+				:selected-item="formType"
+				@set-item="setCategory($event)"
 			/>
 		</aside>
 
@@ -104,13 +100,14 @@ export default defineComponent({
 				</h2>
 
 				<Select
-					v-if="!editMode"
+					v-if="!hideSidebar"
 					class="block lg:hidden mx-4 mb-6"
 					label="Categories"
 					:items="categories"
 					item-value="slug"
 					item-label="name"
-					v-model:value="selectedCategory"
+					:value="formType"
+					@set-item="setCategory($event)"
 				/>
 
 				<BankExpenseForm

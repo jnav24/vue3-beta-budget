@@ -16,6 +16,10 @@ export default defineComponent({
 			default: () => ({}),
 			type: Object as () => BudgetExpense,
 		},
+		hideSidebar: {
+			default: false,
+			type: Boolean,
+		},
 		show: {
 			required: true,
 			type: Boolean,
@@ -53,6 +57,7 @@ export default defineComponent({
 			:data="data"
 			:edit-mode="editMode"
 			:type="type"
+			:hide-sidebar="hideSidebar"
 			@close-modal="setCloseModal($event)"
 		>
 			<ExpenseForm />

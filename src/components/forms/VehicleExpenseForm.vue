@@ -103,7 +103,7 @@ export default defineComponent({
 		});
 
 		const typeName = computed(() =>
-			typeStore.getTypeById('vehicles', form.type.value)
+			typeStore.getSlugById('vehicles', form.type.value)
 		);
 
 		const closeModal = (submit: boolean) => {

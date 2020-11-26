@@ -29,6 +29,7 @@ export default defineComponent({
 	setup(props, { emit }) {
 		const emitSelected = (e: string) => {
 			emit('update:selected-item', e);
+			emit('set-item', e);
 		};
 
 		return { emitSelected };

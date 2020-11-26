@@ -3,6 +3,15 @@ import useHttp from '@/hooks/useHttp';
 import useUtils from '@/hooks/useUtils';
 import { BudgetExpense } from '@/store/budget';
 
+const mapTypes = {
+	bank: 'banks',
+	credit_card: 'creditCards',
+	investment: 'investments',
+	income: 'incomes',
+	utility: 'utilities',
+	vehicle: 'vehicles',
+};
+
 export const useTypesStore = createStore({
 	id: 'types',
 
@@ -46,17 +55,9 @@ export const useTypesStore = createStore({
 			}
 		},
 
-		getType<T extends BudgetExpense>(
+		getTypeFromExpenseObject<T extends BudgetExpense>(
 			item: T
 		): CommonExpenseTypeInterface | null {
-			const mapTypes = {
-				bank: 'banks',
-				credit_card: 'creditCards',
-				investment: 'investments',
-				income: 'incomes',
-				utility: 'utilities',
-				vehicle: 'vehicles',
-			};
 			const type =
 				Object.keys(item)
 					.filter((key: string) => /[a-z]*_type_[a-z]*/.exec(key))
@@ -77,11 +78,26 @@ export const useTypesStore = createStore({
 			return null;
 		},
 
-		getTypeById(
+		getSlugById(
 			type: keyof TypesStateInterface,
 			id: number
 		): string | undefined {
 			return this[type].filter(obj => obj.id === id)?.shift()?.slug;
+		},
+
+		getTypeColumnNameFromType(type: string) {
+			const { camelCase } = useUtils();
+			const typeName = camelCase(type);
+			const keyList = Object.keys(mapTypes);
+			const valueList = Object.values(mapTypes);
+			const index = valueList.indexOf(typeName);
+			const placeholder = '_type_id';
+
+			if (index > -1) {
+				return `${keyList[index]}${placeholder}`;
+			}
+
+			return `${typeName}${placeholder}`;
 		},
 	},
 });

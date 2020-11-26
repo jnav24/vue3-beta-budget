@@ -16,6 +16,10 @@ export default defineComponent({
 			default: () => ({}),
 			type: Object as () => BudgetExpense,
 		},
+		hideSidebar: {
+			default: false,
+			type: Boolean,
+		},
 		show: {
 			required: true,
 			type: Boolean,
@@ -49,11 +53,12 @@ export default defineComponent({
 
 <template>
 	<Modal :show="show" :set-close="setClose" @close="closeModal($event)">
-		<div :class="{ 'w-200': editMode, 'w-250': !editMode }">
+		<div :class="{ 'w-200': hideSidebar, 'w-250': !hideSidebar }">
 			<ExpenseFormProvider
 				:data="data"
 				:edit-mode="editMode"
 				:type="type"
+				:hide-sidebar="hideSidebar"
 				@close-modal="setCloseModal($event)"
 			>
 				<ExpenseForm />

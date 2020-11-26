@@ -18,6 +18,7 @@ import SideBar from '@/components/partials/SideBar.vue';
 import { useBudgetStore, useTypesStore } from '@/store';
 import { useRoute } from 'vue-router';
 import { BudgetExpense, BudgetList } from '@/store/budget';
+import useTimestamp from '@/hooks/useTimestamp';
 
 export default defineComponent({
 	components: {
@@ -35,6 +36,7 @@ export default defineComponent({
 		const {
 			params: { id },
 		} = useRoute();
+		const { generateTempId } = useTimestamp();
 
 		const alert = reactive({
 			hide: true,
@@ -86,17 +88,28 @@ export default defineComponent({
 		};
 
 		const updateLocalBudget = (data: BudgetExpense) => {
-			let index = -1;
-
 			if (budget.value && budget.value.expenses) {
-				index = budget.value.expenses[selectedCategory.value].findIndex(
-					(expense: BudgetExpense) => expense.id === data.id
+				disableSave.value = false;
+				const index = budget.value.expenses[
+					selectedCategory.value
+				].findIndex(
+					(expense: BudgetExpense) => expense.id === (data.id ?? -1)
 				);
 
 				if (index > -1) {
 					// @todo compare new data with current to see if there was a change
 					budget.value.expenses[selectedCategory.value][index] = data;
-					disableSave.value = false;
+				} else {
+					const result: BudgetExpense = {
+						...data,
+						id: generateTempId(),
+						[typeStore.getTypeColumnNameFromType(
+							selectedCategory.value
+						)]: (data as any).type,
+					};
+
+					delete (result as any).type;
+					budget.value.expenses[selectedCategory.value].push(result);
 				}
 			}
 		};
@@ -139,6 +152,7 @@ export default defineComponent({
 		v-model:show="showModal"
 		:data="expenseData"
 		:type="selectedCategory"
+		:hide-sidebar="!!Object.keys(expenseData).length"
 		@update-budget="updateLocalBudget($event)"
 	/>
 
@@ -147,6 +161,7 @@ export default defineComponent({
 		v-model:show="showModal"
 		:data="expenseData"
 		:type="selectedCategory"
+		:hide-sidebar="!!Object.keys(expenseData).length"
 		@update-budget="updateLocalBudget($event)"
 	/>
 

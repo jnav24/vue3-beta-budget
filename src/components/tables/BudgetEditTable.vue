@@ -107,7 +107,7 @@ export default defineComponent({
 			}
 
 			if (header === 'type') {
-				const typeObj = typesStore.getType(item);
+				const typeObj = typesStore.getTypeFromExpenseObject(item);
 				return typeObj?.name ?? null;
 			}
 
@@ -135,7 +135,7 @@ export default defineComponent({
 
 <template>
 	<Card>
-		<CardHeader class="bg-gray-100">
+		<CardHeader class="bg-gray-100 rounded-t-md">
 			<BudgetTableHeaders :headers="categoryHeader" />
 		</CardHeader>
 

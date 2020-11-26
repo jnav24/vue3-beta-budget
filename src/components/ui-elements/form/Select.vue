@@ -77,6 +77,7 @@ export default defineComponent({
 				error.value = FormContext.validateField(labelId.value, value);
 			}
 			emit('update:value', value);
+			emit('set-item', value);
 		};
 
 		const blurEvent = () => {
