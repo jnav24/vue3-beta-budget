@@ -1,5 +1,6 @@
 <script lang="ts">
-import { defineComponent, ref, watch, watchEffect } from 'vue';
+import { defineComponent, reactive, ref, watch, watchEffect } from 'vue';
+import Alert from '@/components/ui-elements/Alert.vue';
 import BudgetTemplateTable from '@/components/tables/BudgetTemplateTable.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import ExpenseModal from '@/components/modals/ExpenseModal.vue';
@@ -11,6 +12,7 @@ import { BudgetExpense } from '@/store/budget';
 
 export default defineComponent({
 	components: {
+		Alert,
 		BudgetTemplateTable,
 		Button,
 		ExpenseModal,
@@ -22,6 +24,12 @@ export default defineComponent({
 		const templateStore = useTemplateStore();
 		const typeStore = useTypesStore();
 
+		const alert = reactive({
+			hide: true,
+			show: false,
+			message: '',
+			type: '',
+		});
 		const disableSave = ref(true);
 		const expenses = ref<Record<string, BudgetExpense[]>>(
 			{} as Record<string, BudgetExpense[]>
@@ -80,8 +88,26 @@ export default defineComponent({
 		};
 
 		const saveBudgetTemplate = async () => {
+			disableSave.value = true;
 			await removeAllExpenses();
-			await templateStore.saveTemplate(expenses.value);
+			const response = await templateStore.saveTemplate(expenses.value);
+
+			if (response.success) {
+				alert.type = 'success';
+				alert.message = 'Template was saved successfully';
+			} else {
+				alert.type = 'danger';
+				alert.message = 'There was a problem saving the template.';
+			}
+
+			alert.hide = false;
+			setTimeout(() => {
+				alert.show = true;
+				setTimeout(() => {
+					alert.show = false;
+					setTimeout(() => (alert.hide = true), 275);
+				}, 6000);
+			}, 75);
 		};
 
 		const updateLocalExpense = (data: BudgetExpense) => {
@@ -107,6 +133,7 @@ export default defineComponent({
 		};
 
 		return {
+			alert,
 			disableSave,
 			expenses,
 			expenseData,
@@ -174,7 +201,18 @@ export default defineComponent({
 		</div>
 	</div>
 
-	<div class="container mx-auto">
+	<div class="container mx-auto relative">
+		<div
+			class="absolute w-full top-0 left-0 transform transition duration-200 ease-in-out"
+			:class="{
+				'-translate-y-12 opacity-100': alert.show,
+				'-translate-y-24 opacity-0': !alert.show,
+			}"
+			v-if="!alert.hide"
+		>
+			<Alert :type="alert.type" :message="alert.message" />
+		</div>
+
 		<BudgetTemplateTable
 			v-for="(item, key) in expenses"
 			:key="key"
