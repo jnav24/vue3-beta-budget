@@ -11,6 +11,7 @@ import {
 import Alert from '@/components/ui-elements/Alert.vue';
 import BudgetEditSummary from '@/components/partials/BudgetEditSummary.vue';
 import BudgetEditTable from '@/components/tables/BudgetEditTable.vue';
+import ConfirmationModal from '@/components/modals/ConfirmationModal.vue';
 import ExpenseModal from '@/components/modals/ExpenseModal.vue';
 import ExpenseSlideover from '@/components/slideovers/ExpenseSlideover.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
@@ -19,12 +20,14 @@ import { useBudgetStore, useTypesStore } from '@/store';
 import { useRoute } from 'vue-router';
 import { BudgetExpense, BudgetList } from '@/store/budget';
 import useTimestamp from '@/hooks/useTimestamp';
+import useRemoveExpense from '@/hooks/useRemoveExpense';
 
 export default defineComponent({
 	components: {
 		Alert,
 		BudgetEditSummary,
 		BudgetEditTable,
+		ConfirmationModal,
 		ExpenseModal,
 		ExpenseSlideover,
 		SideBar,
@@ -37,6 +40,11 @@ export default defineComponent({
 			params: { id },
 		} = useRoute();
 		const { generateTempId } = useTimestamp();
+		const {
+			getRemoveExpenseList,
+			removeExpense,
+			setItemToBeRemoved,
+		} = useRemoveExpense();
 
 		const alert = reactive({
 			hide: true,
@@ -56,9 +64,11 @@ export default defineComponent({
 		const expenseData = ref({});
 		const selectedCategory = ref('banks');
 		const categories = computed(() => typeStore.bills);
+		const showConfirmModal = ref(false);
 		const showModal = ref(false);
 
 		const saveBudget = async () => {
+			await budgetStore.removeBudgetExpenses(budget.value.id, getRemoveExpenseList());
 			const res = await budgetStore.updateBudget(budget.value);
 			disableSave.value = true;
 
@@ -78,6 +88,22 @@ export default defineComponent({
 					setTimeout(() => (alert.hide = true), 275);
 				}, 6000);
 			}, 75);
+		};
+
+		const confirmRemoveExpense = () => {
+			const { save, expenses } = removeExpense(
+				budget.value.expenses as Record<string, Array<BudgetExpense>>
+			);
+			budget.value.expenses = expenses;
+			disableSave.value = !save;
+		};
+
+		const setDeleteAndShowConfirmation = (e: {
+			id: string | number;
+			category: string;
+		}) => {
+			setItemToBeRemoved(e);
+			showConfirmModal.value = true;
 		};
 
 		const showExpenseModal = (e: BudgetExpense) => {
@@ -133,10 +159,13 @@ export default defineComponent({
 			alert,
 			categories,
 			budget,
+			confirmRemoveExpense,
 			disableSave,
 			expenseData,
 			saveBudget,
 			selectedCategory,
+			setDeleteAndShowConfirmation,
+			showConfirmModal,
 			showExpenseModal,
 			showModal,
 			updateLocalBudget,
@@ -147,6 +176,11 @@ export default defineComponent({
 </script>
 
 <template>
+	<ConfirmationModal
+		v-model:show="showConfirmModal"
+		@confirm="confirmRemoveExpense()"
+	/>
+
 	<ExpenseModal
 		class="hidden lg:block"
 		v-model:show="showModal"
@@ -211,6 +245,9 @@ export default defineComponent({
 					:category="selectedCategory"
 					:data="budget.expenses"
 					@show-expense-modal="showExpenseModal($event)"
+					@show-remove-expense-modal="
+						setDeleteAndShowConfirmation($event)
+					"
 				/>
 			</div>
 		</div>
