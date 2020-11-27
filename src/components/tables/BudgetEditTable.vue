@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent } from 'vue';
 import BanIcon from '@/components/ui-elements/icons/BanIcon.vue';
 import BudgetTableHeaders from '@/components/partials/BudgetTableHeaders.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
@@ -7,7 +7,6 @@ import Card from '@/components/ui-elements/card/Card.vue';
 import CardContent from '@/components/ui-elements/card/CardContent.vue';
 import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
 import CheckIcon from '@/components/ui-elements/icons/CheckIcon.vue';
-import ConfirmationModal from '@/components/modals/ConfirmationModal.vue';
 import EditIcon from '@/components/ui-elements/icons/EditIcon.vue';
 import WarningIcon from '@/components/ui-elements/icons/WarningIcon.vue';
 import useBudgetTable from '@/hooks/useBudgetTable';
@@ -34,7 +33,6 @@ export default defineComponent({
 		CardHeader,
 		CardContent,
 		CheckIcon,
-		ConfirmationModal,
 		EditIcon,
 		WarningIcon,
 	},
@@ -79,8 +77,6 @@ export default defineComponent({
 				'actions',
 			],
 		};
-		const removeId = ref<string | number | null>(null);
-		const showConfirmModal = ref(false);
 
 		const categoryHeader = computed(() =>
 			getHeaders(props.category, headers)
@@ -128,16 +124,8 @@ export default defineComponent({
 			return '';
 		};
 
-		const removeExpense = () =>
-			removeId.value &&
-			emit('remove-expenses', {
-				id: removeId.value,
-				type: props.category,
-			});
-
-		const setDeleteAndShowConfirmation = (id: string | number) => {
-			removeId.value = id;
-			showConfirmModal.value = true;
+		const removeExpense = (id: string | number) => {
+			emit('show-remove-expense-modal', { id, category: props.category });
 		};
 
 		const showExpenseModal = (item: BudgetExpense) => {
@@ -148,8 +136,6 @@ export default defineComponent({
 			categoryHeader,
 			getExpenseValue,
 			removeExpense,
-			setDeleteAndShowConfirmation,
-			showConfirmModal,
 			showExpenseModal,
 			ucFirst,
 		};
@@ -158,11 +144,6 @@ export default defineComponent({
 </script>
 
 <template>
-	<ConfirmationModal
-		v-model:show="showConfirmModal"
-		@confirm="removeExpense()"
-	/>
-
 	<Card>
 		<CardHeader class="bg-gray-100 rounded-t-md">
 			<BudgetTableHeaders :headers="categoryHeader" />
@@ -219,7 +200,7 @@ export default defineComponent({
 						<Button
 							color="danger"
 							fab
-							@click="setDeleteAndShowConfirmation(item.id)"
+							@click="removeExpense(item.id)"
 						>
 							<BanIcon class="w-4 h-4 text-white" />
 						</Button>
