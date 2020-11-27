@@ -3,18 +3,21 @@ import { defineComponent, reactive, ref, watch, watchEffect } from 'vue';
 import Alert from '@/components/ui-elements/Alert.vue';
 import BudgetTemplateTable from '@/components/tables/BudgetTemplateTable.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
+import ConfirmationModal from '@/components/modals/ConfirmationModal.vue';
 import ExpenseModal from '@/components/modals/ExpenseModal.vue';
 import ExpenseSlideover from '@/components/slideovers/ExpenseSlideover.vue';
 import SaveIcon from '@/components/ui-elements/icons/SaveIcon.vue';
 import { useTemplateStore, useTypesStore } from '@/store';
 import useTimestamp from '@/hooks/useTimestamp';
 import { BudgetExpense } from '@/store/budget';
+import useRemoveExpense from '@/hooks/useRemoveExpense';
 
 export default defineComponent({
 	components: {
 		Alert,
 		BudgetTemplateTable,
 		Button,
+		ConfirmationModal,
 		ExpenseModal,
 		ExpenseSlideover,
 		SaveIcon,
@@ -23,6 +26,11 @@ export default defineComponent({
 		const { generateTempId, isTempId } = useTimestamp();
 		const templateStore = useTemplateStore();
 		const typeStore = useTypesStore();
+		const {
+			getRemoveExpenseList,
+			removeExpense,
+			setItemToBeRemoved,
+		} = useRemoveExpense();
 
 		const alert = reactive({
 			hide: true,
@@ -30,15 +38,12 @@ export default defineComponent({
 			message: '',
 			type: '',
 		});
+		const showConfirmModal = ref(false);
 		const disableSave = ref(true);
 		const expenses = ref<Record<string, BudgetExpense[]>>(
 			{} as Record<string, BudgetExpense[]>
 		);
 		const expenseData = ref({});
-		const removeExpenseList: Array<{
-			id: number | string;
-			type: string;
-		}> = [];
 		const selectedCategory = ref('');
 		const showModal = ref(false);
 
@@ -52,6 +57,14 @@ export default defineComponent({
 			expenses.value = JSON.parse(JSON.stringify(templateStore.expenses));
 		});
 
+		const confirmRemoveExpense = () => {
+			const data = removeExpense(
+				expenses.value as Record<string, Array<BudgetExpense>>
+			);
+			expenses.value = data.expenses;
+			disableSave.value = !data.save;
+		};
+
 		const openExpense = (data: {
 			category: string;
 			expense?: BudgetExpense;
@@ -63,33 +76,9 @@ export default defineComponent({
 			showModal.value = true;
 		};
 
-		const removeAllExpenses = async () => {
-			const expenses = removeExpenseList.filter(
-				expense => !isTempId(expense.id)
-			);
-
-			if (expenses.length) {
-				await templateStore.removeExpense(expenses);
-			}
-		};
-
-		const removeExpenses = (data: {
-			id: number | string;
-			type: string;
-		}) => {
-			removeExpenseList.push(data);
-			expenses.value = {
-				...expenses.value,
-				[data.type]: expenses.value[data.type].filter(
-					expense => data.id !== expense.id
-				),
-			};
-			disableSave.value = false;
-		};
-
 		const saveBudgetTemplate = async () => {
 			disableSave.value = true;
-			await removeAllExpenses();
+			await templateStore.removeExpense(getRemoveExpenseList());
 			const response = await templateStore.saveTemplate(expenses.value);
 
 			if (response.success) {
@@ -108,6 +97,14 @@ export default defineComponent({
 					setTimeout(() => (alert.hide = true), 275);
 				}, 6000);
 			}, 75);
+		};
+
+		const setDeleteAndShowConfirmation = (e: {
+			id: string | number;
+			category: string;
+		}) => {
+			setItemToBeRemoved(e);
+			showConfirmModal.value = true;
 		};
 
 		const updateLocalExpense = (data: BudgetExpense) => {
@@ -134,13 +131,15 @@ export default defineComponent({
 
 		return {
 			alert,
+			confirmRemoveExpense,
 			disableSave,
 			expenses,
 			expenseData,
 			openExpense,
-			removeExpenses,
 			saveBudgetTemplate,
 			selectedCategory,
+			setDeleteAndShowConfirmation,
+			showConfirmModal,
 			showModal,
 			updateLocalExpense,
 		};
@@ -149,6 +148,11 @@ export default defineComponent({
 </script>
 
 <template>
+	<ConfirmationModal
+		v-model:show="showConfirmModal"
+		@confirm="confirmRemoveExpense()"
+	/>
+
 	<ExpenseModal
 		class="hidden lg:block"
 		v-model:show="showModal"
@@ -219,7 +223,7 @@ export default defineComponent({
 			:category="key"
 			:data="item"
 			@add-expense="openExpense($event)"
-			@remove-expenses="removeExpenses($event)"
+			@show-remove-expense-modal="setDeleteAndShowConfirmation($event)"
 		/>
 	</div>
 </template>
