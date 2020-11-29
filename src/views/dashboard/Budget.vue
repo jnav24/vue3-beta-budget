@@ -15,6 +15,7 @@ import SubNav from '@/components/partials/SubNav.vue';
 import SubNavItems from '@/components/partials/SubNavItems.vue';
 import TrendDownIcon from '@/components/ui-elements/icons/TrendDownIcon.vue';
 import TrendUpIcon from '@/components/ui-elements/icons/TrendUpIcon.vue';
+import WarningIcon from '@/components/ui-elements/icons/WarningIcon.vue';
 import { useBudgetStore } from '@/store';
 import { useRouter } from 'vue-router';
 import useCurrency from '@/hooks/useCurrency';
@@ -41,6 +42,7 @@ export default defineComponent({
 		SubNavItems,
 		TrendDownIcon,
 		TrendUpIcon,
+		WarningIcon,
 		YTDSummary,
 	},
 	setup() {
@@ -219,7 +221,7 @@ export default defineComponent({
 				v-model:selected-item="selectedYear"
 			/>
 			<Card class="col-span-4 md:col-span-3 ml-3 mr-4 sm:mx-0">
-				<CardHeader class="bg-gray-100">
+				<CardHeader class="bg-gray-100 rounded-t-lg">
 					<div
 						class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-gray-900"
 					>
@@ -230,6 +232,17 @@ export default defineComponent({
 					</div>
 				</CardHeader>
 				<CardContent class="px-0">
+					<div
+						v-if="
+							!budgets[selectedYear] ||
+								!budgets[selectedYear].length
+						"
+						class="py-8 text-gray-500 flex flex-col items-center justify-center"
+					>
+						<WarningIcon class="w-8 h-8" />
+						<span>There are no budgets for {{ selectedYear }}</span>
+					</div>
+
 					<div
 						v-for="item in budgets[selectedYear]"
 						:key="item.id"
