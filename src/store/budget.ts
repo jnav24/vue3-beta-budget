@@ -133,5 +133,35 @@ export const useBudgetStore = createStore({
 
 			return { success: response.success, error: response.error };
 		},
+
+		// @todo there is no endpoint for this; have to create it
+		async removeBudgetExpenses(
+			id: string | number,
+			expenses: Array<{ id: string | number; type: string }>
+		) {
+			const { deleteAuth } = useHttp();
+			const data = {
+				path: 'budgets',
+				params: {
+					expenses,
+					id,
+				},
+			};
+
+			const response = await deleteAuth(data);
+
+			if (response.success) {
+				const index = this.list.findIndex(list => list.id === id);
+
+				if (index > -1) {
+					expenses.forEach(expense => {
+						(this.list[index].expenses as any)[expense.type] = (this
+							.list[index].expenses as any)[expense.type].filter(
+							(exp: BudgetExpense) => exp.id !== expense.id
+						);
+					});
+				}
+			}
+		},
 	},
 });

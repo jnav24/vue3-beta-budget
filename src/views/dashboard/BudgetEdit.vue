@@ -68,7 +68,10 @@ export default defineComponent({
 		const showModal = ref(false);
 
 		const saveBudget = async () => {
-			await budgetStore.removeBudgetExpenses(budget.value.id, getRemoveExpenseList());
+			await budgetStore.removeBudgetExpenses(
+				budget.value.id,
+				getRemoveExpenseList()
+			);
 			const res = await budgetStore.updateBudget(budget.value);
 			disableSave.value = true;
 
