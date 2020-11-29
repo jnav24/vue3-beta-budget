@@ -60,8 +60,8 @@ export default defineComponent({
 		const aggregationStore = useAggregationStore();
 
 		const addBudgetItems = [
-			{ value: '', label: 'Monthly Budget', icon: 'CalendarIcon' },
-			{ value: '', label: 'Blank Budget', icon: 'ArchiveIcon' },
+			{ value: 'monthly', label: 'Monthly Budget', icon: 'CalendarIcon' },
+			{ value: 'blank', label: 'Blank Budget', icon: 'ArchiveIcon' },
 		];
 		const showAddBudgetNav = ref(false);
 		const budgets = computed(() => budgetStore.sortedBudgets);
@@ -92,6 +92,10 @@ export default defineComponent({
 
 		const goToTemplatePage = () => push({ name: 'budget-template' });
 
+		const handleNavClick = (e: string) => {
+			console.log(e);
+		};
+
 		const setDeleteAndShowConfirmation = (id: string | number) => {
 			setItemToBeRemoved({ id, category: selectedYear.value });
 			showConfirmModal.value = true;
@@ -105,6 +109,7 @@ export default defineComponent({
 			formatDollar,
 			goToEditPage,
 			goToTemplatePage,
+			handleNavClick,
 			maxSaved,
 			selectedYear,
 			setDeleteAndShowConfirmation,
@@ -203,7 +208,11 @@ export default defineComponent({
 					</span>
 				</Button>
 
-				<SubNavItems :items="addBudgetItems" :show="showAddBudgetNav" />
+				<SubNavItems
+					:items="addBudgetItems"
+					:show="showAddBudgetNav"
+					@nav-clicked="handleNavClick($event)"
+				/>
 			</SubNav>
 
 			<Select
