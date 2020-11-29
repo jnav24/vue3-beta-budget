@@ -43,6 +43,7 @@ export default defineComponent({
 		const {
 			getRemoveExpenseList,
 			removeExpense,
+			resetList,
 			setItemToBeRemoved,
 		} = useRemoveExpense();
 
@@ -78,6 +79,7 @@ export default defineComponent({
 			if (res.success) {
 				alert.type = 'success';
 				alert.message = 'Budget was saved successfully';
+				resetList();
 			} else {
 				alert.type = 'danger';
 				alert.message = 'There was a problem saving the budget.';

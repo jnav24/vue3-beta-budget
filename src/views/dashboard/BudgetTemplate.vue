@@ -23,12 +23,13 @@ export default defineComponent({
 		SaveIcon,
 	},
 	setup() {
-		const { generateTempId, isTempId } = useTimestamp();
+		const { generateTempId } = useTimestamp();
 		const templateStore = useTemplateStore();
 		const typeStore = useTypesStore();
 		const {
 			getRemoveExpenseList,
 			removeExpense,
+			resetList,
 			setItemToBeRemoved,
 		} = useRemoveExpense();
 
@@ -84,6 +85,7 @@ export default defineComponent({
 			if (response.success) {
 				alert.type = 'success';
 				alert.message = 'Template was saved successfully';
+				resetList();
 			} else {
 				alert.type = 'danger';
 				alert.message = 'There was a problem saving the template.';
