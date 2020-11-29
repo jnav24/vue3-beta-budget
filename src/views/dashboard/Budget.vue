@@ -6,6 +6,7 @@ import Card from '@/components/ui-elements/card/Card.vue';
 import CardContent from '@/components/ui-elements/card/CardContent.vue';
 import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
 import ChevronDownIcon from '@/components/ui-elements/icons/ChevronDownIcon.vue';
+import ConfirmationModal from '@/components/modals/ConfirmationModal.vue';
 import EditIcon from '@/components/ui-elements/icons/EditIcon.vue';
 import FireIcon from '@/components/ui-elements/icons/FireIcon.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
@@ -17,6 +18,7 @@ import TrendUpIcon from '@/components/ui-elements/icons/TrendUpIcon.vue';
 import { useBudgetStore } from '@/store';
 import { useRouter } from 'vue-router';
 import useCurrency from '@/hooks/useCurrency';
+import useRemoveExpense from '@/hooks/useRemoveExpense';
 import useTimestamp from '@/hooks/useTimestamp';
 import useUtils from '@/hooks/useUtils';
 import { useAggregationStore } from '@/store';
@@ -30,6 +32,7 @@ export default defineComponent({
 		CardContent,
 		CardHeader,
 		ChevronDownIcon,
+		ConfirmationModal,
 		EditIcon,
 		FireIcon,
 		Select,
@@ -43,6 +46,11 @@ export default defineComponent({
 	setup() {
 		const { arrayColumn } = useUtils();
 		const { push } = useRouter();
+		const {
+			getRemoveExpenseList,
+			removeExpense,
+			setItemToBeRemoved,
+		} = useRemoveExpense();
 		const { formatDate } = useTimestamp();
 		const { formatDollar } = useCurrency();
 		const budgetStore = useBudgetStore();
@@ -55,6 +63,7 @@ export default defineComponent({
 		const showAddBudgetNav = ref(false);
 		const budgets = computed(() => budgetStore.sortedBudgets);
 		const selectedYear = ref(formatDate('yyyy'));
+		const showConfirmModal = ref(false);
 		const maxSaved = computed(() => {
 			return Math.max(
 				...arrayColumn(
@@ -64,13 +73,33 @@ export default defineComponent({
 			).toString();
 		});
 
+		const confirmRemoveBudget = () => {
+			const { save, expenses } = removeExpense(
+				budgets.value as Record<string, Array<any>>
+			);
+			console.log(save);
+			console.log(expenses);
+			if (save) {
+				// @todo uncomment line below
+				// budgets.value = expenses;
+				// @todo call endpoint to remove all budgets
+				console.log(getRemoveExpenseList());
+			}
+		};
+
 		const goToEditPage = (id: string) =>
 			push({ name: 'budget-edit', params: { id } });
 
 		const goToTemplatePage = () => push({ name: 'budget-template' });
 
+		const setDeleteAndShowConfirmation = (id: string | number) => {
+			setItemToBeRemoved({ id, category: selectedYear.value });
+			showConfirmModal.value = true;
+		};
+
 		return {
 			addBudgetItems,
+			confirmRemoveBudget,
 			showAddBudgetNav,
 			budgets,
 			formatDollar,
@@ -78,6 +107,8 @@ export default defineComponent({
 			goToTemplatePage,
 			maxSaved,
 			selectedYear,
+			setDeleteAndShowConfirmation,
+			showConfirmModal,
 			years: computed(() => aggregationStore.allYears),
 		};
 	},
@@ -85,6 +116,11 @@ export default defineComponent({
 </script>
 
 <template>
+	<ConfirmationModal
+		v-model:show="showConfirmModal"
+		@confirm="confirmRemoveBudget()"
+	/>
+
 	<div class="container mx-auto py-6">
 		<div class="grid grid-cols-2 gap-4 mb-8 hidden sm:block md:grid">
 			<Card class="hidden sm:block">
@@ -227,7 +263,11 @@ export default defineComponent({
 							>
 								<EditIcon class="w-4 h-4" />
 							</Button>
-							<Button color="danger" fab>
+							<Button
+								color="danger"
+								fab
+								@click="setDeleteAndShowConfirmation(item.id)"
+							>
 								<BanIcon class="w-4 h-4 text-white" />
 							</Button>
 						</div>
