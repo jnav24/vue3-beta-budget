@@ -49,6 +49,7 @@ export default defineComponent({
 		const {
 			getRemoveExpenseList,
 			removeExpense,
+			resetList,
 			setItemToBeRemoved,
 		} = useRemoveExpense();
 		const { formatDate } = useTimestamp();
@@ -74,16 +75,13 @@ export default defineComponent({
 		});
 
 		const confirmRemoveBudget = () => {
-			const { save, expenses } = removeExpense(
+			const { save } = removeExpense(
 				budgets.value as Record<string, Array<any>>
 			);
-			console.log(save);
-			console.log(expenses);
+
 			if (save) {
-				// @todo uncomment line below
-				// budgets.value = expenses;
-				// @todo call endpoint to remove all budgets
-				console.log(getRemoveExpenseList());
+				budgetStore.removeBudgets(getRemoveExpenseList()[0]);
+				resetList();
 			}
 		};
 

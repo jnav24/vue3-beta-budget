@@ -10,7 +10,7 @@ export default function useRemoveExpense() {
 		type: null,
 	};
 
-	const removeExpenseList: Array<{
+	let removeExpenseList: Array<{
 		id: number | string;
 		type: string;
 	}> = [];
@@ -21,6 +21,8 @@ export default function useRemoveExpense() {
 		itemToBeRemoved.type = null;
 		itemToBeRemoved.id = null;
 	};
+
+	const resetList = () => removeExpenseList = [];
 
 	const removeExpense = (expenses: Record<string, BudgetExpense[]>) => {
 		let tempExpenses = JSON.parse(JSON.stringify(expenses));
@@ -54,6 +56,7 @@ export default function useRemoveExpense() {
 	return {
 		getRemoveExpenseList,
 		removeExpense,
+		resetList,
 		setItemToBeRemoved,
 	};
 }

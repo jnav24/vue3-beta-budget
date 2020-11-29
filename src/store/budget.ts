@@ -62,8 +62,9 @@ export const useBudgetStore = createStore({
 	},
 
 	actions: {
-		async deleteBudget() {
-			// ...
+		async removeBudgets(budget: { id: string | number; type: string }) {
+			// @todo build an endpoint for this
+			this.list = this.list.filter(item => item.id !== budget.id);
 		},
 
 		async getBudget(id: string) {
