@@ -1,12 +1,14 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue';
 import BanIcon from '@/components/ui-elements/icons/BanIcon.vue';
+import BudgetModal from '@/components/modals/BudgetModal.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import Card from '@/components/ui-elements/card/Card.vue';
 import CardContent from '@/components/ui-elements/card/CardContent.vue';
 import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
 import ChevronDownIcon from '@/components/ui-elements/icons/ChevronDownIcon.vue';
 import ConfirmationModal from '@/components/modals/ConfirmationModal.vue';
+import CustomBudgetModal from '@/components/modals/CustomBudgetModal.vue';
 import EditIcon from '@/components/ui-elements/icons/EditIcon.vue';
 import FireIcon from '@/components/ui-elements/icons/FireIcon.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
@@ -28,12 +30,14 @@ import YTDSummary from '@/components/partials/YTDSummary.vue';
 export default defineComponent({
 	components: {
 		BanIcon,
+		BudgetModal,
 		Button,
 		Card,
 		CardContent,
 		CardHeader,
 		ChevronDownIcon,
 		ConfirmationModal,
+		CustomBudgetModal,
 		EditIcon,
 		FireIcon,
 		Select,
@@ -64,6 +68,8 @@ export default defineComponent({
 			{ value: 'blank', label: 'Blank Budget', icon: 'ArchiveIcon' },
 		];
 		const showAddBudgetNav = ref(false);
+		const showBudgetModal = ref(false);
+		const showCustomBudgetModal = ref(false);
 		const budgets = computed(() => budgetStore.sortedBudgets);
 		const selectedYear = ref(formatDate('yyyy'));
 		const showConfirmModal = ref(false);
@@ -93,7 +99,13 @@ export default defineComponent({
 		const goToTemplatePage = () => push({ name: 'budget-template' });
 
 		const handleNavClick = (e: string) => {
-			console.log(e);
+			if (e === 'monthly') {
+				showBudgetModal.value = true;
+			}
+
+			if (e === 'blank') {
+				showCustomBudgetModal.value = true;
+			}
 		};
 
 		const setDeleteAndShowConfirmation = (id: string | number) => {
@@ -113,7 +125,9 @@ export default defineComponent({
 			maxSaved,
 			selectedYear,
 			setDeleteAndShowConfirmation,
+			showBudgetModal,
 			showConfirmModal,
+			showCustomBudgetModal,
 			years: computed(() => aggregationStore.allYears),
 		};
 	},
@@ -127,6 +141,10 @@ export default defineComponent({
 		v-model:show="showConfirmModal"
 		@confirm="confirmRemoveBudget()"
 	/>
+
+	<BudgetModal v-model:show="showBudgetModal" />
+
+	<CustomBudgetModal v-model:show="showCustomBudgetModal" />
 
 	<div class="container mx-auto py-6">
 		<div class="grid grid-cols-2 gap-4 mb-8 hidden sm:block md:grid">
