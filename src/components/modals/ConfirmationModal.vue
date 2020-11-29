@@ -14,6 +14,14 @@ export default defineComponent({
 			required: true,
 			type: Boolean,
 		},
+		text: {
+			default: 'Are you sure you want to remove this item?',
+			type: String,
+		},
+		title: {
+			default: 'Remove Item',
+			type: String,
+		},
 	},
 	setup(props, { emit }) {
 		const setClose = ref(false);
@@ -51,18 +59,20 @@ export default defineComponent({
 						class="text-lg leading-6 font-medium text-gray-900"
 						id="modal-headline"
 					>
-						Remove Expense
+						{{ title }}
 					</h3>
 					<div class="mt-2">
 						<p class="text-sm leading-5 text-gray-500">
-							Are you sure you want to remove this expense?
+							{{ text }}
 						</p>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-lg">
+		<div
+			class="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-lg"
+		>
 			<span class="flex w-full rounded-md shadow-sm sm:ml-3 sm:w-auto">
 				<button
 					type="button"

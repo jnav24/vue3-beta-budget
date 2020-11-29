@@ -115,6 +115,8 @@ export default defineComponent({
 
 <template>
 	<ConfirmationModal
+		title="Remove Budget"
+		text="Are you sure you want to remove this budget?"
 		v-model:show="showConfirmModal"
 		@confirm="confirmRemoveBudget()"
 	/>

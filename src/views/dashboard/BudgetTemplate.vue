@@ -151,6 +151,8 @@ export default defineComponent({
 
 <template>
 	<ConfirmationModal
+		title="Remove Expense"
+		text="Are you sure you want to remove this expense?"
 		v-model:show="showConfirmModal"
 		@confirm="confirmRemoveExpense()"
 	/>
