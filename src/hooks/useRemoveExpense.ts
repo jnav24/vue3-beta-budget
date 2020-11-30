@@ -1,4 +1,3 @@
-import { reactive } from 'vue';
 import { BudgetExpense } from '@/store/budget';
 
 export default function useRemoveExpense() {
@@ -22,7 +21,7 @@ export default function useRemoveExpense() {
 		itemToBeRemoved.id = null;
 	};
 
-	const resetList = () => removeExpenseList = [];
+	const resetList = () => (removeExpenseList = []);
 
 	const removeExpense = (expenses: Record<string, BudgetExpense[]>) => {
 		let tempExpenses = JSON.parse(JSON.stringify(expenses));
@@ -30,7 +29,11 @@ export default function useRemoveExpense() {
 
 		if (itemToBeRemoved.id && itemToBeRemoved.type) {
 			removeExpenseList.push(
-				JSON.parse(JSON.stringify(itemToBeRemoved as { id: string | number; type: string }))
+				JSON.parse(
+					JSON.stringify(
+						itemToBeRemoved as { id: string | number; type: string }
+					)
+				)
 			);
 			tempExpenses = {
 				...expenses,
