@@ -99,6 +99,16 @@ export default function useTimestamp() {
 		});
 	};
 
+	const getSetAmountOfYears = (amount: number) => {
+		const currentYear = +formatDate('yyyy');
+		return [...Array(amount).keys()].map(year => {
+			return {
+				label: currentYear - year,
+				value: currentYear - year,
+			};
+		});
+	};
+
 	return {
 		addMonth,
 		addYear,
@@ -111,5 +121,6 @@ export default function useTimestamp() {
 		setDoubleDigits,
 		unix,
 		getStartDayOfMonth,
+		getSetAmountOfYears,
 	};
 }
