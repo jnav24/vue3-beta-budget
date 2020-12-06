@@ -70,7 +70,7 @@ export default defineComponent({
 
 		const saveBudget = async () => {
 			await budgetStore.removeBudgetExpenses(
-				budget.value.id,
+				budget.value.id as number,
 				getRemoveExpenseList()
 			);
 			const res = await budgetStore.updateBudget(budget.value);

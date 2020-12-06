@@ -5,7 +5,11 @@ import Form from '@/components/ui-elements/form/Form';
 import Input from '@/components/ui-elements/form/Input.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
 import Modal from './Modal.vue';
+import { useBudgetStore, useTypesStore } from '@/store';
 import useTimestamp from '@/hooks/useTimestamp';
+import useUtils from '@/hooks/useUtils';
+import { BudgetList } from '@/store/budget';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
 	components: {
@@ -22,7 +26,11 @@ export default defineComponent({
 		},
 	},
 	setup(props, { emit }) {
+		const budgetStore = useBudgetStore();
+		const typesStore = useTypesStore();
 		const { getAllMonths, getSetAmountOfYears } = useTimestamp();
+		const { arrayColumn } = useUtils();
+		const { push } = useRouter();
 
 		const form = reactive({
 			name: {
@@ -45,7 +53,27 @@ export default defineComponent({
 			setTimeout(() => (setClose.value = false), 1000);
 		};
 
+		const addNewBudget = async () => {
+			const types = arrayColumn('slug', typesStore.bills as any);
+			const data: BudgetList = {
+				name: form.name.value,
+				budget_cycle: `${form.year.value}-${form.month.value}-01 00:00:00`,
+				expenses: {},
+			};
+
+			types.forEach(type => ((data.expenses as any)[type] = []));
+			const response = await budgetStore.saveBudget(data);
+
+			if (response.success) {
+				push({
+					name: 'budget-edit',
+					params: { id: response.data.id },
+				});
+			}
+		};
+
 		return {
+			addNewBudget,
 			closeModal: (e: boolean) => emit('update:show', e),
 			form,
 			months: getAllMonths('full'),
@@ -99,7 +127,11 @@ export default defineComponent({
 				class="bg-gray-100 rounded-b-lg p-4 flex flex-row items-end justify-end"
 			>
 				<Button @click="setCloseModal(false)">Cancel</Button>
-				<Button color="secondary" :is-disabled="!valid">
+				<Button
+					color="secondary"
+					:is-disabled="!valid"
+					@click="addNewBudget()"
+				>
 					Add Budget
 				</Button>
 			</div>
