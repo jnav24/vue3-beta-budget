@@ -116,7 +116,7 @@ export const useBudgetStore = createStore({
 
 			if (response.success) {
 				const result: BudgetList = getDataFromResponse(response);
-				this.list = [...this.list, result];
+				this.list = [result, ...this.list];
 			}
 
 			return {
