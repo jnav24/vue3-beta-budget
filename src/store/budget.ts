@@ -28,7 +28,7 @@ export type BudgetExpense = {
 };
 
 export type BudgetList = {
-	id: number;
+	id?: number;
 	name: string;
 	budget_cycle: string;
 	expenses?: Record<string, Array<BudgetExpense>>;
@@ -101,8 +101,28 @@ export const useBudgetStore = createStore({
 			}
 		},
 
-		async saveBudget() {
-			// ...
+		async saveBudget(payload: BudgetList) {
+			const { postAuth, getDataFromResponse } = useHttp();
+			const data = {
+				path: 'budgets',
+				params: {
+					name: payload.name,
+					cycle: payload.budget_cycle,
+					expenses: payload.expenses,
+				},
+			};
+
+			const response = await postAuth(data);
+
+			if (response.success) {
+				const result: BudgetList = getDataFromResponse(response);
+				this.list = [...this.list, result];
+			}
+
+			return {
+				success: response.success,
+				data: getDataFromResponse(response),
+			};
 		},
 
 		async updateBudget(payload: BudgetList) {
