@@ -4,9 +4,11 @@ import Button from '@/components/ui-elements/form/Button.vue';
 import Form from '@/components/ui-elements/form/Form';
 import Modal from './Modal.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
-import { useAggregationStore, useBudgetStore } from '@/store';
+import { useAggregationStore, useBudgetStore, useTemplateStore } from '@/store';
 import useTimestamp from '@/hooks/useTimestamp';
 import useUtils from '@/hooks/useUtils';
+import { useRouter } from 'vue-router';
+import { BudgetExpense } from '@/store/budget';
 
 export default defineComponent({
 	components: {
@@ -24,8 +26,16 @@ export default defineComponent({
 	setup(props, { emit }) {
 		const aggregationStore = useAggregationStore();
 		const budgetStore = useBudgetStore();
-		const { addMonth, addYear, formatDate, getAllMonths } = useTimestamp();
+		const templateStore = useTemplateStore();
+		const {
+			addMonth,
+			addYear,
+			formatDate,
+			getAllMonths,
+			generateTempId,
+		} = useTimestamp();
 		const { arrayColumn } = useUtils();
+		const { push } = useRouter();
 
 		const form = reactive({
 			month: {
@@ -45,6 +55,43 @@ export default defineComponent({
 		const setClose = ref(false);
 		const valid = ref(false);
 		const years = computed(() => aggregationStore.allYears);
+
+		const getTemplateExpenses = () => {
+			const data: Record<string, Array<BudgetExpense>> = JSON.parse(
+				JSON.stringify(templateStore.expenses)
+			);
+
+			for (const expense of Object.keys(data)) {
+				data[expense].map((item: BudgetExpense) => {
+					if (expense === 'banks') {
+						(item as any).bank_template_id = item.id;
+					}
+
+					item.id = generateTempId();
+					return item;
+				});
+			}
+
+			return data;
+		};
+
+		const addNewBudget = async () => {
+			const cycle = `${form.year.value}-${form.month.value}-01 00:00:00`;
+			const data = {
+				name: formatDate('MMMM', cycle),
+				budget_cycle: cycle,
+				expenses: getTemplateExpenses(),
+			};
+
+			const response = await budgetStore.saveBudget(data);
+
+			if (response.success) {
+				push({
+					name: 'budget-edit',
+					params: { id: response.data.id },
+				});
+			}
+		};
 
 		watchEffect(() => {
 			const allMonths = getAllMonths('full');
@@ -118,6 +165,7 @@ export default defineComponent({
 		};
 
 		return {
+			addNewBudget,
 			closeModal: (e: boolean) => emit('update:show', e),
 			form,
 			setClose,
@@ -162,7 +210,11 @@ export default defineComponent({
 				class="bg-gray-100 rounded-b-lg p-4 flex flex-row items-end justify-end"
 			>
 				<Button @click="setCloseModal(false)">Cancel</Button>
-				<Button color="secondary" :is-disabled="!valid">
+				<Button
+					color="secondary"
+					:is-disabled="!valid"
+					@click="addNewBudget()"
+				>
 					New Budget
 				</Button>
 			</div>
