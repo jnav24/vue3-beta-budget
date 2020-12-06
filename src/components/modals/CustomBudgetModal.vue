@@ -98,7 +98,7 @@ export default defineComponent({
 			<div
 				class="bg-gray-100 rounded-b-lg p-4 flex flex-row items-end justify-end"
 			>
-				<Button>Cancel</Button>
+				<Button @click="setCloseModal(false)">Cancel</Button>
 				<Button color="secondary" :is-disabled="!valid">
 					Add Budget
 				</Button>
