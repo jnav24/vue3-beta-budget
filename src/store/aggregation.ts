@@ -46,7 +46,7 @@ export const useAggregationStore = createStore({
 
 	actions: {
 		addEmptyYear(year: string) {
-			if (year.length === 4 && /^\d+$/.test(year)) {
+			if (year.length === 4 && /^\d+$/.test(year) && !this.budget[year]) {
 				this.budget[year] = {
 					earned: [],
 					saved: [],

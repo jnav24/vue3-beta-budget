@@ -24,7 +24,7 @@ export default defineComponent({
 	setup(props, { emit }) {
 		const aggregationStore = useAggregationStore();
 		const budgetStore = useBudgetStore();
-		const { addYear, formatDate, getAllMonths } = useTimestamp();
+		const { addMonth, addYear, formatDate, getAllMonths } = useTimestamp();
 		const { arrayColumn } = useUtils();
 
 		const form = reactive({
@@ -38,7 +38,7 @@ export default defineComponent({
 			},
 		});
 
-		const recentBudget = computed(
+		const currentYearBudgetList = computed(
 			() => budgetStore.sortedBudgets[form.year.value] ?? []
 		);
 		const months = ref<any>([]);
@@ -46,25 +46,59 @@ export default defineComponent({
 		const valid = ref(false);
 		const years = computed(() => aggregationStore.allYears);
 
-		watch(recentBudget, recent => {
+		watch(currentYearBudgetList, budgets => {
 			const allMonths = getAllMonths('full');
-			const monthList = arrayColumn('name', recent as any);
+			const currentMonth = +formatDate('MM');
+			let maxMonth = currentMonth + 1;
+			const nextMonth = addMonth(1);
+			const selectedYear = computed(() =>
+				years.value.find(year => year.value === form.year.value)
+			);
 
-			if (formatDate('MM') === '12') {
+			if (currentMonth === 12) {
+				maxMonth = currentMonth;
 				aggregationStore.addEmptyYear(
-					formatDate('yyyy', addYear(1).toDateString())
+					formatDate('yyyy', nextMonth.toDateString())
 				);
 			}
 
-			if (recent && recent.length) {
+			if (!budgets && !selectedYear.value) {
+				aggregationStore.addEmptyYear(form.year.value);
+			}
+
+			if (budgets && budgets.length) {
+				const monthList = arrayColumn('name', budgets as any);
+
+				if (monthList.includes('December') && !selectedYear.value) {
+					aggregationStore.addEmptyYear(
+						formatDate('yyyy', addYear(1).toDateString())
+					);
+				}
+
+				if (!monthList.includes(formatDate('MMMM'))) {
+					maxMonth = currentMonth;
+				}
+
 				months.value = allMonths.filter(
-					month => !monthList.includes(month.label)
+					month =>
+						!monthList.includes(month.label) &&
+						+month.value <= maxMonth
 				);
 			} else {
 				months.value = [allMonths[0]];
 			}
 
 			if (months.value.length) {
+				const budgetMonths = arrayColumn('label', months.value);
+				const nextYear = formatDate('yyyy', addYear(1).toDateString());
+
+				if (
+					!budgetMonths.includes('December') &&
+					years.value.find(year => year.value === nextYear)
+				) {
+					form.year.value = nextYear;
+				}
+
 				form.month.value = months.value[months.value.length - 1].value;
 			} else {
 				valid.value = false;
