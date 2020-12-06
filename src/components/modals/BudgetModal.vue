@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, defineComponent, reactive, ref, watch } from 'vue';
+import { computed, defineComponent, reactive, ref, watchEffect } from 'vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import Form from '@/components/ui-elements/form/Form';
 import Modal from './Modal.vue';
@@ -46,7 +46,7 @@ export default defineComponent({
 		const valid = ref(false);
 		const years = computed(() => aggregationStore.allYears);
 
-		watch(currentYearBudgetList, budgets => {
+		watchEffect(() => {
 			const allMonths = getAllMonths('full');
 			const currentMonth = +formatDate('MM');
 			let maxMonth = currentMonth + 1;
@@ -62,12 +62,18 @@ export default defineComponent({
 				);
 			}
 
-			if (!budgets && !selectedYear.value) {
+			if (!currentYearBudgetList.value && !selectedYear.value) {
 				aggregationStore.addEmptyYear(form.year.value);
 			}
 
-			if (budgets && budgets.length) {
-				const monthList = arrayColumn('name', budgets as any);
+			if (
+				currentYearBudgetList.value &&
+				currentYearBudgetList.value.length
+			) {
+				const monthList = arrayColumn(
+					'name',
+					currentYearBudgetList.value as any
+				);
 
 				if (monthList.includes('December') && !selectedYear.value) {
 					aggregationStore.addEmptyYear(
