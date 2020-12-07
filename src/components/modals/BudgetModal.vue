@@ -1,5 +1,12 @@
 <script lang="ts">
-import { computed, defineComponent, reactive, ref, watchEffect } from 'vue';
+import {
+	computed,
+	defineComponent,
+	reactive,
+	ref,
+	watch,
+	watchEffect,
+} from 'vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import Form from '@/components/ui-elements/form/Form';
 import Modal from './Modal.vue';
@@ -142,22 +149,32 @@ export default defineComponent({
 			}
 
 			if (months.value.length) {
-				const budgetMonths = arrayColumn('label', months.value);
-				const nextYear = formatDate('yyyy', addYear(1).toDateString());
-
-				if (
-					!budgetMonths.includes('December') &&
-					years.value.find(year => year.value === nextYear)
-				) {
-					form.year.value = nextYear;
-				}
-
 				form.month.value = months.value[months.value.length - 1].value;
 			} else {
 				valid.value = false;
 				form.month.value = '';
 			}
 		});
+
+		watch(
+			() => props.show,
+			visible => {
+				if (visible) {
+					const budgetMonths = arrayColumn('label', months.value);
+					const nextYear = formatDate(
+						'yyyy',
+						addYear(1).toDateString()
+					);
+
+					if (
+						!budgetMonths.includes('December') &&
+						years.value.find(year => year.value === nextYear)
+					) {
+						form.year.value = nextYear;
+					}
+				}
+			}
+		);
 
 		const setCloseModal = () => {
 			setClose.value = true;
