@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import Card from '@/components/ui-elements/card/Card.vue';
 import CardContent from '@/components/ui-elements/card/CardContent.vue';
 import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
@@ -9,6 +9,7 @@ import ReportsForm from '@/components/partials/ReportsForm.vue';
 import ReportsSkeleton from '@/components/partials/ReportsSkeleton.vue';
 import ReportsSummary from '@/components/partials/ReportsSummary.vue';
 import ReportsTable from '@/components/tables/ReportsTable.vue';
+import useHttp from '@/hooks/useHttp';
 
 export default defineComponent({
 	components: {
@@ -23,11 +24,30 @@ export default defineComponent({
 		ReportsTable,
 	},
 	setup() {
+		const { postAuth, getDataFromResponse } = useHttp();
+
 		const hasSearched = ref(false);
 		const isLoading = ref(false);
-		const searchResults = reactive([]);
+		const searchResults = ref([]);
 
-		return { hasSearched, isLoading, searchResults };
+		const runSearch = async (params: Record<string, string>) => {
+			isLoading.value = true;
+			const data = {
+				path: 'search',
+				params,
+			};
+			const response = await postAuth(data);
+
+			if (response.success) {
+				console.log(getDataFromResponse(response));
+				searchResults.value = getDataFromResponse(response);
+			}
+
+			hasSearched.value = true;
+			isLoading.value = false;
+		};
+
+		return { hasSearched, isLoading, runSearch, searchResults };
 	},
 });
 </script>
@@ -35,7 +55,7 @@ export default defineComponent({
 <template>
 	<div class="bg-gray-100 w-full">
 		<div class="container mx-auto py-8">
-			<ReportsForm />
+			<ReportsForm @run-search="runSearch($event)" />
 		</div>
 	</div>
 
