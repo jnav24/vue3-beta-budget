@@ -1,5 +1,13 @@
 <script lang="ts">
-import { computed, defineComponent, inject, onMounted, ref, watch } from 'vue';
+import {
+	computed,
+	defineComponent,
+	inject,
+	onMounted,
+	nextTick,
+	ref,
+	watch,
+} from 'vue';
 import ChevronDownIcon from '@/components/ui-elements/icons/ChevronDownIcon.vue';
 import { FormProvider } from '@/components/ui-elements/form/Form';
 import Label from '@/components/ui-elements/form/Label.vue';
@@ -40,6 +48,10 @@ export default defineComponent({
 			required: true,
 			type: String,
 		},
+		isDisabled: {
+			default: false,
+			type: Boolean,
+		},
 	},
 	setup(props, { emit }) {
 		const error = ref(false);
@@ -72,6 +84,12 @@ export default defineComponent({
 			return props.placeholder;
 		});
 
+		const handleClick = () => {
+			if (!props.isDisabled) {
+				selected.value = !selected.value;
+			}
+		};
+
 		const setValue = (value: string) => {
 			if (FormContext) {
 				error.value = FormContext.validateField(labelId.value, value);
@@ -81,9 +99,29 @@ export default defineComponent({
 		};
 
 		const blurEvent = () => {
-			selected.value = false;
-			setValue(props.value);
+			if (!props.isDisabled) {
+				selected.value = false;
+				setValue(props.value);
+			}
 		};
+
+		watch(
+			() => props.value,
+			val => {
+				nextTick(() => {
+					if (FormContext) {
+						if (!props.isDisabled) {
+							error.value = FormContext.validateField(
+								labelId.value,
+								val
+							);
+						} else {
+							FormContext.validateField(labelId.value, val);
+						}
+					}
+				});
+			}
+		);
 
 		watch(selected, n => {
 			if (!n) {
@@ -105,6 +143,7 @@ export default defineComponent({
 			dropDownItems,
 			error,
 			getPlaceholder,
+			handleClick,
 			selected,
 			setValue,
 		};
@@ -116,16 +155,18 @@ export default defineComponent({
 	<div>
 		<Label :error="error" :labelId="labelId" :label="label" />
 		<div
-			class="border-solid border cursor-pointer px-2 py-2 mt-2 rounded-md flex items-center justify-between outline-none transform relative bg-white"
+			class="border-solid border px-2 py-2 mt-2 rounded-md flex items-center justify-between outline-none transform relative"
 			:class="{
-				'border-gray-300 hover:border-gray-600 text-gray-600 hover:text-gray-700 focus:border-primary transition duration-300': !error,
-				'border-red-600 text-red-600': error,
+				'bg-gray-200 border-gray-300 cursor-text text-gray-500': isDisabled,
+				'border-gray-300 hover:border-gray-600 bg-white cursor-pointer text-gray-600 hover:text-gray-700 focus:border-primary transition duration-300':
+					!error && !isDisabled,
+				'border-red-600 bg-white text-red-600': error && !isDisabled,
 				'z-50': selected,
 				'z-0': !selected,
 			}"
 			tabindex="0"
 			@blur="blurEvent()"
-			@click="selected = !selected"
+			@click="handleClick()"
 		>
 			<span class="flex-1">{{ getPlaceholder }}</span>
 			<ChevronDownIcon

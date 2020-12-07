@@ -28,7 +28,7 @@ export type BudgetExpense = {
 };
 
 export type BudgetList = {
-	id: number;
+	id?: number;
 	name: string;
 	budget_cycle: string;
 	expenses?: Record<string, Array<BudgetExpense>>;
@@ -62,8 +62,9 @@ export const useBudgetStore = createStore({
 	},
 
 	actions: {
-		async deleteBudget() {
-			// ...
+		async removeBudgets(budget: { id: string | number; type: string }) {
+			// @todo build an endpoint for this
+			this.list = this.list.filter(item => item.id !== budget.id);
 		},
 
 		async getBudget(id: string) {
@@ -100,8 +101,28 @@ export const useBudgetStore = createStore({
 			}
 		},
 
-		async saveBudget() {
-			// ...
+		async saveBudget(payload: BudgetList) {
+			const { postAuth, getDataFromResponse } = useHttp();
+			const data = {
+				path: 'budgets',
+				params: {
+					name: payload.name,
+					cycle: payload.budget_cycle,
+					expenses: payload.expenses,
+				},
+			};
+
+			const response = await postAuth(data);
+
+			if (response.success) {
+				const result: BudgetList = getDataFromResponse(response);
+				this.list = [result, ...this.list];
+			}
+
+			return {
+				success: response.success,
+				data: getDataFromResponse(response),
+			};
 		},
 
 		async updateBudget(payload: BudgetList) {
@@ -132,6 +153,36 @@ export const useBudgetStore = createStore({
 			}
 
 			return { success: response.success, error: response.error };
+		},
+
+		// @todo there is no endpoint for this; have to create it
+		async removeBudgetExpenses(
+			id: string | number,
+			expenses: Array<{ id: string | number; type: string }>
+		) {
+			const { deleteAuth } = useHttp();
+			const data = {
+				path: 'budgets',
+				params: {
+					expenses,
+					id,
+				},
+			};
+
+			const response = await deleteAuth(data);
+
+			if (response.success) {
+				const index = this.list.findIndex(list => list.id === id);
+
+				if (index > -1) {
+					expenses.forEach(expense => {
+						(this.list[index].expenses as any)[expense.type] = (this
+							.list[index].expenses as any)[expense.type].filter(
+							(exp: BudgetExpense) => exp.id !== expense.id
+						);
+					});
+				}
+			}
 		},
 	},
 });

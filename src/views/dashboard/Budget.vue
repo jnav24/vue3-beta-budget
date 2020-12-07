@@ -1,11 +1,14 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue';
 import BanIcon from '@/components/ui-elements/icons/BanIcon.vue';
+import BudgetModal from '@/components/modals/BudgetModal.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import Card from '@/components/ui-elements/card/Card.vue';
 import CardContent from '@/components/ui-elements/card/CardContent.vue';
 import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
 import ChevronDownIcon from '@/components/ui-elements/icons/ChevronDownIcon.vue';
+import ConfirmationModal from '@/components/modals/ConfirmationModal.vue';
+import CustomBudgetModal from '@/components/modals/CustomBudgetModal.vue';
 import EditIcon from '@/components/ui-elements/icons/EditIcon.vue';
 import FireIcon from '@/components/ui-elements/icons/FireIcon.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
@@ -14,9 +17,11 @@ import SubNav from '@/components/partials/SubNav.vue';
 import SubNavItems from '@/components/partials/SubNavItems.vue';
 import TrendDownIcon from '@/components/ui-elements/icons/TrendDownIcon.vue';
 import TrendUpIcon from '@/components/ui-elements/icons/TrendUpIcon.vue';
+import WarningIcon from '@/components/ui-elements/icons/WarningIcon.vue';
 import { useBudgetStore } from '@/store';
 import { useRouter } from 'vue-router';
 import useCurrency from '@/hooks/useCurrency';
+import useRemoveExpense from '@/hooks/useRemoveExpense';
 import useTimestamp from '@/hooks/useTimestamp';
 import useUtils from '@/hooks/useUtils';
 import { useAggregationStore } from '@/store';
@@ -25,11 +30,14 @@ import YTDSummary from '@/components/partials/YTDSummary.vue';
 export default defineComponent({
 	components: {
 		BanIcon,
+		BudgetModal,
 		Button,
 		Card,
 		CardContent,
 		CardHeader,
 		ChevronDownIcon,
+		ConfirmationModal,
+		CustomBudgetModal,
 		EditIcon,
 		FireIcon,
 		Select,
@@ -38,23 +46,33 @@ export default defineComponent({
 		SubNavItems,
 		TrendDownIcon,
 		TrendUpIcon,
+		WarningIcon,
 		YTDSummary,
 	},
 	setup() {
 		const { arrayColumn } = useUtils();
 		const { push } = useRouter();
+		const {
+			getRemoveExpenseList,
+			removeExpense,
+			resetList,
+			setItemToBeRemoved,
+		} = useRemoveExpense();
 		const { formatDate } = useTimestamp();
 		const { formatDollar } = useCurrency();
 		const budgetStore = useBudgetStore();
 		const aggregationStore = useAggregationStore();
 
 		const addBudgetItems = [
-			{ value: '', label: 'Monthly Budget', icon: 'CalendarIcon' },
-			{ value: '', label: 'Blank Budget', icon: 'ArchiveIcon' },
+			{ value: 'monthly', label: 'Monthly Budget', icon: 'CalendarIcon' },
+			{ value: 'blank', label: 'Blank Budget', icon: 'ArchiveIcon' },
 		];
 		const showAddBudgetNav = ref(false);
+		const showBudgetModal = ref(false);
+		const showCustomBudgetModal = ref(false);
 		const budgets = computed(() => budgetStore.sortedBudgets);
 		const selectedYear = ref(formatDate('yyyy'));
+		const showConfirmModal = ref(false);
 		const maxSaved = computed(() => {
 			return Math.max(
 				...arrayColumn(
@@ -64,20 +82,52 @@ export default defineComponent({
 			).toString();
 		});
 
+		const confirmRemoveBudget = () => {
+			const { save } = removeExpense(
+				budgets.value as Record<string, Array<any>>
+			);
+
+			if (save) {
+				budgetStore.removeBudgets(getRemoveExpenseList()[0]);
+				resetList();
+			}
+		};
+
 		const goToEditPage = (id: string) =>
 			push({ name: 'budget-edit', params: { id } });
 
 		const goToTemplatePage = () => push({ name: 'budget-template' });
 
+		const handleNavClick = (e: string) => {
+			if (e === 'monthly') {
+				showBudgetModal.value = true;
+			}
+
+			if (e === 'blank') {
+				showCustomBudgetModal.value = true;
+			}
+		};
+
+		const setDeleteAndShowConfirmation = (id: string | number) => {
+			setItemToBeRemoved({ id, category: selectedYear.value });
+			showConfirmModal.value = true;
+		};
+
 		return {
 			addBudgetItems,
+			confirmRemoveBudget,
 			showAddBudgetNav,
 			budgets,
 			formatDollar,
 			goToEditPage,
 			goToTemplatePage,
+			handleNavClick,
 			maxSaved,
 			selectedYear,
+			setDeleteAndShowConfirmation,
+			showBudgetModal,
+			showConfirmModal,
+			showCustomBudgetModal,
 			years: computed(() => aggregationStore.allYears),
 		};
 	},
@@ -85,6 +135,17 @@ export default defineComponent({
 </script>
 
 <template>
+	<ConfirmationModal
+		title="Remove Budget"
+		text="Are you sure you want to remove this budget?"
+		v-model:show="showConfirmModal"
+		@confirm="confirmRemoveBudget()"
+	/>
+
+	<BudgetModal v-model:show="showBudgetModal" />
+
+	<CustomBudgetModal v-model:show="showCustomBudgetModal" />
+
 	<div class="container mx-auto py-6">
 		<div class="grid grid-cols-2 gap-4 mb-8 hidden sm:block md:grid">
 			<Card class="hidden sm:block">
@@ -165,7 +226,11 @@ export default defineComponent({
 					</span>
 				</Button>
 
-				<SubNavItems :items="addBudgetItems" :show="showAddBudgetNav" />
+				<SubNavItems
+					:items="addBudgetItems"
+					:show="showAddBudgetNav"
+					@nav-clicked="handleNavClick($event)"
+				/>
 			</SubNav>
 
 			<Select
@@ -183,7 +248,7 @@ export default defineComponent({
 				v-model:selected-item="selectedYear"
 			/>
 			<Card class="col-span-4 md:col-span-3 ml-3 mr-4 sm:mx-0">
-				<CardHeader class="bg-gray-100">
+				<CardHeader class="bg-gray-100 rounded-t-lg">
 					<div
 						class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-gray-900"
 					>
@@ -194,6 +259,17 @@ export default defineComponent({
 					</div>
 				</CardHeader>
 				<CardContent class="px-0">
+					<div
+						v-if="
+							!budgets[selectedYear] ||
+								!budgets[selectedYear].length
+						"
+						class="py-8 text-gray-500 flex flex-col items-center justify-center"
+					>
+						<WarningIcon class="w-8 h-8" />
+						<span>There are no budgets for {{ selectedYear }}</span>
+					</div>
+
 					<div
 						v-for="item in budgets[selectedYear]"
 						:key="item.id"
@@ -227,7 +303,11 @@ export default defineComponent({
 							>
 								<EditIcon class="w-4 h-4" />
 							</Button>
-							<Button color="danger" fab>
+							<Button
+								color="danger"
+								fab
+								@click="setDeleteAndShowConfirmation(item.id)"
+							>
 								<BanIcon class="w-4 h-4 text-white" />
 							</Button>
 						</div>

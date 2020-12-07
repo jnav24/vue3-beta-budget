@@ -29,8 +29,8 @@ export default defineComponent({
 		const showMobileNav = ref(false);
 		const showSubNav = ref(false);
 		const profileLinks = [
-			{ value: '', label: 'Profile', icon: 'UserIcon' },
-			{ value: { name: 'logout' }, label: 'Logout', icon: 'LogoutIcon' },
+			{ to: '', label: 'Profile', icon: 'UserIcon' },
+			{ to: { name: 'logout' }, label: 'Logout', icon: 'LogoutIcon' },
 		];
 		const menu = [
 			{ link: { name: 'home' }, label: 'Home', icon: 'HomeIcon' },

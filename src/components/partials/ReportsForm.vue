@@ -53,7 +53,7 @@ export default defineComponent({
 			() => !['vehicles'].includes(form.bill_type.value)
 		);
 		const showTypesSelect = computed(
-			() => !['miscellaneous', 'incomes'].includes(form.bill_type.value)
+			() => !['miscellaneous'].includes(form.bill_type.value)
 		);
 		const billTypes: any[] = typesStore.bills;
 		const vehicles: any[] = [];
@@ -173,6 +173,7 @@ export default defineComponent({
 		<div
 			class="flex flex-col sm:flex-row justify-center items-center mt-6 px-4 sm:px-0"
 		>
+			<Button class="w-full sm:w-auto" @click="resetForm()">Reset</Button>
 			<Button
 				class="w-full sm:w-auto mb-2 sm:mb-0"
 				color="secondary"
@@ -180,7 +181,6 @@ export default defineComponent({
 			>
 				Search
 			</Button>
-			<Button class="w-full sm:w-auto" @click="resetForm()">Reset</Button>
 		</div>
 	</Form>
 </template>
