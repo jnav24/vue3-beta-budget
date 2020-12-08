@@ -5,6 +5,7 @@ import CardContent from '@/components/ui-elements/card/CardContent.vue';
 import CardFooter from '@/components/ui-elements/card/CardFooter.vue';
 import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
 import WarningIcon from '@/components/ui-elements/icons/WarningIcon.vue';
+import useBudgetTable from '@/hooks/useBudgetTable';
 import useCurrency from '@/hooks/useCurrency';
 import useTimestamp from '@/hooks/useTimestamp';
 import useUtils from '@/hooks/useUtils';
@@ -28,6 +29,7 @@ export default defineComponent({
 		},
 	},
 	setup(props, { emit }) {
+		const { getExpenseValue } = useBudgetTable();
 		const { formatDollar } = useCurrency();
 		const { formatDate } = useTimestamp();
 		const { toTitleCase } = useUtils();
@@ -37,18 +39,18 @@ export default defineComponent({
 
 		const setHeaders = () => {
 			if (props.type === 'vehicles') {
-				headers.push('Vehicle');
-				headers.push('Mileage');
+				headers.push('vehicle');
+				headers.push('mileage');
 			} else {
-				headers.push('Name');
+				headers.push('name');
 			}
 
 			if (props.type !== 'miscellaneous') {
-				headers.push('Type');
+				headers.push('type');
 			}
 
 			if (!['banks', 'investments'].includes(props.type)) {
-				headers.push('Paid Date');
+				headers.push('paid_date');
 			}
 
 			if (
@@ -56,10 +58,10 @@ export default defineComponent({
 					props.type
 				)
 			) {
-				headers.push('Balance');
+				headers.push('balance');
 			}
 
-			headers.push('Amount');
+			headers.push('amount');
 		};
 
 		const setTotalAmount = () => {
@@ -79,7 +81,7 @@ export default defineComponent({
 			setTotalAmount();
 		});
 
-		return { formatDate, formatDollar, headers, total, toTitleCase };
+		return { formatDate, formatDollar, getExpenseValue, headers, total, toTitleCase };
 	},
 });
 </script>
@@ -111,7 +113,7 @@ export default defineComponent({
 						v-for="(header, index) in headers"
 						:key="index"
 					>
-						{{ header }}
+						{{ toTitleCase(header, '_') }}
 					</div>
 				</div>
 			</CardHeader>
@@ -144,8 +146,7 @@ export default defineComponent({
 							].includes(header),
 						}"
 					>
-						<!-- @todo get elements from data -->
-						{{ header }}
+						{{ getExpenseValue(header, item) }}
 					</div>
 				</div>
 			</CardContent>
