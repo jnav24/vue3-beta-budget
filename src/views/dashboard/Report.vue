@@ -26,12 +26,14 @@ export default defineComponent({
 	setup() {
 		const { postAuth, getDataFromResponse } = useHttp();
 
+		const type = ref('');
 		const hasSearched = ref(false);
 		const isLoading = ref(false);
 		const searchResults = ref([]);
 
 		const runSearch = async (params: Record<string, string>) => {
 			isLoading.value = true;
+			type.value = params.billType;
 			const data = {
 				path: 'search',
 				params,
@@ -47,7 +49,7 @@ export default defineComponent({
 			isLoading.value = false;
 		};
 
-		return { hasSearched, isLoading, runSearch, searchResults };
+		return { hasSearched, isLoading, runSearch, searchResults, type };
 	},
 });
 </script>
@@ -127,9 +129,11 @@ export default defineComponent({
 			</Card>
 		</div>
 
-		<ReportsTable :data="[]" type="banks" />
-		<ReportsTable :data="[]" type="vehicles" />
-		<ReportsTable :data="[]" type="credit-cards" />
-		<ReportsTable :data="[]" type="Banks" />
+		<ReportsTable
+			v-for="results in searchResults"
+			:key="results.id"
+			:data="results"
+			:type="type"
+		/>
 	</main>
 </template>

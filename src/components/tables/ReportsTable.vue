@@ -1,10 +1,12 @@
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue';
+import { defineComponent, watchEffect } from 'vue';
 import Card from '@/components/ui-elements/card/Card.vue';
 import CardContent from '@/components/ui-elements/card/CardContent.vue';
 import CardFooter from '@/components/ui-elements/card/CardFooter.vue';
 import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
 import WarningIcon from '@/components/ui-elements/icons/WarningIcon.vue';
+import useCurrency from '@/hooks/useCurrency';
+import useTimestamp from '@/hooks/useTimestamp';
 import useUtils from '@/hooks/useUtils';
 
 export default defineComponent({
@@ -26,7 +28,10 @@ export default defineComponent({
 		},
 	},
 	setup(props, { emit }) {
+		const { formatDollar } = useCurrency();
+		const { formatDate } = useTimestamp();
 		const { toTitleCase } = useUtils();
+
 		const headers: string[] = [];
 		let total = 0;
 
@@ -58,20 +63,21 @@ export default defineComponent({
 		};
 
 		const setTotalAmount = () => {
-			total = (props.data as Array<
-				Record<string, { amount: number }>
-			>).reduce((acc, item) => {
-				return acc + Number(item.amount);
-			}, 0);
-			emit('set-table-total', total);
+			if (props.data) {
+				total = (props.data as any)[props.type]
+					.reduce((acc: any, item: any) => {
+						return acc + Number(item.amount);
+					}, 0);
+				emit('set-table-total', total);
+			}
 		};
 
-		onMounted(() => {
+		watchEffect(() => {
 			setHeaders();
 			setTotalAmount();
 		});
 
-		return { headers, total, toTitleCase };
+		return { formatDate, formatDollar, headers, total, toTitleCase };
 	},
 });
 </script>
@@ -80,7 +86,7 @@ export default defineComponent({
 	<section class="mb-24">
 		<div class="mt-4 flex flex-row items-center justify-between">
 			<h2 class="text-2xl text-gray-600 font-body">
-				January
+				{{ formatDate('MMMM', data.budget_cycle) }}
 			</h2>
 		</div>
 
@@ -110,7 +116,7 @@ export default defineComponent({
 
 			<CardContent>
 				<div
-					v-if="!data.length"
+					v-if="!data[type].length"
 					class="py-16 text-gray-500 flex flex-col items-center justify-center"
 				>
 					<WarningIcon class="w-8 h-8" />
@@ -118,7 +124,7 @@ export default defineComponent({
 				</div>
 
 				<div
-					v-for="item in data"
+					v-for="item in data[type]"
 					:key="item.id"
 					:class="
 						`grid gap-2 grid-cols-2 sm:grid-cols-${headers.length} text-gray-700 py-4 even:bg-gray-100 items-center`
@@ -127,7 +133,7 @@ export default defineComponent({
 					<div
 						v-for="(header, index) in headers"
 						:key="index"
-						class="col-span-1"
+						class="col-span-1 first:pl-2"
 						:class="{
 							'hidden sm:block': ![
 								'Name',
@@ -143,11 +149,11 @@ export default defineComponent({
 			</CardContent>
 
 			<CardFooter
-				class="bg-gray-100 overflow-hidden pt-2 rounded-b text-right"
+				class="bg-gray-100 overflow-hidden mt-4 pt-2 rounded-b text-right"
 			>
 				<span class="text-gray-600 mr-2 text-base">Total</span>
 				<span class="font-bold text-gray-700 text-lg">
-					${{ total }}
+					${{ formatDollar(total) }}
 				</span>
 			</CardFooter>
 		</Card>
