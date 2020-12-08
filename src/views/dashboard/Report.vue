@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, reactive, ref, watch } from 'vue';
 import Card from '@/components/ui-elements/card/Card.vue';
 import CardContent from '@/components/ui-elements/card/CardContent.vue';
 import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
@@ -9,7 +9,9 @@ import ReportsForm from '@/components/partials/ReportsForm.vue';
 import ReportsSkeleton from '@/components/partials/ReportsSkeleton.vue';
 import ReportsSummary from '@/components/partials/ReportsSummary.vue';
 import ReportsTable from '@/components/tables/ReportsTable.vue';
+import useCurrency from '@/hooks/useCurrency';
 import useHttp from '@/hooks/useHttp';
+import useTimestamp from '@/hooks/useTimestamp';
 
 export default defineComponent({
 	components: {
@@ -24,12 +26,36 @@ export default defineComponent({
 		ReportsTable,
 	},
 	setup() {
+		const { formatDollar } = useCurrency();
 		const { postAuth, getDataFromResponse } = useHttp();
+		const { formatDate } = useTimestamp();
 
+		const averageBalance = ref('0.00');
+		const endBalance = reactive({
+			amount: '',
+			month: '',
+		});
+		const highestBalance = reactive({
+			amount: '',
+			month: '',
+		});
+		const lowestBalance = reactive({
+			amount: '',
+			month: '',
+		});
+		const startBalance = reactive({
+			amount: '',
+			month: '',
+		});
+		const ytdBalance = reactive({
+			amount: '0.00',
+			percent: '0',
+		});
 		const type = ref('');
 		const hasSearched = ref(false);
 		const isLoading = ref(false);
 		const searchResults = ref([]);
+		const summaryData: Record<string, number> = reactive({});
 
 		const runSearch = async (params: Record<string, string>) => {
 			isLoading.value = true;
@@ -41,7 +67,6 @@ export default defineComponent({
 			const response = await postAuth(data);
 
 			if (response.success) {
-				console.log(getDataFromResponse(response));
 				searchResults.value = getDataFromResponse(response);
 			}
 
@@ -49,7 +74,56 @@ export default defineComponent({
 			isLoading.value = false;
 		};
 
-		return { hasSearched, isLoading, runSearch, searchResults, type };
+		const setSummary = (total: number, cycle: string) => {
+			summaryData[formatDate('MMMM', cycle)] = total;
+		};
+
+		watch(summaryData, summary => {
+			const months = Object.keys(summary);
+			const dollars = Object.values(summary);
+			const maxDollars = Math.max(...dollars);
+			const minDollars = Math.min(...dollars);
+
+			averageBalance.value = formatDollar(
+				(dollars.reduce((a, c) => a + c, 0) / dollars.length).toString()
+			);
+			endBalance.amount = formatDollar(dollars[dollars.length - 1]);
+			endBalance.month = months[months.length - 1];
+			highestBalance.amount = formatDollar(maxDollars);
+			highestBalance.month = months[dollars.indexOf(maxDollars)];
+			lowestBalance.amount = formatDollar(minDollars);
+			lowestBalance.month = months[dollars.indexOf(minDollars)];
+			startBalance.amount = formatDollar(dollars[0]);
+			startBalance.month = months[0];
+			ytdBalance.percent = Math.round(
+				((dollars[dollars.length - 1] - dollars[0]) / dollars[0]) * 100
+			).toString();
+
+			if (['banks', 'investments'].includes(type.value)) {
+				ytdBalance.amount = formatDollar(
+					dollars[dollars.length - 1] - dollars[0]
+				);
+			} else {
+				ytdBalance.amount = formatDollar(
+					dollars.reduce((a, c) => a + c, 0)
+				);
+			}
+		});
+
+		return {
+			averageBalance,
+			endBalance,
+			hasSearched,
+			highestBalance,
+			lowestBalance,
+			isLoading,
+			runSearch,
+			searchResults,
+			setSummary,
+			startBalance,
+			type,
+			ytdBalance,
+		};
 	},
 });
 </script>
@@ -86,37 +160,37 @@ export default defineComponent({
 				<div class="block sm:grid-cols-3 sm:grid sm:gap-2 lg:block">
 					<ReportsSummary
 						title="YTD Gains/Loss"
-						amount="253.983.23"
-						percentage="85"
+						:amount="ytdBalance.amount"
+						:percentage="ytdBalance.percent"
 					/>
 
 					<ReportsSummary
 						title="Monthly Average"
-						amount="253.983.23"
+						:amount="averageBalance"
 					/>
 
 					<ReportsSummary
 						title="Beginning Balances"
-						amount="253.983.23"
-						text="June"
+						:amount="startBalance.amount"
+						:text="startBalance.month"
 					/>
 
 					<ReportsSummary
 						title="Ending Balances"
-						amount="253.983.23"
-						text="March"
+						:amount="endBalance.amount"
+						:text="endBalance.month"
 					/>
 
 					<ReportsSummary
 						title="Highest Balances"
-						amount="253.983.23"
-						text="August"
+						:amount="highestBalance.amount"
+						:text="highestBalance.month"
 					/>
 
 					<ReportsSummary
 						title="Lowest Balances"
-						amount="253.983.23"
-						text="October"
+						:amount="lowestBalance.amount"
+						:text="lowestBalance.month"
 					/>
 				</div>
 			</aside>
@@ -134,6 +208,7 @@ export default defineComponent({
 			:key="results.id"
 			:data="results"
 			:type="type"
+			@set-table-total="setSummary($event, results.budget_cycle)"
 		/>
 	</main>
 </template>
