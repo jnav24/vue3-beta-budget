@@ -64,10 +64,12 @@ export default defineComponent({
 
 		const setTotalAmount = () => {
 			if (props.data) {
-				total = (props.data as any)[props.type]
-					.reduce((acc: any, item: any) => {
+				total = (props.data as any)[props.type].reduce(
+					(acc: any, item: any) => {
 						return acc + Number(item.amount);
-					}, 0);
+					},
+					0
+				);
 				emit('set-table-total', total);
 			}
 		};
