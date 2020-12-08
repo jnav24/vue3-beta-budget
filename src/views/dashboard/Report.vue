@@ -56,6 +56,7 @@ export default defineComponent({
 		const isLoading = ref(false);
 		const searchResults = ref([]);
 		const summaryData: Record<string, number> = reactive({});
+		const year = ref('');
 
 		const runSearch = async (params: Record<string, string>) => {
 			isLoading.value = true;
@@ -67,6 +68,7 @@ export default defineComponent({
 			const response = await postAuth(data);
 
 			if (response.success) {
+				year.value = params.year;
 				searchResults.value = getDataFromResponse(response);
 			}
 
@@ -122,6 +124,7 @@ export default defineComponent({
 			setSummary,
 			startBalance,
 			type,
+			year,
 			ytdBalance,
 		};
 	},
@@ -196,7 +199,7 @@ export default defineComponent({
 			</aside>
 
 			<Card class="col-span-1 lg:col-span-4 hidden sm:grid">
-				<CardHeader>Hello</CardHeader>
+				<CardHeader>{{ year }} Chart</CardHeader>
 				<CardContent>
 					<LineChart />
 				</CardContent>
