@@ -81,7 +81,14 @@ export default defineComponent({
 			setTotalAmount();
 		});
 
-		return { formatDate, formatDollar, getExpenseValue, headers, total, toTitleCase };
+		return {
+			formatDate,
+			formatDollar,
+			getExpenseValue,
+			headers,
+			total,
+			toTitleCase,
+		};
 	},
 });
 </script>
