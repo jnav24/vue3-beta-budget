@@ -9,6 +9,7 @@ import ReportsForm from '@/components/partials/ReportsForm.vue';
 import ReportsSkeleton from '@/components/partials/ReportsSkeleton.vue';
 import ReportsSummary from '@/components/partials/ReportsSummary.vue';
 import ReportsTable from '@/components/tables/ReportsTable.vue';
+import useChart, { ChartData } from '@/hooks/useChart';
 import useCurrency from '@/hooks/useCurrency';
 import useHttp from '@/hooks/useHttp';
 import useTimestamp from '@/hooks/useTimestamp';
@@ -26,6 +27,7 @@ export default defineComponent({
 		ReportsTable,
 	},
 	setup() {
+		const { getChartData } = useChart();
 		const { formatDollar } = useCurrency();
 		const { postAuth, getDataFromResponse } = useHttp();
 		const { formatDate } = useTimestamp();
@@ -51,6 +53,10 @@ export default defineComponent({
 			amount: '0.00',
 			percent: '0',
 		});
+		const chartData: ChartData = reactive({
+			labels: [],
+			datasets: [],
+		});
 		const type = ref('');
 		const hasSearched = ref(false);
 		const isLoading = ref(false);
@@ -68,8 +74,12 @@ export default defineComponent({
 			const response = await postAuth(data);
 
 			if (response.success) {
+				const result = getDataFromResponse(response);
 				year.value = params.year;
-				searchResults.value = getDataFromResponse(response);
+				searchResults.value = result;
+				const { labels, datasets } = getChartData(result, params.billType);
+				chartData.labels = labels;
+				chartData.datasets = datasets;
 			}
 
 			hasSearched.value = true;
@@ -114,6 +124,7 @@ export default defineComponent({
 
 		return {
 			averageBalance,
+			chartData,
 			endBalance,
 			hasSearched,
 			highestBalance,
@@ -201,7 +212,10 @@ export default defineComponent({
 			<Card class="col-span-1 lg:col-span-4 hidden sm:grid">
 				<CardHeader>{{ year }} Chart</CardHeader>
 				<CardContent>
-					<LineChart />
+					<LineChart
+						:labels="chartData.labels"
+						:data="chartData.datasets"
+					/>
 				</CardContent>
 			</Card>
 		</div>
