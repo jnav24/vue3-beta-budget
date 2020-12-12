@@ -66,12 +66,11 @@ export default defineComponent({
 
 		const setTotalAmount = () => {
 			if (props.data) {
-				total = (props.data as any)[props.type].reduce(
-					(acc: any, item: any) => {
-						return acc + Number(item.amount);
-					},
-					0
-				);
+				total = (props.data as any)[
+					props.type.replace('-', '_')
+				].reduce((acc: any, item: any) => {
+					return acc + Number(item.amount);
+				}, 0);
 				emit('set-table-total', total);
 			}
 		};
@@ -127,7 +126,7 @@ export default defineComponent({
 
 			<CardContent>
 				<div
-					v-if="!data[type].length"
+					v-if="!data[type.replace('-', '_')].length"
 					class="py-16 text-gray-500 flex flex-col items-center justify-center"
 				>
 					<WarningIcon class="w-8 h-8" />

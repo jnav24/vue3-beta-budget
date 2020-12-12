@@ -194,24 +194,26 @@ export default function useChart() {
 		const result: ChartDataSets[] = [];
 
 		data.forEach((dt, int) => {
-			dt[type].forEach((type: { name: string; amount: string }) => {
-				const typeObject = typeStore.getTypeFromExpenseObject(
-					type as any
-				) ?? { name: null };
-				const keyName = `${type.name} (${typeObject.name ?? ''})`;
+			dt[type.replace('-', '_')].forEach(
+				(type: { name: string; amount: string }) => {
+					const typeObject = typeStore.getTypeFromExpenseObject(
+						type as any
+					) ?? { name: null };
+					const keyName = `${type.name} (${typeObject.name ?? ''})`;
 
-				if (!dataValues[keyName]) {
-					dataValues[keyName] = [];
+					if (!dataValues[keyName]) {
+						dataValues[keyName] = [];
 
-					for (let i = 0; i < nameList.length; i++) {
-						dataValues[keyName].push(0);
+						for (let i = 0; i < nameList.length; i++) {
+							dataValues[keyName].push(0);
+						}
 					}
-				}
 
-				dataValues[keyName][int] = +(
-					+type.amount + +dataValues[keyName][int]
-				).toFixed(2);
-			});
+					dataValues[keyName][int] = +(
+						+type.amount + +dataValues[keyName][int]
+					).toFixed(2);
+				}
+			);
 		});
 
 		const randomColors = getRandomColors(Object.keys(dataValues).length);
