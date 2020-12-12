@@ -1,5 +1,6 @@
 import { useTypesStore, useUserStore } from '@/store';
 import useCurrency from '@/hooks/useCurrency';
+import useTimestamp from '@/hooks/useTimestamp';
 
 export default function useBudgetTable() {
 	const getHeaders = (
@@ -27,6 +28,7 @@ export default function useBudgetTable() {
 		item: Record<string, string>
 	): string => {
 		const { formatDollar } = useCurrency();
+		const { formatDate } = useTimestamp();
 		const typesStore = useTypesStore();
 		const userStore = useUserStore();
 
@@ -42,6 +44,9 @@ export default function useBudgetTable() {
 		}
 
 		if (item[header]) {
+			if (header === 'paid_date') {
+				return formatDate('yyyy-MM-dd', item['paid_date']);
+			}
 			return item[header];
 		}
 
@@ -52,11 +57,11 @@ export default function useBudgetTable() {
 
 		if (header === 'due date') {
 			if (item['paid_date']) {
-				return item['paid_date'];
+				return formatDate('yyyy-MM-dd', item['paid_date']);
 			}
 
 			if (item['initial_pay_date']) {
-				return item['initial_pay_date'];
+				return formatDate('yyyy-MM-dd', item['initial_pay_date']);
 			}
 		}
 
