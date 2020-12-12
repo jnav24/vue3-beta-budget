@@ -134,7 +134,7 @@ export default defineComponent({
 				</div>
 
 				<div
-					v-for="item in data[type]"
+					v-for="item in data[type.replace('-', '_')]"
 					:key="item.id"
 					:class="
 						`grid gap-2 grid-cols-2 sm:grid-cols-${headers.length} text-gray-700 py-4 even:bg-gray-100 items-center`
