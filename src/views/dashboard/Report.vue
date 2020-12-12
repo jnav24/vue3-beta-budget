@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, reactive, ref, watch } from 'vue';
+import { computed, defineComponent, reactive, ref, watch } from 'vue';
 import Card from '@/components/ui-elements/card/Card.vue';
 import CardContent from '@/components/ui-elements/card/CardContent.vue';
 import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
@@ -63,6 +63,19 @@ export default defineComponent({
 		const searchResults = ref([]);
 		const summaryData: Record<string, number> = reactive({});
 		const year = ref('');
+
+		const ytdValue = computed(() => {
+			if (type.value === 'incomes') {
+				return 'Earned';
+			} else if (['banks', 'investments'].includes(type.value)) {
+				if (+ytdBalance.percent < 0) {
+					return 'Loss';
+				}
+				return 'Saved';
+			} else {
+				return 'Spent';
+			}
+		});
 
 		const runSearch = async (params: Record<string, string>) => {
 			isLoading.value = true;
@@ -137,6 +150,7 @@ export default defineComponent({
 			type,
 			year,
 			ytdBalance,
+			ytdValue,
 		};
 	},
 });
@@ -173,7 +187,7 @@ export default defineComponent({
 			<aside class="col-span-1 lg:col-span-1">
 				<div class="block sm:grid-cols-3 sm:grid sm:gap-2 lg:block">
 					<ReportsSummary
-						title="YTD Gains/Loss"
+						:title="`YTD ${ytdValue}`"
 						:amount="ytdBalance.amount"
 						:percentage="ytdBalance.percent"
 					/>
