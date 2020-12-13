@@ -90,7 +90,10 @@ export default defineComponent({
 				const result = getDataFromResponse(response);
 				year.value = params.year;
 				searchResults.value = result;
-				const { labels, datasets } = getChartData(result, params.billType);
+				const { labels, datasets } = getChartData(
+					result,
+					params.billType
+				);
 				chartData.labels = labels;
 				chartData.datasets = datasets;
 			}
