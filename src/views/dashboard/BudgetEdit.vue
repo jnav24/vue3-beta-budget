@@ -16,7 +16,12 @@ import ExpenseModal from '@/components/modals/ExpenseModal.vue';
 import ExpenseSlideover from '@/components/slideovers/ExpenseSlideover.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
 import SideBar from '@/components/partials/SideBar.vue';
-import { useBudgetStore, useTypesStore } from '@/store';
+import {
+	useAggregationStore,
+	useBudgetStore,
+	useTemplateStore,
+	useTypesStore,
+} from '@/store';
 import { useRoute } from 'vue-router';
 import { BudgetExpense, BudgetList } from '@/store/budget';
 import useTimestamp from '@/hooks/useTimestamp';
@@ -34,7 +39,9 @@ export default defineComponent({
 		Select,
 	},
 	setup() {
+		const aggregationStore = useAggregationStore();
 		const budgetStore = useBudgetStore();
+		const templateStore = useTemplateStore();
 		const typeStore = useTypesStore();
 		const {
 			params: { id },
@@ -68,15 +75,54 @@ export default defineComponent({
 		const showConfirmModal = ref(false);
 		const showModal = ref(false);
 
+		const isLatestBudget = () =>
+			budgetStore.list[0]?.id === budget.value.id;
+
+		const updateBudgetTemplate = async () => {
+			const data: { expenses: Record<string, any[]> } = {
+				expenses: {
+					banks: [],
+				},
+			};
+
+			budget.value?.expenses?.banks.forEach(bank => {
+				const templateObj = templateStore.expenses.banks.find(
+					temp => temp.id === bank?.bank_template_id
+				);
+
+				if (templateObj) {
+					data.expenses.banks.push({
+						...templateObj,
+						amount: bank.amount,
+					});
+				}
+			});
+
+			if (data.expenses.banks.length) {
+				await templateStore.saveTemplate(data.expenses);
+			}
+		};
+
 		const saveBudget = async () => {
-			await budgetStore.removeBudgetExpenses(
-				budget.value.id as number,
-				getRemoveExpenseList()
-			);
+			const removeList = getRemoveExpenseList();
+
+			if (removeList.length) {
+				await budgetStore.removeBudgetExpenses(
+					budget.value.id as number,
+					removeList
+				);
+			}
+
 			const res = await budgetStore.updateBudget(budget.value);
 			disableSave.value = true;
 
 			if (res.success) {
+				if (isLatestBudget()) {
+					await aggregationStore.getUnpaidBillTotals();
+					await updateBudgetTemplate();
+				}
+
+				await aggregationStore.getYearlyAggregations();
 				alert.type = 'success';
 				alert.message = 'Budget was saved successfully';
 				resetList();

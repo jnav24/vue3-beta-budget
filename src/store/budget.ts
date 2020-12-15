@@ -9,6 +9,7 @@ type BudgetState = {
 export type BudgetExpense = {
 	id: number | string;
 	budget_id: number;
+	bank_template_id?: number;
 	name: string;
 	amount: string;
 	apr?: string;
