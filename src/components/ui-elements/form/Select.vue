@@ -21,7 +21,7 @@ export default defineComponent({
 	},
 	props: {
 		label: {
-			default: null,
+			default: '',
 			type: String,
 		},
 		rules: {
@@ -144,6 +144,7 @@ export default defineComponent({
 			error,
 			getPlaceholder,
 			handleClick,
+			labelId,
 			selected,
 			setValue,
 		};
