@@ -64,8 +64,15 @@ export const useBudgetStore = createStore({
 
 	actions: {
 		async removeBudgets(budget: { id: string | number; type: string }) {
-			// @todo build an endpoint for this
-			this.list = this.list.filter(item => item.id !== budget.id);
+			const { deleteAuth } = useHttp();
+			const data = {
+				path: `budgets/${budget.id}`,
+			};
+			const response = await deleteAuth(data);
+
+			if (response.success) {
+				this.list = this.list.filter(item => item.id !== budget.id);
+			}
 		},
 
 		async getBudget(id: string) {
