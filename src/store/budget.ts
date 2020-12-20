@@ -163,17 +163,15 @@ export const useBudgetStore = createStore({
 			return { success: response.success, error: response.error };
 		},
 
-		// @todo there is no endpoint for this; have to create it
 		async removeBudgetExpenses(
 			id: string | number,
 			expenses: Array<{ id: string | number; type: string }>
 		) {
 			const { deleteAuth } = useHttp();
 			const data = {
-				path: 'budgets',
+				path: `budget-expense/${id}`,
 				params: {
 					expenses,
-					id,
 				},
 			};
 
