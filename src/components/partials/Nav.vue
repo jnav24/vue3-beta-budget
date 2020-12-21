@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import ChartIcon from '@/components/ui-elements/icons/ChartIcon.vue';
 import ChevronDownIcon from '@/components/ui-elements/icons/ChevronDownIcon.vue';
 import CloseIcon from '@/components/ui-elements/icons/CloseIcon.vue';
@@ -10,6 +10,7 @@ import UserCircleIcon from '@/components/ui-elements/icons/UserCircleIcon.vue';
 import Link from '@/components/ui-elements/Link.vue';
 import SubNav from '@/components/partials/SubNav.vue';
 import SubNavItems from '@/components/partials/SubNavItems.vue';
+import { useUserStore } from '@/store';
 
 export default defineComponent({
 	components: {
@@ -25,9 +26,14 @@ export default defineComponent({
 		UserCircleIcon,
 	},
 	setup() {
+		const userStore = useUserStore();
 		const buttonSelected = ref(false);
 		const showMobileNav = ref(false);
 		const showSubNav = ref(false);
+		const fullName = computed(
+			() => `${userStore.user.first_name} ${userStore.user.last_name}`
+		);
+
 		const profileLinks = [
 			{ to: '', label: 'Profile', icon: 'UserIcon' },
 			{ to: { name: 'logout' }, label: 'Logout', icon: 'LogoutIcon' },
@@ -54,6 +60,7 @@ export default defineComponent({
 
 		return {
 			buttonSelected,
+			fullName,
 			profileLinks,
 			showMobileNav,
 			showSubNav,
@@ -107,7 +114,7 @@ export default defineComponent({
 						<span
 							class="text-white ml-4 mr-2 my-0 ellipsis max-w-32 hidden sm:block"
 						>
-							Bobby Sanchez
+							{{ fullName }}
 						</span>
 
 						<span class="hidden sm:block">
