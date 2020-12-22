@@ -1,6 +1,7 @@
 import { reactive, ref, toRefs } from 'vue';
 import axios, { AxiosResponse } from 'axios';
 import useSession from '@/hooks/useSession';
+import { useUserStore } from '@/store';
 
 enum URLMethods {
 	GET = 'get',
@@ -24,6 +25,7 @@ export type HttpResponse = {
 
 export default function useHttp() {
 	const { getCookie } = useSession();
+	const userStore = useUserStore();
 
 	const state: HttpResponse = reactive({
 		data: {},
@@ -67,6 +69,10 @@ export default function useHttp() {
 
 			if (error.response.data.message) {
 				msg = error.response.data.message;
+
+				if (msg.includes('token') && msg.includes('expired')) {
+					userStore.setTokenExpired(true);
+				}
 			}
 
 			state.success = false;
