@@ -6,7 +6,11 @@ import Input from '@/components/ui-elements/form/Input.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
 import useTimestamp from '@/hooks/useTimestamp';
 import useUtils from '@/hooks/useUtils';
-import { useTypesStore, CommonExpenseTypeInterface } from '@/store';
+import {
+	useAggregationStore,
+	useTypesStore,
+	CommonExpenseTypeInterface,
+} from '@/store';
 
 export default defineComponent({
 	components: {
@@ -18,6 +22,7 @@ export default defineComponent({
 	setup(props, { emit }) {
 		const { camelCase } = useUtils();
 		const { getAllMonths } = useTimestamp();
+		const aggregationStore = useAggregationStore();
 		const typesStore = useTypesStore();
 
 		const form = reactive({
@@ -59,7 +64,7 @@ export default defineComponent({
 		);
 		const billTypes = computed(() => typesStore.bills);
 		const vehicles: any[] = [];
-		const years: any[] = [{ value: '2020', label: '2020' }];
+		const years = computed(() => aggregationStore.allYears);
 
 		const billName = computed(() => {
 			const type = billTypes.value.find(
@@ -87,6 +92,11 @@ export default defineComponent({
 			emit('run-search', formValues);
 		};
 
+		const updateExpenseType = (e: string) => {
+			form.bill_type.value = e;
+			form.type.value = '';
+		};
+
 		return {
 			billTypes,
 			form,
@@ -98,6 +108,7 @@ export default defineComponent({
 			showNameInput,
 			showTypesSelect,
 			types,
+			updateExpenseType,
 			vehicles,
 			years,
 		};
@@ -115,7 +126,8 @@ export default defineComponent({
 					item-value="slug"
 					item-label="name"
 					label="Expense Type"
-					v-model:value="form.bill_type.value"
+					:value="form.bill_type.value"
+					@set-item="updateExpenseType($event)"
 				/>
 			</div>
 
