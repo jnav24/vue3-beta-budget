@@ -44,7 +44,7 @@ export default defineComponent({
 				rules: [],
 				value: '',
 			},
-			do_not_track: {
+			not_track_amount: {
 				rules: [],
 				value: false,
 			},
@@ -104,8 +104,8 @@ export default defineComponent({
 				form.balance.value = ExpenseContext.data.balance || '';
 				form.confirmation.value =
 					ExpenseContext.data.confirmation || '';
-				form.do_not_track.value =
-					!!ExpenseContext.data.do_not_track || false;
+				form.not_track_amount.value =
+					!!ExpenseContext.data.not_track_amount || false;
 				form.due_date.value = ExpenseContext.data.due_date || '';
 				form.exp_month.value = ExpenseContext.data.exp_month || '';
 				form.exp_year.value = ExpenseContext.data.exp_year || '';
@@ -209,8 +209,8 @@ export default defineComponent({
 				<Checkbox
 					class="pl-4 my-6"
 					label="Do not track this expense"
-					:rules="form.do_not_track.rules"
-					v-model:value="form.do_not_track.value"
+					:rules="form.not_track_amount.rules"
+					v-model:value="form.not_track_amount.value"
 				/>
 
 				<div class="grid grid-cols-2 gap-4 px-4">

@@ -36,7 +36,7 @@ export default defineComponent({
 				rules: [],
 				value: '',
 			},
-			do_not_track: {
+			not_track_amount: {
 				rules: [],
 				value: false,
 			},
@@ -68,8 +68,8 @@ export default defineComponent({
 				form.amount.value = ExpenseContext.data.amount;
 				form.confirmation.value =
 					ExpenseContext.data.confirmation || '';
-				form.do_not_track.value =
-					!!ExpenseContext.data.do_not_track || false;
+				form.not_track_amount.value =
+					!!ExpenseContext.data.not_track_amount || false;
 				form.due_date.value = ExpenseContext.data.due_date || '';
 				form.name.value = ExpenseContext.data.name;
 				form.notes.value = ExpenseContext.data.notes || '';
@@ -138,8 +138,8 @@ export default defineComponent({
 				<Checkbox
 					class="pl-4 my-6"
 					label="Calculate this purchase in your totals?"
-					:rules="form.do_not_track.rules"
-					v-model:value="form.do_not_track.value"
+					:rules="form.not_track_amount.rules"
+					v-model:value="form.not_track_amount.value"
 				/>
 
 				<div class="grid grid-cols-2 gap-4 px-4">
