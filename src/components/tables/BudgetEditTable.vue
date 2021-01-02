@@ -178,7 +178,10 @@ export default defineComponent({
 					v-for="(header, index) in categoryHeader"
 					:key="index"
 				>
-					<div v-if="!header.trim().length" class="flex flex-row items-center justify-start">
+					<div
+						v-if="!header.trim().length"
+						class="flex flex-row items-center justify-start"
+					>
 						<div
 							class="rounded-full p-2 bg-primary w-8 mr-2"
 							v-if="item.confirmation"
