@@ -16,6 +16,10 @@ export default defineComponent({
 			default: () => ({}),
 			type: Object as () => BudgetExpense,
 		},
+		editMode: {
+			default: false,
+			type: Boolean,
+		},
 		hideSidebar: {
 			default: false,
 			type: Boolean,
@@ -43,7 +47,6 @@ export default defineComponent({
 
 		return {
 			closeModal: (e: boolean) => emit('update:show', e),
-			editMode: computed(() => !!Object.keys(props.data).length),
 			setClose,
 			setCloseModal,
 		};

@@ -237,8 +237,9 @@ export default defineComponent({
 
 	<ExpenseModal
 		class="hidden lg:block"
-		v-model:show="showModal"
 		:data="expenseData"
+		:edit-mode="true"
+		v-model:show="showModal"
 		:type="selectedCategory"
 		:hide-sidebar="!!Object.keys(expenseData).length"
 		@update-budget="updateLocalBudget($event)"
