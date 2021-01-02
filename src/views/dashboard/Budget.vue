@@ -71,7 +71,7 @@ export default defineComponent({
 		const showBudgetModal = ref(false);
 		const showCustomBudgetModal = ref(false);
 		const budgets = computed(() => budgetStore.sortedBudgets);
-		const selectedYear = ref(formatDate('yyyy'));
+		const selectedYear = ref('');
 		const showConfirmModal = ref(false);
 		const maxSaved = computed(() => {
 			return Math.max(
@@ -80,6 +80,16 @@ export default defineComponent({
 					(budgets.value as any)[selectedYear.value]
 				).map(val => Number(val))
 			).toString();
+		});
+
+		const years = computed(() => {
+			const allYears = aggregationStore.allYears;
+
+			if (selectedYear.value === '' && allYears.length) {
+				selectedYear.value = allYears[0].value;
+			}
+
+			return allYears;
 		});
 
 		const confirmRemoveBudget = () => {
@@ -128,7 +138,7 @@ export default defineComponent({
 			showBudgetModal,
 			showConfirmModal,
 			showCustomBudgetModal,
-			years: computed(() => aggregationStore.allYears),
+			years,
 		};
 	},
 });
