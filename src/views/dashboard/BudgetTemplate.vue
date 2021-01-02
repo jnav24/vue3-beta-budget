@@ -116,7 +116,11 @@ export default defineComponent({
 			showConfirmModal.value = true;
 		};
 
-		const updateLocalExpense = (data: BudgetExpense) => {
+		const updateLocalExpense = (modalData: {
+			type: string;
+			data: BudgetExpense;
+		}) => {
+			const { data } = modalData;
 			const index = expenses.value[selectedCategory.value].findIndex(
 				(expense: BudgetExpense) => expense.id === (data.id ?? -1)
 			);
