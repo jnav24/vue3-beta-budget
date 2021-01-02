@@ -127,8 +127,9 @@ export default defineComponent({
 				alert.message = 'Budget was saved successfully';
 				resetList();
 			} else {
-				alert.type = 'danger';
+				alert.type = 'error';
 				alert.message = 'There was a problem saving the budget.';
+				disableSave.value = false;
 			}
 
 			alert.hide = false;
@@ -270,10 +271,7 @@ export default defineComponent({
 			}"
 			v-if="!alert.hide"
 		>
-			<Alert
-				type="success"
-				message="Budget has been saved successfully"
-			/>
+			<Alert :type="alert.type" :message="alert.message" />
 		</div>
 
 		<Select
