@@ -165,29 +165,31 @@ export default defineComponent({
 			showModal.value = true;
 		};
 
-		const updateLocalBudget = (data: BudgetExpense) => {
+		const updateLocalBudget = (modalData: {
+			type: string;
+			data: BudgetExpense;
+		}) => {
 			if (budget.value && budget.value.expenses) {
+				const { type, data } = modalData;
 				disableSave.value = false;
-				const index = budget.value.expenses[
-					selectedCategory.value
-				].findIndex(
+				const index = budget.value.expenses[type].findIndex(
 					(expense: BudgetExpense) => expense.id === (data.id ?? -1)
 				);
 
 				if (index > -1) {
 					// @todo compare new data with current to see if there was a change
-					budget.value.expenses[selectedCategory.value][index] = data;
+					budget.value.expenses[type][index] = data;
 				} else {
 					const result: BudgetExpense = {
 						...data,
 						id: generateTempId(),
 						[typeStore.getTypeColumnNameFromType(
-							selectedCategory.value
+							type
 						)]: (data as any).type,
 					};
 
 					delete (result as any).type;
-					budget.value.expenses[selectedCategory.value].push(result);
+					budget.value.expenses[type].push(result);
 				}
 			}
 		};
