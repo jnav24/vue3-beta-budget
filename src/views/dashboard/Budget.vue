@@ -22,7 +22,6 @@ import { useBudgetStore } from '@/store';
 import { useRouter } from 'vue-router';
 import useCurrency from '@/hooks/useCurrency';
 import useRemoveExpense from '@/hooks/useRemoveExpense';
-import useTimestamp from '@/hooks/useTimestamp';
 import useUtils from '@/hooks/useUtils';
 import { useAggregationStore } from '@/store';
 import YTDSummary from '@/components/partials/YTDSummary.vue';
@@ -58,7 +57,6 @@ export default defineComponent({
 			resetList,
 			setItemToBeRemoved,
 		} = useRemoveExpense();
-		const { formatDate } = useTimestamp();
 		const { formatDollar } = useCurrency();
 		const budgetStore = useBudgetStore();
 		const aggregationStore = useAggregationStore();
