@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-type LinkItems = Array<{ label: string; value: string }>;
+type LinkItems = { label: string; value: string };
 
 export default defineComponent({
 	props: {
@@ -11,7 +11,7 @@ export default defineComponent({
 		},
 		items: {
 			required: true,
-			type: () => Array as () => LinkItems,
+			type: Array as () => Array<LinkItems>,
 		},
 		itemLabel: {
 			default: 'label',

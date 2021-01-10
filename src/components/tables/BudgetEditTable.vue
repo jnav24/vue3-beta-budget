@@ -8,6 +8,7 @@ import CardContent from '@/components/ui-elements/card/CardContent.vue';
 import CardHeader from '@/components/ui-elements/card/CardHeader.vue';
 import CheckIcon from '@/components/ui-elements/icons/CheckIcon.vue';
 import EditIcon from '@/components/ui-elements/icons/EditIcon.vue';
+import StopIcon from '@/components/ui-elements/icons/StopIcon.vue';
 import WarningIcon from '@/components/ui-elements/icons/WarningIcon.vue';
 import useBudgetTable from '@/hooks/useBudgetTable';
 import useCurrency from '@/hooks/useCurrency';
@@ -34,6 +35,7 @@ export default defineComponent({
 		CardContent,
 		CheckIcon,
 		EditIcon,
+		StopIcon,
 		WarningIcon,
 	},
 	props: {
@@ -176,14 +178,20 @@ export default defineComponent({
 					v-for="(header, index) in categoryHeader"
 					:key="index"
 				>
-					<template v-if="!header.trim().length">
+					<div
+						v-if="!header.trim().length"
+						class="flex flex-row items-center justify-start"
+					>
 						<div
 							class="rounded-full p-2 bg-primary w-8 mr-2"
 							v-if="item.confirmation"
 						>
 							<CheckIcon class="w-4 h-4 text-white" />
 						</div>
-					</template>
+						<div v-if="item.not_track_amount">
+							<StopIcon class="w-10 h-10 text-danger" />
+						</div>
+					</div>
 
 					<div
 						class="flex flex-row items-center"

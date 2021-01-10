@@ -48,9 +48,12 @@ export default defineComponent({
 
 		const closeModal = (data = {}) => {
 			if (Object.keys(data).length) {
-				emit('close-modal', {
-					...props.data,
-					...data,
+				return emit('close-modal', {
+					type: currentType.value,
+					data: {
+						...props.data,
+						...data,
+					},
 				});
 			}
 

@@ -85,6 +85,8 @@ export const useTemplateStore = createStore({
 					);
 				});
 			}
+
+			return { success: response.success, error: response.error };
 		},
 
 		async saveTemplate(expenses: Record<string, any[]>) {

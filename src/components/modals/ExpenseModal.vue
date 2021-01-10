@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import ExpenseForm from '@/components/partials/ExpenseForm.vue';
 import Modal from '@/components/modals/Modal.vue';
 import { BudgetExpense, BudgetList } from '@/store/budget';
@@ -15,6 +15,10 @@ export default defineComponent({
 		data: {
 			default: () => ({}),
 			type: Object as () => BudgetExpense,
+		},
+		editMode: {
+			default: false,
+			type: Boolean,
 		},
 		hideSidebar: {
 			default: false,
@@ -32,8 +36,8 @@ export default defineComponent({
 	setup(props, { emit }) {
 		const setClose = ref(false);
 
-		const setCloseModal = (budget?: BudgetList) => {
-			if (budget && Object.keys(budget).length) {
+		const setCloseModal = (budget?: { type: string; data: BudgetList }) => {
+			if (budget && Object.keys(budget.data).length) {
 				emit('update-budget', budget);
 			}
 
@@ -43,7 +47,6 @@ export default defineComponent({
 
 		return {
 			closeModal: (e: boolean) => emit('update:show', e),
-			editMode: computed(() => !!Object.keys(props.data).length),
 			setClose,
 			setCloseModal,
 		};

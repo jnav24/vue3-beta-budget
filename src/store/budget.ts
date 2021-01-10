@@ -9,6 +9,7 @@ type BudgetState = {
 export type BudgetExpense = {
 	id: number | string;
 	budget_id: number;
+	bank_template_id?: number;
 	name: string;
 	amount: string;
 	apr?: string;
@@ -21,7 +22,7 @@ export type BudgetExpense = {
 	paid_date?: string;
 	initial_pay_date?: string;
 	user_vehicle_id?: number;
-	do_not_track?: number;
+	not_track_amount?: number;
 	mileage?: string;
 	notes?: string;
 	limit?: string;
@@ -63,8 +64,15 @@ export const useBudgetStore = createStore({
 
 	actions: {
 		async removeBudgets(budget: { id: string | number; type: string }) {
-			// @todo build an endpoint for this
-			this.list = this.list.filter(item => item.id !== budget.id);
+			const { deleteAuth } = useHttp();
+			const data = {
+				path: `budgets/${budget.id}`,
+			};
+			const response = await deleteAuth(data);
+
+			if (response.success) {
+				this.list = this.list.filter(item => item.id !== budget.id);
+			}
 		},
 
 		async getBudget(id: string) {
@@ -155,17 +163,15 @@ export const useBudgetStore = createStore({
 			return { success: response.success, error: response.error };
 		},
 
-		// @todo there is no endpoint for this; have to create it
 		async removeBudgetExpenses(
 			id: string | number,
 			expenses: Array<{ id: string | number; type: string }>
 		) {
 			const { deleteAuth } = useHttp();
 			const data = {
-				path: 'budgets',
+				path: `budget-expense/${id}`,
 				params: {
 					expenses,
-					id,
 				},
 			};
 

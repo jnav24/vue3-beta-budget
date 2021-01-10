@@ -46,8 +46,17 @@ export default defineComponent({
 		const form = reactive({
 			year: {
 				rules: {},
-				value: formatDate('yyyy'),
+				value: '',
 			},
+		});
+		const years = computed(() => {
+			const allYears = aggregationStore.allYears;
+
+			if (form.year.value === '' && allYears.length) {
+				form.year.value = allYears[0].value;
+			}
+
+			return allYears;
 		});
 
 		const chartData = computed(() => {
@@ -200,7 +209,7 @@ export default defineComponent({
 			totalSpent,
 			totalUnpaid: computed(() => aggregationStore.totalUnpaid),
 			yearlyExpenseData,
-			years: computed(() => aggregationStore.allYears),
+			years,
 		};
 	},
 });

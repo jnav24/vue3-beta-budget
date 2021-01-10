@@ -79,16 +79,23 @@ export default defineComponent({
 
 		const saveBudgetTemplate = async () => {
 			disableSave.value = true;
-			await templateStore.removeExpense(getRemoveExpenseList());
-			const response = await templateStore.saveTemplate(expenses.value);
+			const rmResponse = await templateStore.removeExpense(
+				getRemoveExpenseList()
+			);
 
-			if (response.success) {
-				alert.type = 'success';
-				alert.message = 'Template was saved successfully';
-				resetList();
-			} else {
-				alert.type = 'danger';
-				alert.message = 'There was a problem saving the template.';
+			alert.type = 'error';
+			alert.message = 'There was a problem saving the template.';
+
+			if (rmResponse.success) {
+				const response = await templateStore.saveTemplate(
+					expenses.value
+				);
+
+				if (response.success) {
+					alert.type = 'success';
+					alert.message = 'Template was saved successfully';
+					resetList();
+				}
 			}
 
 			alert.hide = false;
@@ -109,7 +116,11 @@ export default defineComponent({
 			showConfirmModal.value = true;
 		};
 
-		const updateLocalExpense = (data: BudgetExpense) => {
+		const updateLocalExpense = (modalData: {
+			type: string;
+			data: BudgetExpense;
+		}) => {
+			const { data } = modalData;
 			const index = expenses.value[selectedCategory.value].findIndex(
 				(expense: BudgetExpense) => expense.id === (data.id ?? -1)
 			);

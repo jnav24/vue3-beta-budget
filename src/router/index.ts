@@ -7,15 +7,10 @@ import {
 	NavigationGuardNext,
 	useRouter,
 } from 'vue-router';
-import {
-	useAggregationStore,
-	useBudgetStore,
-	useTemplateStore,
-	useTypesStore,
-	useUserStore,
-} from '@/store';
+import { useUserStore } from '@/store';
 import useRouteMiddleware from '@/hooks/useRouteMiddleware';
 import useHttp from '@/hooks/useHttp';
+import useStates from '@/hooks/useStates';
 
 const { auth, autoLogin, runMiddleware } = useRouteMiddleware();
 
@@ -102,16 +97,8 @@ const routes: Array<RouteRecordRaw> = [
 			from: RouteLocationNormalized,
 			next: NavigationGuardNext
 		) => {
-			const aggregationStore = useAggregationStore();
-			const budgetStore = useBudgetStore();
-			const templateStore = useTemplateStore();
-			const typesStore = useTypesStore();
-
-			aggregationStore.getYearlyAggregations();
-			aggregationStore.getUnpaidBillTotals();
-			budgetStore.getBudgets();
-			templateStore.getTemplates();
-			typesStore.getAllBillTypes();
+			const { init } = useStates();
+			init();
 			next();
 		},
 		children: [
@@ -147,7 +134,7 @@ const routes: Array<RouteRecordRaw> = [
 					defineComponent({
 						setup() {
 							const { push } = useRouter();
-							const { logout } = useUserStore();
+							const { logout } = useStates();
 
 							onBeforeMount(() => {
 								logout();

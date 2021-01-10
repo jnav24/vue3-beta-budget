@@ -3,6 +3,10 @@ import { defineComponent, ref, watch } from 'vue';
 
 export default defineComponent({
 	props: {
+		persistent: {
+			default: false,
+			type: Boolean,
+		},
 		setClose: {
 			default: false,
 			type: Boolean,
@@ -16,8 +20,10 @@ export default defineComponent({
 		const showContent = ref(false);
 
 		const closeModal = () => {
-			showContent.value = false;
-			setTimeout(() => emit('close', false), 200);
+			if (!props.persistent) {
+				showContent.value = false;
+				setTimeout(() => emit('close', false), 200);
+			}
 		};
 
 		watch(

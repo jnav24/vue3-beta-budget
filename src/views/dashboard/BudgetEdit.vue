@@ -16,7 +16,12 @@ import ExpenseModal from '@/components/modals/ExpenseModal.vue';
 import ExpenseSlideover from '@/components/slideovers/ExpenseSlideover.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
 import SideBar from '@/components/partials/SideBar.vue';
-import { useBudgetStore, useTypesStore } from '@/store';
+import {
+	useAggregationStore,
+	useBudgetStore,
+	useTemplateStore,
+	useTypesStore,
+} from '@/store';
 import { useRoute } from 'vue-router';
 import { BudgetExpense, BudgetList } from '@/store/budget';
 import useTimestamp from '@/hooks/useTimestamp';
@@ -34,7 +39,9 @@ export default defineComponent({
 		Select,
 	},
 	setup() {
+		const aggregationStore = useAggregationStore();
 		const budgetStore = useBudgetStore();
+		const templateStore = useTemplateStore();
 		const typeStore = useTypesStore();
 		const {
 			params: { id },
@@ -68,21 +75,61 @@ export default defineComponent({
 		const showConfirmModal = ref(false);
 		const showModal = ref(false);
 
+		const isLatestBudget = () =>
+			budgetStore.list[0]?.id === budget.value.id;
+
+		const updateBudgetTemplate = async () => {
+			const data: { expenses: Record<string, any[]> } = {
+				expenses: {
+					banks: [],
+				},
+			};
+
+			budget.value?.expenses?.banks.forEach(bank => {
+				const templateObj = templateStore.expenses.banks.find(
+					temp => temp.id === bank?.bank_template_id
+				);
+
+				if (templateObj) {
+					data.expenses.banks.push({
+						...templateObj,
+						amount: bank.amount,
+					});
+				}
+			});
+
+			if (data.expenses.banks.length) {
+				await templateStore.saveTemplate(data.expenses);
+			}
+		};
+
 		const saveBudget = async () => {
-			await budgetStore.removeBudgetExpenses(
-				budget.value.id as number,
-				getRemoveExpenseList()
-			);
+			const removeList = getRemoveExpenseList();
+
+			if (removeList.length) {
+				await budgetStore.removeBudgetExpenses(
+					budget.value.id as number,
+					removeList
+				);
+			}
+
 			const res = await budgetStore.updateBudget(budget.value);
 			disableSave.value = true;
 
 			if (res.success) {
+				if (isLatestBudget()) {
+					await aggregationStore.getUnpaidBillTotals();
+					await updateBudgetTemplate();
+				}
+
+				await aggregationStore.getYearlyAggregations();
 				alert.type = 'success';
 				alert.message = 'Budget was saved successfully';
 				resetList();
 			} else {
-				alert.type = 'danger';
+				alert.type = 'error';
 				alert.message = 'There was a problem saving the budget.';
+				disableSave.value = false;
 			}
 
 			alert.hide = false;
@@ -118,29 +165,31 @@ export default defineComponent({
 			showModal.value = true;
 		};
 
-		const updateLocalBudget = (data: BudgetExpense) => {
+		const updateLocalBudget = (modalData: {
+			type: string;
+			data: BudgetExpense;
+		}) => {
 			if (budget.value && budget.value.expenses) {
+				const { type, data } = modalData;
 				disableSave.value = false;
-				const index = budget.value.expenses[
-					selectedCategory.value
-				].findIndex(
+				const index = budget.value.expenses[type].findIndex(
 					(expense: BudgetExpense) => expense.id === (data.id ?? -1)
 				);
 
 				if (index > -1) {
 					// @todo compare new data with current to see if there was a change
-					budget.value.expenses[selectedCategory.value][index] = data;
+					budget.value.expenses[type][index] = data;
 				} else {
 					const result: BudgetExpense = {
 						...data,
 						id: generateTempId(),
 						[typeStore.getTypeColumnNameFromType(
-							selectedCategory.value
+							type
 						)]: (data as any).type,
 					};
 
 					delete (result as any).type;
-					budget.value.expenses[selectedCategory.value].push(result);
+					budget.value.expenses[type].push(result);
 				}
 			}
 		};
@@ -190,8 +239,9 @@ export default defineComponent({
 
 	<ExpenseModal
 		class="hidden lg:block"
-		v-model:show="showModal"
 		:data="expenseData"
+		:edit-mode="true"
+		v-model:show="showModal"
 		:type="selectedCategory"
 		:hide-sidebar="!!Object.keys(expenseData).length"
 		@update-budget="updateLocalBudget($event)"
@@ -224,10 +274,7 @@ export default defineComponent({
 			}"
 			v-if="!alert.hide"
 		>
-			<Alert
-				type="success"
-				message="Budget has been saved successfully"
-			/>
+			<Alert :type="alert.type" :message="alert.message" />
 		</div>
 
 		<Select

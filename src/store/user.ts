@@ -1,6 +1,7 @@
 import { createStore } from 'pinia';
 import useHttp, { HttpResponse } from '@/hooks/useHttp';
 import useSession from '@/hooks/useSession';
+import useStates from '@/hooks/useStates';
 
 type LoginType = {
 	timeout: boolean;
@@ -40,7 +41,16 @@ export const useUserStore = createStore({
 	id: 'user',
 
 	state: (): UserState => ({
-		login: {} as LoginType,
+		login: {
+			timeout: false,
+			throttle: {
+				attempts: 0,
+				allowed: 0,
+			},
+			verify: {
+				expires_at: '',
+			},
+		},
 		user: {},
 		vehicles: [],
 	}),
@@ -58,15 +68,14 @@ export const useUserStore = createStore({
 	},
 
 	actions: {
-		resetUser() {
-			this.login = {} as LoginType;
-			this.user = {};
-			this.vehicles = [];
+		setTokenExpired(payload: boolean) {
+			this.login.timeout = payload;
 		},
 
 		async isLoggedIn() {
 			const { getAuth, failedResponse } = useHttp();
 			const { getCookie } = useSession();
+			const { logout } = useStates();
 			const cookie = getCookie(cookieName);
 
 			if (cookie) {
@@ -89,7 +98,7 @@ export const useUserStore = createStore({
 				return response;
 			}
 
-			this.logout();
+			logout();
 			return failedResponse();
 		},
 
@@ -103,17 +112,11 @@ export const useUserStore = createStore({
 			});
 
 			if (response.success) {
+				this.setTokenExpired(false);
 				setCookie(cookieName, response.data.data.token);
 			}
 
 			return response;
-		},
-
-		logout() {
-			const { deleteCookie } = useSession();
-			deleteCookie(cookieName);
-			this.resetUser();
-			// @todo add reset to other stores
 		},
 
 		setVerifyExpiration(payload: string) {

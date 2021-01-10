@@ -1,8 +1,7 @@
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import Modal from '@/components/modals/Modal.vue';
 import WarningIcon from '@/components/ui-elements/icons/WarningIcon.vue';
-import { BudgetList } from '@/store/budget';
 
 export default defineComponent({
 	components: {

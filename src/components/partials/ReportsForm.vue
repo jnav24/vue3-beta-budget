@@ -5,7 +5,12 @@ import Form from '@/components/ui-elements/form/Form';
 import Input from '@/components/ui-elements/form/Input.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
 import useTimestamp from '@/hooks/useTimestamp';
-import { useTypesStore, CommonExpenseTypeInterface } from '@/store';
+import useUtils from '@/hooks/useUtils';
+import {
+	useAggregationStore,
+	useTypesStore,
+	CommonExpenseTypeInterface,
+} from '@/store';
 
 export default defineComponent({
 	components: {
@@ -14,8 +19,10 @@ export default defineComponent({
 		Input,
 		Select,
 	},
-	setup() {
+	setup(props, { emit }) {
+		const { camelCase } = useUtils();
 		const { getAllMonths } = useTimestamp();
+		const aggregationStore = useAggregationStore();
 		const typesStore = useTypesStore();
 
 		const form = reactive({
@@ -55,12 +62,12 @@ export default defineComponent({
 		const showTypesSelect = computed(
 			() => !['miscellaneous'].includes(form.bill_type.value)
 		);
-		const billTypes: any[] = typesStore.bills;
+		const billTypes = computed(() => typesStore.bills);
 		const vehicles: any[] = [];
-		const years: any[] = [{ value: '2020', label: '2020' }];
+		const years = computed(() => aggregationStore.allYears);
 
 		const billName = computed(() => {
-			const type = billTypes.find(
+			const type = billTypes.value.find(
 				obj => obj.slug === form.bill_type.value
 			);
 			return type ? type.name : '';
@@ -75,6 +82,21 @@ export default defineComponent({
 			form.year.value = '';
 		};
 
+		const runSearch = () => {
+			const formValues: Record<string, string> = {};
+
+			for (const key of Object.keys(form)) {
+				formValues[camelCase(key)] = (form as any)[key].value;
+			}
+
+			emit('run-search', formValues);
+		};
+
+		const updateExpenseType = (e: string) => {
+			form.bill_type.value = e;
+			form.type.value = '';
+		};
+
 		return {
 			billTypes,
 			form,
@@ -82,9 +104,11 @@ export default defineComponent({
 			isFormValid,
 			months: getAllMonths('abbr'),
 			resetForm,
+			runSearch,
 			showNameInput,
 			showTypesSelect,
 			types,
+			updateExpenseType,
 			vehicles,
 			years,
 		};
@@ -102,7 +126,8 @@ export default defineComponent({
 					item-value="slug"
 					item-label="name"
 					label="Expense Type"
-					v-model:value="form.bill_type.value"
+					:value="form.bill_type.value"
+					@set-item="updateExpenseType($event)"
 				/>
 			</div>
 
@@ -178,6 +203,7 @@ export default defineComponent({
 				class="w-full sm:w-auto mb-2 sm:mb-0"
 				color="secondary"
 				:is-disabled="!isFormValid"
+				@click="runSearch()"
 			>
 				Search
 			</Button>

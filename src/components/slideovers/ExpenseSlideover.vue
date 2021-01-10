@@ -32,8 +32,8 @@ export default defineComponent({
 	setup(props, { emit }) {
 		const setClose = ref(false);
 
-		const setCloseModal = (budget?: BudgetList) => {
-			if (budget && Object.keys(budget).length) {
+		const setCloseModal = (budget?: { type: string; data: BudgetList }) => {
+			if (budget && Object.keys(budget.data).length) {
 				emit('update-budget', budget);
 			}
 
