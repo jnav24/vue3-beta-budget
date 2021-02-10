@@ -30,7 +30,7 @@ export default defineComponent({
 		Select,
 		Textarea,
 	},
-	setup() {
+	setup(props, { emit }) {
 		const ExpenseContext = inject<ExpenseFormContextType>(
 			ExpenseFormContext,
 			{} as ExpenseFormContextType
@@ -116,6 +116,11 @@ export default defineComponent({
 			ExpenseContext?.closeModal(data);
 		};
 
+		const updateVehicleType = (e: number) => {
+			form.type.value = e;
+			emit('update-category');
+		};
+
 		return {
 			closeModal,
 			dates: ExpenseContext?.dates ?? [],
@@ -123,6 +128,7 @@ export default defineComponent({
 			form,
 			typeName,
 			types: ExpenseContext.typeList,
+			updateVehicleType,
 			valid,
 			vehicles,
 		};
@@ -153,7 +159,8 @@ export default defineComponent({
 					item-label="name"
 					item-value="id"
 					:rules="form.type.rules"
-					v-model:value="form.type.value"
+					:value="form.type.value"
+					@set-item="updateVehicleType($event)"
 				/>
 
 				<Input
