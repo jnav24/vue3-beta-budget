@@ -92,13 +92,19 @@ export default defineComponent({
 				}
 			});
 
-			// eslint-disable-next-line no-prototype-builtins
-			if (result.hasOwnProperty('paid_date') && result.confirmation?.length) {
+			if (
+				// eslint-disable-next-line no-prototype-builtins
+				result.hasOwnProperty('paid_date') &&
+				result.confirmation?.length
+			) {
 				result.paid_date = formatDate('yyyy-MM-dd');
 			}
 
-			// eslint-disable-next-line no-prototype-builtins
-			if (result.hasOwnProperty('paid_date') && !result.confirmation?.length) {
+			if (
+				// eslint-disable-next-line no-prototype-builtins
+				result.hasOwnProperty('paid_date') &&
+				!result.confirmation?.length
+			) {
 				result.paid_date = null;
 			}
 
