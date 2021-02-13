@@ -48,7 +48,7 @@ export default defineComponent({
 		const dateCounter = ref(0);
 		const dateHeader = computed(() =>
 			formatDate(
-				'yyyy-MM-dd',
+				'yyyy-MM',
 				addMonth(dateCounter.value, props.value).toISOString()
 			)
 		);
