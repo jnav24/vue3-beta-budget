@@ -122,6 +122,7 @@ export default defineComponent({
 				/>
 				<VehicleExpenseForm
 					v-else-if="['vehicles'].includes(formType)"
+					@update-category="setCategory('vehicles')"
 				/>
 				<CommonExpenseForm v-else />
 			</div>

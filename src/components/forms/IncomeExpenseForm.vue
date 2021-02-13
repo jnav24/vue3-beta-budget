@@ -44,10 +44,14 @@ export default defineComponent({
 		const valid = ref(false);
 
 		onBeforeMount(() => {
+			form.paid_date.value = ExpenseContext.budgetCycle.value;
+
 			if (ExpenseContext && Object.keys(ExpenseContext.data).length) {
 				form.amount.value = ExpenseContext.data.amount;
 				form.name.value = ExpenseContext.data.name;
-				form.paid_date.value = ExpenseContext.data.paid_date || '';
+				form.paid_date.value =
+					ExpenseContext.data.paid_date ||
+					ExpenseContext.budgetCycle.value;
 				form.type.value = ExpenseContext.getTypeId();
 			}
 		});

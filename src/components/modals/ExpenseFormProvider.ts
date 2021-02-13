@@ -3,11 +3,13 @@ import { BudgetExpense } from '@/store/budget';
 import { ComputedRef, Ref } from '@vue/reactivity';
 import { CommonExpenseTypeInterface, useTypesStore } from '@/store';
 import { BillTypesInterface, TypesStateInterface } from '@/store/types';
+import useTimestamp from '@/hooks/useTimestamp';
 import useUtils from '@/hooks/useUtils';
 
 export const ExpenseFormContext = Symbol('Expense Form Provider');
 
 export type ExpenseFormContextType = {
+	budgetCycle: ComputedRef<string>;
 	data: BudgetExpense;
 	closeModal: (data: Record<string, string>) => void;
 	currentType: Ref<keyof TypesStateInterface>;
@@ -21,6 +23,10 @@ export type ExpenseFormContextType = {
 
 export default defineComponent({
 	props: {
+		budgetCycle: {
+			default: '',
+			type: String,
+		},
 		editMode: {
 			required: true,
 			type: Boolean,
@@ -41,6 +47,7 @@ export default defineComponent({
 	setup(props, { emit }) {
 		const typeStore = useTypesStore();
 		const { camelCase } = useUtils();
+		const { formatDate } = useTimestamp();
 
 		const currentType = ref(props.type);
 
@@ -89,10 +96,28 @@ export default defineComponent({
 					result[key] = form[value].value;
 				}
 			});
+
+			if (
+				// eslint-disable-next-line no-prototype-builtins
+				result.hasOwnProperty('paid_date') &&
+				result.confirmation?.length
+			) {
+				result.paid_date = formatDate('yyyy-MM-dd');
+			}
+
+			if (
+				// eslint-disable-next-line no-prototype-builtins
+				result.hasOwnProperty('paid_date') &&
+				!result.confirmation?.length
+			) {
+				result.paid_date = null;
+			}
+
 			return result;
 		};
 
 		provide(ExpenseFormContext, {
+			budgetCycle: computed(() => props.budgetCycle),
 			data: props.data,
 			closeModal,
 			currentType,

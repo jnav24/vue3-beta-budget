@@ -93,8 +93,13 @@ export default defineComponent({
 				return `$${formatDollar((item as any)[header])}`;
 			}
 
-			if (header === 'name' && item.user_vehicle_id) {
-				const vehicle = userStore.getVehicleName(item.user_vehicle_id);
+			if (
+				header === 'name' &&
+				((item as any).vehicle || item.user_vehicle_id)
+			) {
+				const vehicle = userStore.getVehicleName(
+					(item as any).vehicle ?? item.user_vehicle_id
+				);
 				return vehicle
 					? `${vehicle.year} ${vehicle.make} ${vehicle.model}`
 					: '';

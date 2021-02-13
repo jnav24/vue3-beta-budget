@@ -58,7 +58,18 @@ export default defineComponent({
 				.filter(
 					type => !['banks', 'incomes', 'investments'].includes(type)
 				)
-				.forEach(key => spentList.push(...props.expenses[key]));
+				.forEach(key => {
+					const list = props.expenses[key].filter(expense => {
+						if (typeof expense.not_track_amount !== 'undefined') {
+							return !expense.not_track_amount;
+						}
+
+						return true;
+					});
+
+					spentList.push(...list);
+				});
+
 			return generateTotals(spentList);
 		});
 		const totalSaved = computed(() => {
