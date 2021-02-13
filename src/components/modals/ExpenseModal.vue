@@ -1,9 +1,10 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 import ExpenseForm from '@/components/partials/ExpenseForm.vue';
 import Modal from '@/components/modals/Modal.vue';
-import { BudgetExpense, BudgetList } from '@/store/budget';
+import { BudgetExpense, BudgetList, useBudgetStore } from '@/store/budget';
 import ExpenseFormProvider from '@/components/modals/ExpenseFormProvider';
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
 	components: {
@@ -34,6 +35,12 @@ export default defineComponent({
 		},
 	},
 	setup(props, { emit }) {
+		const budgetStore = useBudgetStore();
+		const {
+			params: { id },
+		} = useRoute();
+
+		const budgetCycle = ref('');
 		const setClose = ref(false);
 
 		const setCloseModal = (budget?: { type: string; data: BudgetList }) => {
@@ -45,7 +52,19 @@ export default defineComponent({
 			setTimeout(() => (setClose.value = false), 1000);
 		};
 
+		watch(
+			() => props.show,
+			n => {
+				if (n) {
+					budgetCycle.value =
+						budgetStore.list.find(item => item.id === Number(id))
+							?.budget_cycle ?? '';
+				}
+			}
+		);
+
 		return {
+			budgetCycle,
 			closeModal: (e: boolean) => emit('update:show', e),
 			setClose,
 			setCloseModal,
@@ -58,6 +77,7 @@ export default defineComponent({
 	<Modal :show="show" :set-close="setClose" @close="closeModal($event)">
 		<div :class="{ 'w-200': hideSidebar, 'w-250': !hideSidebar }">
 			<ExpenseFormProvider
+				:budget-cycle="budgetCycle"
 				:data="data"
 				:edit-mode="editMode"
 				:type="type"

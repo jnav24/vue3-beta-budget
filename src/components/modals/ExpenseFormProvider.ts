@@ -9,6 +9,7 @@ import useUtils from '@/hooks/useUtils';
 export const ExpenseFormContext = Symbol('Expense Form Provider');
 
 export type ExpenseFormContextType = {
+	budgetCycle: ComputedRef<string>;
 	data: BudgetExpense;
 	closeModal: (data: Record<string, string>) => void;
 	currentType: Ref<keyof TypesStateInterface>;
@@ -22,6 +23,10 @@ export type ExpenseFormContextType = {
 
 export default defineComponent({
 	props: {
+		budgetCycle: {
+			default: '',
+			type: String,
+		},
 		editMode: {
 			required: true,
 			type: Boolean,
@@ -112,6 +117,7 @@ export default defineComponent({
 		};
 
 		provide(ExpenseFormContext, {
+			budgetCycle: computed(() => props.budgetCycle),
 			data: props.data,
 			closeModal,
 			currentType,
