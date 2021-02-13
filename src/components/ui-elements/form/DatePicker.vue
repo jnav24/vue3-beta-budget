@@ -47,7 +47,10 @@ export default defineComponent({
 		} = useTimestamp();
 		const dateCounter = ref(0);
 		const dateHeader = computed(() =>
-			formatDate('yyyy-MM-dd', addMonth(dateCounter.value, props.value).toISOString())
+			formatDate(
+				'yyyy-MM-dd',
+				addMonth(dateCounter.value, props.value).toISOString()
+			)
 		);
 		const datePicker = ref(null);
 		const dayBegins = computed(() =>
@@ -77,7 +80,10 @@ export default defineComponent({
 					+formatDate(
 						'd',
 						getEndDayOfMonth(
-							addMonth(dateCounter.value, props.value).toISOString()
+							addMonth(
+								dateCounter.value,
+								props.value
+							).toISOString()
 						).toISOString()
 					)
 				).keys()
@@ -135,7 +141,11 @@ export default defineComponent({
 		};
 
 		const isToday = (day: number) => {
-			const result = `${formatTimeZone('yyyy-MM', 'UTC', dateHeader.value)}-${setDay(day)}`;
+			const result = `${formatTimeZone(
+				'yyyy-MM',
+				'UTC',
+				dateHeader.value
+			)}-${setDay(day)}`;
 			return today === result;
 		};
 
