@@ -49,8 +49,6 @@ export default defineComponent({
 		const dateHeader = computed(() =>
 			formatDate('yyyy-MM-dd', addMonth(dateCounter.value, props.value).toISOString())
 		);
-		// @todo only select today's day if it is actually today's day. other months with today's day shouldn't be selected
-		// @todo the dates are not matching properly when setting a default value; i.e. oct 1 2019 starts on tues not mon
 		const datePicker = ref(null);
 		const dayBegins = computed(() =>
 			formatDate(
@@ -138,7 +136,7 @@ export default defineComponent({
 
 		const isToday = (day: number) => {
 			const result = `${formatTimeZone('yyyy-MM', 'UTC', dateHeader.value)}-${setDay(day)}`;
-			return today === result && dateCounter.value === 0;
+			return today === result;
 		};
 
 		const updateValue = (day: number) => {
