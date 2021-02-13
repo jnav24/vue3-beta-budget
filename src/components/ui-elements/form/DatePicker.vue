@@ -47,17 +47,16 @@ export default defineComponent({
 		} = useTimestamp();
 		const dateCounter = ref(0);
 		const dateHeader = computed(() =>
-			formatDate('yyyy-MM-dd', addMonth(dateCounter.value).toISOString())
+			formatDate('yyyy-MM-dd', addMonth(dateCounter.value, props.value).toISOString())
 		);
+		// @todo only select today's day if it is actually today's day. other months with today's day shouldn't be selected
+		// @todo the dates are not matching properly when setting a default value; i.e. oct 1 2019 starts on tues not mon
 		const datePicker = ref(null);
-		const dateTemplate = computed(() =>
-			formatDate('yyyy-MM', dateHeader.value)
-		);
 		const dayBegins = computed(() =>
 			formatDate(
 				'EEEEEE',
 				getStartDayOfMonth(
-					addMonth(dateCounter.value).toISOString()
+					addMonth(dateCounter.value, props.value).toISOString()
 				).toISOString()
 			)
 		);
@@ -65,7 +64,7 @@ export default defineComponent({
 			formatDate(
 				'EEEEEE',
 				getEndDayOfMonth(
-					addMonth(dateCounter.value).toISOString()
+					addMonth(dateCounter.value, props.value).toISOString()
 				).toISOString()
 			)
 		);
@@ -80,7 +79,7 @@ export default defineComponent({
 					+formatDate(
 						'd',
 						getEndDayOfMonth(
-							addMonth(dateCounter.value).toISOString()
+							addMonth(dateCounter.value, props.value).toISOString()
 						).toISOString()
 					)
 				).keys()
@@ -133,18 +132,18 @@ export default defineComponent({
 		const setDay = (day: number) => (day < 10 ? `0${day}` : day);
 
 		const isSelected = (day: number) => {
-			const result = `${dateTemplate.value}-${setDay(day)}`;
+			const result = `${dateHeader.value}-${setDay(day)}`;
 			return formatTimeZone('yyyy-MM-dd', 'UTC', props.value) === result;
 		};
 
 		const isToday = (day: number) => {
-			const result = `${formatTimeZone('yyyy-MM', 'UTC')}-${setDay(day)}`;
+			const result = `${formatTimeZone('yyyy-MM', 'UTC', dateHeader.value)}-${setDay(day)}`;
 			return today === result && dateCounter.value === 0;
 		};
 
 		const updateValue = (day: number) => {
 			selected.value = false;
-			const inputValue = `${dateTemplate.value}-${setDay(day)}`;
+			const inputValue = `${dateHeader.value}-${setDay(day)}`;
 			if (FormContext) {
 				FormContext.validateField(labelId.value, inputValue);
 			}
@@ -210,7 +209,7 @@ export default defineComponent({
 						<ChevronLeftIcon class="cursor-pointer w-4 h-4" />
 					</Button>
 					<span class="text-sm">
-						{{ formatDate('MMMM yyyy', dateHeader) }}
+						{{ formatTimeZone('MMMM yyyy', 'UTC', dateHeader) }}
 					</span>
 					<Button
 						fab
