@@ -1,5 +1,6 @@
 import {
 	format,
+	addHours,
 	addMonths,
 	endOfMonth,
 	startOfMonth,
@@ -13,7 +14,7 @@ export default function useTimestamp() {
 		timestamp.length ? new Date(timestamp) : new Date();
 
 	const formatDate = (
-		pattern = 'yyyy-MM-dd hh:mm A',
+		pattern = 'yyyy-MM-dd hh:mm a',
 		timestamp = ''
 	): string => {
 		return format(getDateObject(timestamp), pattern);
@@ -26,6 +27,10 @@ export default function useTimestamp() {
 	) => {
 		const zonedDate = utcToZonedTime(getDateObject(timestamp), zone);
 		return formatDate(pattern, zonedDate.toLocaleString());
+	};
+
+	const addHour = (addition: number, timestamp = '') => {
+		return addHours(getDateObject(timestamp), addition);
 	};
 
 	const addMonth = (addition: number, timestamp = '') => {
@@ -110,6 +115,7 @@ export default function useTimestamp() {
 	};
 
 	return {
+		addHour,
 		addMonth,
 		addYear,
 		formatDate,
