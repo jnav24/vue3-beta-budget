@@ -60,6 +60,8 @@ export default defineComponent({
 		const valid = ref(false);
 
 		onBeforeMount(() => {
+			form.paid_date.value = ExpenseContext.budgetCycle.value;
+
 			if (Object.keys(ExpenseContext.data).length) {
 				form.amount.value = ExpenseContext.data.amount;
 				form.confirmation.value =
@@ -69,7 +71,9 @@ export default defineComponent({
 				form.due_date.value = ExpenseContext.data.due_date || '';
 				form.name.value = ExpenseContext.data.name;
 				form.notes.value = ExpenseContext.data.notes || '';
-				form.paid_date.value = ExpenseContext.data.paid_date || '';
+				form.paid_date.value =
+					ExpenseContext.data.paid_date ||
+					ExpenseContext.budgetCycle.value;
 			}
 		});
 

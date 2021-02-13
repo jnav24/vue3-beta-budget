@@ -86,6 +86,8 @@ export default defineComponent({
 		);
 
 		onBeforeMount(() => {
+			form.paid_date.value = ExpenseContext.budgetCycle.value;
+
 			if (Object.keys(ExpenseContext.data).length) {
 				form.amount.value = ExpenseContext.data.amount;
 				form.balance.value = ExpenseContext.data.balance || '';
@@ -97,7 +99,9 @@ export default defineComponent({
 				form.vehicle.value = ExpenseContext.data.user_vehicle_id || 0;
 				form.mileage.value = ExpenseContext.data.mileage || '';
 				form.notes.value = ExpenseContext.data.notes || '';
-				form.paid_date.value = ExpenseContext.data.paid_date || '';
+				form.paid_date.value =
+					ExpenseContext.data.paid_date ||
+					ExpenseContext.budgetCycle.value;
 				form.type.value = ExpenseContext.getTypeId();
 			}
 		});
