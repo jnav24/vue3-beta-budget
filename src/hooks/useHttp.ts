@@ -1,5 +1,6 @@
 import { reactive, ref, toRefs } from 'vue';
 import axios, { AxiosResponse } from 'axios';
+import useEncrypt from '@/hooks/useEncrypt';
 import useSession from '@/hooks/useSession';
 import { useUserStore } from '@/store';
 
@@ -26,6 +27,7 @@ export type HttpResponse = {
 };
 
 export default function useHttp() {
+	const { decryptCookie } = useEncrypt();
 	const { getCookie } = useSession();
 	const userStore = useUserStore();
 
@@ -104,7 +106,9 @@ export default function useHttp() {
 			path,
 			params: params || {},
 			headers: {
-				Authorization: `Bearer ${getCookie(process.env.VUE_APP_TOKEN)}`,
+				Authorization: `Bearer ${decryptCookie(
+					getCookie(process.env.VUE_APP_TOKEN) ?? ''
+				)}`,
 			},
 		});
 	};
@@ -124,7 +128,9 @@ export default function useHttp() {
 			path,
 			params: params || {},
 			headers: {
-				Authorization: `Bearer ${getCookie(process.env.VUE_APP_TOKEN)}`,
+				Authorization: `Bearer ${decryptCookie(
+					getCookie(process.env.VUE_APP_TOKEN) ?? ''
+				)}`,
 			},
 		});
 	};
@@ -135,7 +141,9 @@ export default function useHttp() {
 			path,
 			params: params || {},
 			headers: {
-				Authorization: `Bearer ${getCookie(process.env.VUE_APP_TOKEN)}`,
+				Authorization: `Bearer ${decryptCookie(
+					getCookie(process.env.VUE_APP_TOKEN) ?? ''
+				)}`,
 			},
 		});
 	};
