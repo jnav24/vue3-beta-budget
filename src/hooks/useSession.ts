@@ -1,9 +1,19 @@
 export default function useSession() {
-	const setCookie = (name: string, value: string) => {
-		const d = new Date();
-		d.setTime(d.getTime() + 1000 * 60 * 60 * 24);
-		const expire = d.toString();
-		document.cookie = `${name}=${value}; expires=${expire}; path=/; SameSite=Strict; domain=`;
+	const setCookie = (name: string, value: string, minutes = '') => {
+		let expire = '';
+		const secure = process.env.NODE_ENV === 'production' ? 'secure' : '';
+
+		if (expire && expire.length && /^\d+$/.test(value)) {
+			expire = new Date(
+				new Date().getTime() + +minutes * 60000
+			).toString();
+		} else {
+			const d = new Date();
+			d.setTime(d.getTime() + 1000 * 60 * 60 * 24);
+			expire = d.toString();
+		}
+
+		document.cookie = `${name}=${value}; expires=${expire}; path=/; SameSite=Strict; domain=; ${secure}`;
 	};
 
 	const deleteCookie = (name: string) => {
