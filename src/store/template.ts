@@ -53,7 +53,7 @@ export const useTemplateStore = createStore({
 			const { getAuth, getDataFromResponse } = useHttp();
 
 			const data = {
-				path: 'budget-templates',
+				path: 'api/budget-templates',
 			};
 			const response = await getAuth(data);
 
@@ -70,7 +70,7 @@ export const useTemplateStore = createStore({
 			const { deleteAuth } = useHttp();
 
 			const data = {
-				path: 'budget-templates',
+				path: 'api/budget-templates',
 				params: expenses,
 			};
 
@@ -92,7 +92,7 @@ export const useTemplateStore = createStore({
 		async saveTemplate(expenses: Record<string, any[]>) {
 			const { postAuth, getDataFromResponse } = useHttp();
 			const data = {
-				path: 'budget-templates',
+				path: 'api/budget-templates',
 				params: {
 					id: this.templates.id,
 					expenses,

@@ -42,7 +42,7 @@ export const useTypesStore = createStore({
 		async getAllBillTypes() {
 			const { getAuth } = useHttp();
 			const { camelCase } = useUtils();
-			const data = { path: 'types/bill' };
+			const data = { path: 'api/types/bill' };
 			const response = await getAuth(data);
 
 			if (response.success) {

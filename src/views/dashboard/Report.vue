@@ -81,7 +81,7 @@ export default defineComponent({
 			isLoading.value = true;
 			type.value = params.billType;
 			const data = {
-				path: 'search',
+				path: 'api/search',
 				params,
 			};
 			const response = await postAuth(data);
