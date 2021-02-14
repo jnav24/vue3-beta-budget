@@ -103,17 +103,17 @@ export const useUserStore = createStore({
 		},
 
 		async logUserIn(params: { username: string; password: string }) {
-			const { post } = useHttp();
-			const { setCookie } = useSession();
+			const { get, post } = useHttp();
 
 			const response: HttpResponse = await post({
-				path: 'auth/login',
-				params,
+				path: 'login',
+				params: { ...params, email: params.username },
 			});
 
 			if (response.success) {
-				this.setTokenExpired(false);
-				setCookie(cookieName, response.data.data.token);
+				await get({ path: 'user/token' });
+				// @todo not sure if I need this yet
+				// this.setTokenExpired(false);
 			}
 
 			return response;
