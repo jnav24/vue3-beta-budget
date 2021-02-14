@@ -1,7 +1,11 @@
 export default function useSession() {
 	const setCookie = (name: string, value: string, minutes = '') => {
 		let expire = '';
-		const secure = process.env.NODE_ENV === 'production' ? 'secure' : '';
+		const secure =
+			process.env.NODE_ENV === 'production' &&
+			location.protocol === 'https:'
+				? 'secure'
+				: '';
 
 		if (expire && expire.length && /^\d+$/.test(value)) {
 			expire = new Date(
