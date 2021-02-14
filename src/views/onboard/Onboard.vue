@@ -1,7 +1,13 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted } from 'vue';
+import useHttp from '@/hooks/useHttp';
 
-export default defineComponent({});
+export default defineComponent({
+	setup() {
+		const { get } = useHttp();
+		onMounted(() => get({ path: 'sanctum/csrf-cookie' }));
+	},
+});
 </script>
 
 <template>
