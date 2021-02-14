@@ -79,7 +79,6 @@ export default function useHttp() {
 
 				if (msg.includes('Unauthorized')) {
 					userStore.setTokenExpired(true);
-					location.reload();
 				}
 			}
 
