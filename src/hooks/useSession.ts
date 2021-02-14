@@ -1,5 +1,9 @@
+import useEncrypt from '@/hooks/useEncrypt';
+
 export default function useSession() {
 	const setCookie = (name: string, value: string, minutes = '') => {
+		const { encryptCookie } = useEncrypt();
+
 		let expire = '';
 		const secure =
 			process.env.NODE_ENV === 'production' &&
@@ -17,7 +21,8 @@ export default function useSession() {
 			expire = d.toString();
 		}
 
-		document.cookie = `${name}=${value}; expires=${expire}; path=/; SameSite=Strict; domain=; ${secure}`;
+		const encryptedValue = encryptCookie(value);
+		document.cookie = `${name}=${encryptedValue}; expires=${expire}; path=/; SameSite=Strict; domain=; ${secure}`;
 	};
 
 	const deleteCookie = (name: string) => {
