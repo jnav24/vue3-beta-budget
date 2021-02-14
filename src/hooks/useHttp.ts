@@ -3,6 +3,8 @@ import axios, { AxiosResponse } from 'axios';
 import useSession from '@/hooks/useSession';
 import { useUserStore } from '@/store';
 
+axios.defaults.withCredentials = true;
+
 enum URLMethods {
 	GET = 'get',
 	POST = 'post',
@@ -52,7 +54,10 @@ export default function useHttp() {
 
 			const response: AxiosResponse = await axios({
 				method,
-				url: `${process.env.VUE_APP_API_DOMAIN}/${path}`,
+				url: `${process.env.VUE_APP_API_DOMAIN}${path.replace(
+					/^\/|\/$/g,
+					''
+				)}`,
 				headers,
 				...responseData,
 			});
