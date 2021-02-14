@@ -9,18 +9,17 @@ export default function useSession() {
 		const secure =
 			process.env.NODE_ENV === 'production' &&
 			location.protocol === 'https:'
-				? 'secure'
+				? 'secure; '
 				: '';
 
 		if (minutes && minutes.length && /^\d+$/.test(minutes)) {
-			d.setTime(d.getTime() + +minutes * 60000);
-		} else {
-			d.setTime(d.getTime() + 1000 * 60 * 60 * 24);
+			const expirationTime = +minutes * 60000;
+			d.setTime(d.getTime() + expirationTime);
+			expire = `expires=${d.toUTCString()}; `;
 		}
 
-		expire = d.toString();
 		const encryptedValue = encryptCookie(value);
-		document.cookie = `${name}=${encryptedValue}; expires=${expire}; path=/; SameSite=Strict; domain=; ${secure}`;
+		document.cookie = `${name}=${encryptedValue}; path=/; SameSite=Strict; domain=;${expire}${secure}`;
 	};
 
 	const deleteCookie = (name: string) => {
