@@ -79,7 +79,7 @@ export const useUserStore = createStore({
 			const cookie = getCookie(cookieName);
 
 			if (cookie) {
-				const response = await getAuth({ path: 'auth/user' });
+				const response = await getAuth({ path: 'api/user' });
 
 				if (response.success) {
 					const { user, vehicles, verify } = response.data.data;
@@ -104,6 +104,7 @@ export const useUserStore = createStore({
 
 		async logUserIn(params: { username: string; password: string }) {
 			const { get, post } = useHttp();
+			const { setCookie } = useSession();
 
 			const response: HttpResponse = await post({
 				path: 'login',
@@ -111,9 +112,11 @@ export const useUserStore = createStore({
 			});
 
 			if (response.success) {
-				await get({ path: 'user/token' });
+				const resp = await get({ path: 'user/token' });
+				const { token, exp } = resp.data.data;
 				// @todo not sure if I need this yet
 				// this.setTokenExpired(false);
+				setCookie(cookieName, token, exp);
 			}
 
 			return response;
