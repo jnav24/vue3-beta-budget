@@ -3,6 +3,7 @@ import { defineComponent, reactive, ref } from 'vue';
 import { Form } from '@/components/ui-elements';
 import Button from '@/components/ui-elements/form/Button.vue';
 import Input from '@/components/ui-elements/form/Input.vue';
+import useHttp from '@/hooks/useHttp';
 
 export default defineComponent({
 	components: {
@@ -11,7 +12,8 @@ export default defineComponent({
 		Input,
 	},
 	setup() {
-		const emailSent = ref(true);
+		const { get, post } = useHttp();
+		const emailSent = ref(false);
 		const form = reactive({
 			email: {
 				rules: ['required', 'email'],
@@ -20,7 +22,21 @@ export default defineComponent({
 		});
 		const valid = ref(false);
 
-		return { emailSent, form, valid };
+		const handleSubmit = async () => {
+			await get({ path: 'sanctum/csrf-cookie' });
+			const response = await post({
+				path: 'forgot-password',
+				params: {
+					email: form.email.value,
+				},
+			});
+
+			if (response.success) {
+				emailSent.value = true;
+			}
+		};
+
+		return { emailSent, form, handleSubmit, valid };
 	},
 });
 </script>
@@ -45,7 +61,11 @@ export default defineComponent({
 					:rules="form.email.rules"
 				/>
 
-				<Button :is-disabled="!valid" color="secondary">
+				<Button
+					:is-disabled="!valid"
+					color="secondary"
+					@click="handleSubmit()"
+				>
 					Send
 				</Button>
 			</Form>
