@@ -4,6 +4,7 @@ export default function useSession() {
 	const setCookie = (name: string, value: string, minutes = '') => {
 		const { encryptCookie } = useEncrypt();
 
+		const d = new Date();
 		let expire = '';
 		const secure =
 			process.env.NODE_ENV === 'production' &&
@@ -11,16 +12,13 @@ export default function useSession() {
 				? 'secure'
 				: '';
 
-		if (expire && expire.length && /^\d+$/.test(value)) {
-			expire = new Date(
-				new Date().getTime() + +minutes * 60000
-			).toString();
+		if (minutes && minutes.length && /^\d+$/.test(minutes)) {
+			d.setTime(d.getTime() + +minutes * 60000);
 		} else {
-			const d = new Date();
 			d.setTime(d.getTime() + 1000 * 60 * 60 * 24);
-			expire = d.toString();
 		}
 
+		expire = d.toString();
 		const encryptedValue = encryptCookie(value);
 		document.cookie = `${name}=${encryptedValue}; expires=${expire}; path=/; SameSite=Strict; domain=; ${secure}`;
 	};
