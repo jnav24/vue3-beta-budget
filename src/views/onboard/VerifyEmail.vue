@@ -1,17 +1,24 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, reactive } from 'vue';
 
+import Alert from '@/components/ui-elements/Alert.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import useHttp from '@/hooks/useHttp';
 import useStates from '@/hooks/useStates';
 
 export default defineComponent({
 	components: {
+		Alert,
 		Button,
 	},
 	setup() {
 		const { get, post } = useHttp();
 		const { logout } = useStates();
+
+		const error = reactive({
+			display: false,
+			message: '',
+		});
 
 		const handleLogout = () => logout();
 
@@ -27,6 +34,7 @@ export default defineComponent({
 		};
 
 		return {
+			error,
 			handleLogout,
 			handleSendVerification,
 		};
@@ -36,6 +44,8 @@ export default defineComponent({
 
 <template>
 	<div class="pb-6 px-0 sm:px-6 sm:shadow-sm">
+		<Alert type="error" :message="error.message" v-if="error.display" />
+
 		<h1
 			class="text-center text-2xl text-gray-800 sm:text-gray-600 font-header mb-8"
 		>
