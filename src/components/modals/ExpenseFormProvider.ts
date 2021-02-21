@@ -92,6 +92,9 @@ export default defineComponent({
 				const key = value === 'type' ? getTypeKey() ?? value : value;
 				if (key === 'paid_date' && !form[value].value.length) {
 					result[key] = null;
+				} else if (key === 'vehicle' && form[value].value) {
+					result[key] = form[value].value;
+					result['user_vehicle_id'] = form[value].value;
 				} else {
 					result[key] = form[value].value;
 				}
