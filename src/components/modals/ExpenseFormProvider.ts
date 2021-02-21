@@ -102,7 +102,7 @@ export default defineComponent({
 				result.hasOwnProperty('paid_date') &&
 				result.confirmation?.length
 			) {
-				result.paid_date = formatDate('yyyy-MM-dd');
+				result.paid_date = result.paid_date || formatDate('yyyy-MM-dd');
 			}
 
 			if (
