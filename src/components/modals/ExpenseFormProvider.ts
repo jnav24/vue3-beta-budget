@@ -92,6 +92,9 @@ export default defineComponent({
 				const key = value === 'type' ? getTypeKey() ?? value : value;
 				if (key === 'paid_date' && !form[value].value.length) {
 					result[key] = null;
+				} else if (key === 'vehicle' && form[value].value) {
+					result[key] = form[value].value;
+					result['user_vehicle_id'] = form[value].value;
 				} else {
 					result[key] = form[value].value;
 				}
@@ -102,7 +105,7 @@ export default defineComponent({
 				result.hasOwnProperty('paid_date') &&
 				result.confirmation?.length
 			) {
-				result.paid_date = formatDate('yyyy-MM-dd');
+				result.paid_date = result.paid_date || formatDate('yyyy-MM-dd');
 			}
 
 			if (
