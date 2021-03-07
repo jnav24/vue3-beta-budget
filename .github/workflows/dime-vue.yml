@@ -31,5 +31,6 @@ jobs:
         format: 'YYYY-MM-DD-HH-mm-ss'
       env:
         TIMESTAMP: "${{ steps.time.outputs.time }}"
+    - run: [ ! -d ~/vue-releases ] && mkdir -p ~/vue-releases
     - run: NODE_ENV=production && rm -f public/app.css && ./node_modules/.bin/vue-cli-service build --dest=~/vue-releases/$TIMESTAMP --no-clean
     - run: ln -sfn ~/vue-releases/$TIMESTAMP current
