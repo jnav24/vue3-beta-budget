@@ -11,6 +11,9 @@ jobs:
   build:
 
     runs-on: self-hosted
+    
+    env:
+        TIME: "${{ steps.time.outputs.time }}"
 
     strategy:
       matrix:
@@ -43,17 +46,13 @@ jobs:
     
     - name: Building App
       shell: bash
-      env:
-        TIME: "${{ steps.time.outputs.time }}"
       run: |
-        mkdir -p $HOME/test
+        echo "$GITHUB_WORKSPACE"
         echo "$HOME/vue-releases/$TIME"
-        ./node_modules/.bin/vue-cli-service build --dest=~/vue-releases/$TIME --no-clean
+        $GITHUB_WORKSPACE/node_modules/.bin/vue-cli-service build --dest=$HOME/vue-releases/$TIME --no-clean
       
     - name: Setting Current Build
       shell: bash
-      env:
-        TIME: "${{ steps.time.outputs.time }}"
       run: |
         echo $TIME
         ln -sfn ~/vue-releases/$TIME current
