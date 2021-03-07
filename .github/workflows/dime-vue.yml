@@ -59,4 +59,4 @@ jobs:
       env:
         TIME: "${{ steps.time.outputs.time }}"
       run: |
-        ln -sfn $HOME/vue-releases/$TIME current
+        ln -sfn $HOME/vue-releases/$TIME $HOME/vue-releases/current
