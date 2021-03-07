@@ -44,16 +44,14 @@ jobs:
     - if: steps.check_files.outputs.file_exists == 'false'
       shell: bash
       run: |
-        mkdir -p ~/vue-releases
+        mkdir -p $HOME/vue-releases
     
     - name: Building App
       shell: bash
       env:
         TIME: "${{ steps.time.outputs.time }}"
       run: |
-        node --version
-        echo "$GITHUB_WORKSPACE"
-        echo "$HOME/vue-releases/$TIME"
+        NODE_ENV=production
         $GITHUB_WORKSPACE/node_modules/.bin/vue-cli-service build --dest=$HOME/vue-releases/$TIME --no-clean
       
     - name: Setting Current Build
@@ -61,5 +59,4 @@ jobs:
       env:
         TIME: "${{ steps.time.outputs.time }}"
       run: |
-        echo $TIME
-        ln -sfn ~/vue-releases/$TIME current
+        ln -sfn $HOME/vue-releases/$TIME current
