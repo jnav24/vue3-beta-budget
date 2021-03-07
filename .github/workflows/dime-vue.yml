@@ -39,13 +39,18 @@ jobs:
         TIMESTAMP: "${{ steps.time.outputs.time }}"
         
     - if: steps.check_files.outputs.file_exists == 'false'
+      shell: bash
       run: |
         mkdir -p ~/vue-releases
     
     - name: Building App
+      shell: bash
       run: |
-        NODE_ENV=production && rm -f public/app.css && ./node_modules/.bin/vue-cli-service build --dest=~/vue-releases/$TIMESTAMP --no-clean
+        NODE_ENV=production
+        rm -f public/app.css
+        ./node_modules/.bin/vue-cli-service build --dest=~/vue-releases/$TIMESTAMP --no-clean
       
     - name: Setting Current Build
+      shell: bash
       run: |
         ln -sfn ~/vue-releases/$TIMESTAMP current
