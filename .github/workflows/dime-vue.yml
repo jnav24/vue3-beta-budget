@@ -24,13 +24,25 @@ jobs:
     - name: Installing Dependencies
       run: npm install
 
-    - name: Building App
+    - name: Setting Timestamp
       id: time
       uses: nanzm/get-time-action@v1.1
       with:
         format: 'YYYY-MM-DD-HH-mm-ss'
+        
+    - name: Checking Release Directory
+      id: check_files
+      uses: andstor/file-existence-action@v1
+      with:
+        files: "~/vue-releases"
       env:
         TIMESTAMP: "${{ steps.time.outputs.time }}"
-    - run: [ ! -d ~/vue-releases ] && mkdir -p ~/vue-releases
-    - run: NODE_ENV=production && rm -f public/app.css && ./node_modules/.bin/vue-cli-service build --dest=~/vue-releases/$TIMESTAMP --no-clean
-    - run: ln -sfn ~/vue-releases/$TIMESTAMP current
+        
+    - if: steps.check_files.outputs.file_exists == 'false'
+      run: mkdir -p ~/vue-releases
+    
+    - name: Building App
+      run: NODE_ENV=production && rm -f public/app.css && ./node_modules/.bin/vue-cli-service build --dest=~/vue-releases/$TIMESTAMP --no-clean
+      
+    - name: Setting Current Build
+      run: ln -sfn ~/vue-releases/$TIMESTAMP current
