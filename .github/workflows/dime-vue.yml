@@ -46,6 +46,7 @@ jobs:
       env:
         TIME: "${{ steps.time.outputs.time }}"
       run: |
+        node --version
         echo "$GITHUB_WORKSPACE"
         echo "$HOME/vue-releases/$TIME"
         $GITHUB_WORKSPACE/node_modules/.bin/vue-cli-service build --dest=$HOME/vue-releases/$TIME --no-clean
