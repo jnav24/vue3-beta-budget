@@ -46,6 +46,8 @@ jobs:
     - name: Building App
       shell: bash
       run: |
+        mkdir -p $HOME/test
+        echo "$HOME/vue-releases/$TIMESTAMP"
         ./node_modules/.bin/vue-cli-service build --dest=~/vue-releases/$TIMESTAMP --no-clean
       
     - name: Setting Current Build
