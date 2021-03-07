@@ -43,7 +43,8 @@ jobs:
         mkdir -p ~/vue-releases
     
     - name: Building App
-      run: NODE_ENV=production && rm -f public/app.css && ./node_modules/.bin/vue-cli-service build --dest=~/vue-releases/$TIMESTAMP --no-clean
+      run: |
+        NODE_ENV=production && rm -f public/app.css && ./node_modules/.bin/vue-cli-service build --dest=~/vue-releases/$TIMESTAMP --no-clean
       
     - name: Setting Current Build
       run: |
