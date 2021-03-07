@@ -21,8 +21,8 @@ jobs:
     - name: Checking out
       uses: actions/checkout@v2
 
-#     - name: Installing Dependencies
-#       run: npm install
+    - name: Installing Dependencies
+      run: npm install
 
     - name: Setting Timestamp
       id: time
