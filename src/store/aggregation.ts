@@ -57,7 +57,7 @@ export const useAggregationStore = createStore({
 
 		async getUnpaidBillTotals() {
 			const data = {
-				path: 'api/unpaid-aggregate',
+				path: 'api/budget-aggregates/unpaid',
 			};
 			const { getAuth } = useHttp();
 			const response = await getAuth(data);
@@ -73,7 +73,7 @@ export const useAggregationStore = createStore({
 
 		async getSelectedYearAggregate(year: string) {
 			const data = {
-				path: `api/current-budget-aggregate/${year}`,
+				path: `api/budget-aggregates/${year}`,
 			};
 			const { getAuth } = useHttp();
 			const response = await getAuth(data);
@@ -89,7 +89,7 @@ export const useAggregationStore = createStore({
 
 		async getYearlyAggregations() {
 			const data = {
-				path: 'api/budget-aggregate',
+				path: 'api/budget-aggregates',
 			};
 			const { getAuth } = useHttp();
 			const response = await getAuth(data);
