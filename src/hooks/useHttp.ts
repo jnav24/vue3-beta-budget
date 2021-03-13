@@ -1,7 +1,10 @@
 import { reactive, ref, toRefs } from 'vue';
 import axios, { AxiosResponse } from 'axios';
+import useEncrypt from '@/hooks/useEncrypt';
 import useSession from '@/hooks/useSession';
 import { useUserStore } from '@/store';
+
+axios.defaults.withCredentials = true;
 
 enum URLMethods {
 	GET = 'get',
@@ -24,6 +27,7 @@ export type HttpResponse = {
 };
 
 export default function useHttp() {
+	const { decryptCookie } = useEncrypt();
 	const { getCookie } = useSession();
 	const userStore = useUserStore();
 
@@ -52,7 +56,10 @@ export default function useHttp() {
 
 			const response: AxiosResponse = await axios({
 				method,
-				url: `${process.env.VUE_APP_API_DOMAIN}/${path}`,
+				url: `${process.env.VUE_APP_API_DOMAIN}${path.replace(
+					/^\/|\/$/g,
+					''
+				)}`,
 				headers,
 				...responseData,
 			});
@@ -70,7 +77,7 @@ export default function useHttp() {
 			if (error.response.data.message) {
 				msg = error.response.data.message;
 
-				if (msg.includes('token') && msg.includes('expired')) {
+				if (msg.includes('Unauthorized')) {
 					userStore.setTokenExpired(true);
 				}
 			}
@@ -99,7 +106,9 @@ export default function useHttp() {
 			path,
 			params: params || {},
 			headers: {
-				Authorization: `Bearer ${getCookie(process.env.VUE_APP_TOKEN)}`,
+				Authorization: `Bearer ${decryptCookie(
+					getCookie(process.env.VUE_APP_TOKEN) ?? ''
+				)}`,
 			},
 		});
 	};
@@ -119,7 +128,9 @@ export default function useHttp() {
 			path,
 			params: params || {},
 			headers: {
-				Authorization: `Bearer ${getCookie(process.env.VUE_APP_TOKEN)}`,
+				Authorization: `Bearer ${decryptCookie(
+					getCookie(process.env.VUE_APP_TOKEN) ?? ''
+				)}`,
 			},
 		});
 	};
@@ -130,7 +141,9 @@ export default function useHttp() {
 			path,
 			params: params || {},
 			headers: {
-				Authorization: `Bearer ${getCookie(process.env.VUE_APP_TOKEN)}`,
+				Authorization: `Bearer ${decryptCookie(
+					getCookie(process.env.VUE_APP_TOKEN) ?? ''
+				)}`,
 			},
 		});
 	};

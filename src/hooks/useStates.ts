@@ -5,6 +5,7 @@ import {
 	useTypesStore,
 	useUserStore,
 } from '@/store';
+import useHttp from '@/hooks/useHttp';
 import useSession from '@/hooks/useSession';
 
 export default function useStates() {
@@ -27,6 +28,8 @@ export default function useStates() {
 	};
 
 	const logout = () => {
+		const { postAuth } = useHttp();
+		postAuth({ path: 'logout' });
 		deleteCookie(cookieName);
 		aggregationStore.reset();
 		budgetStore.reset();

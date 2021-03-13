@@ -1,9 +1,25 @@
+import useEncrypt from '@/hooks/useEncrypt';
+
 export default function useSession() {
-	const setCookie = (name: string, value: string) => {
+	const setCookie = (name: string, value: string, minutes = '') => {
+		const { encryptCookie } = useEncrypt();
+
 		const d = new Date();
-		d.setTime(d.getTime() + 1000 * 60 * 60 * 24);
-		const expire = d.toString();
-		document.cookie = `${name}=${value}; expires=${expire}; path=/; SameSite=Strict; domain=`;
+		let expire = '';
+		const secure =
+			process.env.NODE_ENV === 'production' &&
+			location.protocol === 'https:'
+				? 'secure; '
+				: '';
+
+		if (minutes && minutes.length && /^\d+$/.test(minutes)) {
+			const expirationTime = +minutes * 60000;
+			d.setTime(d.getTime() + expirationTime);
+			expire = `expires=${d.toUTCString()}; `;
+		}
+
+		const encryptedValue = encryptCookie(value);
+		document.cookie = `${name}=${encryptedValue}; path=/; SameSite=Strict; domain=;${expire}${secure}`;
 	};
 
 	const deleteCookie = (name: string) => {
@@ -13,6 +29,7 @@ export default function useSession() {
 		document.cookie = `${name} =; ${expires}; path=/; Max-Age=-99999999;`;
 	};
 
+	// @todo why did I use this?
 	const resetCookies = () => {
 		const newCookies = {};
 		const cookieList: string[] = document.cookie
@@ -33,7 +50,7 @@ export default function useSession() {
 	};
 
 	const getCookie = (name: string): string | null => {
-		resetCookies();
+		// resetCookies();
 		const match = document.cookie.match(new RegExp(name + '=([^;]+)'));
 		if (match) {
 			return match[1];

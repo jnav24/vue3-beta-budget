@@ -1,17 +1,27 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
 import { Form } from '@/components/ui-elements';
+import Alert from '@/components/ui-elements/Alert.vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import Input from '@/components/ui-elements/form/Input.vue';
+import useHttp from '@/hooks/useHttp';
 
 export default defineComponent({
 	components: {
+		Alert,
 		Button,
 		Form,
 		Input,
 	},
 	setup() {
-		const emailSent = ref(true);
+		const { get, post } = useHttp();
+
+		const disableSubmit = ref(false);
+		const emailSent = ref(false);
+		const error = reactive({
+			display: false,
+			message: '',
+		});
 		const form = reactive({
 			email: {
 				rules: ['required', 'email'],
@@ -20,7 +30,27 @@ export default defineComponent({
 		});
 		const valid = ref(false);
 
-		return { emailSent, form, valid };
+		const handleSubmit = async () => {
+			await get({ path: 'sanctum/csrf-cookie' });
+			const response = await post({
+				path: 'forgot-password',
+				params: {
+					email: form.email.value,
+				},
+			});
+
+			if (response.success) {
+				error.display = false;
+				error.message = '';
+				emailSent.value = true;
+			} else {
+				error.display = true;
+				error.message = response.error;
+				disableSubmit.value = false;
+			}
+		};
+
+		return { disableSubmit, emailSent, error, form, handleSubmit, valid };
 	},
 });
 </script>
@@ -33,10 +63,13 @@ export default defineComponent({
 			>
 				Forgot Password?
 			</h1>
+
 			<p class="text-sm text-center text-gray-600 mb-8">
 				Enter your email and we will send you a link with instructions
 				on resetting your password.
 			</p>
+
+			<Alert type="error" :message="error.message" v-if="error.display" />
 
 			<Form v-model:valid="valid">
 				<Input
@@ -45,7 +78,11 @@ export default defineComponent({
 					:rules="form.email.rules"
 				/>
 
-				<Button :is-disabled="!valid" color="secondary">
+				<Button
+					:is-disabled="!valid || disableSubmit"
+					color="secondary"
+					@click="handleSubmit()"
+				>
 					Send
 				</Button>
 			</Form>

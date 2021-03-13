@@ -66,7 +66,7 @@ export const useBudgetStore = createStore({
 		async removeBudgets(budget: { id: string | number; type: string }) {
 			const { deleteAuth } = useHttp();
 			const data = {
-				path: `budgets/${budget.id}`,
+				path: `api/budgets/${budget.id}`,
 			};
 			const response = await deleteAuth(data);
 
@@ -78,7 +78,7 @@ export const useBudgetStore = createStore({
 		async getBudget(id: string) {
 			const { getAuth, getDataFromResponse } = useHttp();
 			const data = {
-				path: `budgets/${id}`,
+				path: `api/budgets/${id}`,
 			};
 			const response = await getAuth(data);
 
@@ -100,7 +100,7 @@ export const useBudgetStore = createStore({
 			const { getAuth } = useHttp();
 
 			const data = {
-				path: 'budgets',
+				path: 'api/budgets',
 			};
 			const response = await getAuth(data);
 
@@ -112,7 +112,7 @@ export const useBudgetStore = createStore({
 		async saveBudget(payload: BudgetList) {
 			const { postAuth, getDataFromResponse } = useHttp();
 			const data = {
-				path: 'budgets',
+				path: 'api/budgets',
 				params: {
 					name: payload.name,
 					cycle: payload.budget_cycle,
@@ -136,7 +136,7 @@ export const useBudgetStore = createStore({
 		async updateBudget(payload: BudgetList) {
 			const { postAuth, getDataFromResponse } = useHttp();
 			const data = {
-				path: 'budgets',
+				path: 'api/budgets',
 				params: {
 					id: payload.id,
 					name: payload.name,
@@ -169,7 +169,7 @@ export const useBudgetStore = createStore({
 		) {
 			const { deleteAuth } = useHttp();
 			const data = {
-				path: `budget-expense/${id}`,
+				path: `api/budget-expense/${id}`,
 				params: {
 					expenses,
 				},
