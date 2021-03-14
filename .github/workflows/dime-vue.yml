@@ -25,6 +25,15 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '14'
+        
+    - name: Set Environment
+      uses: SpicyPizza/create-envfile@v1
+      with:
+        envkey_VUE_APP_TOKEN: ${{ secrets.VUE_APP_TOKEN }}
+        envkey_VUE_APP_API_DOMAIN: ${{ secrets.VUE_APP_API_DOMAIN }}
+        envkey_VUE_APP_VERIFY: ${{ secrets.VUE_APP_VERIFY }}
+        envkey_VUE_APP_SECRET_KEY: ${{ secrets.VUE_APP_SECRET_KEY }}
+        file_name: .env.production
 
     - name: Installing Dependencies
       run: npm install
