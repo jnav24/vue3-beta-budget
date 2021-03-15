@@ -74,7 +74,7 @@ export default function useHttp() {
 			let msg =
 				'Something unexpected has occurred. Please try again later.';
 
-			if (error.response.data.message) {
+			if (error?.response?.data?.message) {
 				msg = error.response.data.message;
 
 				if (msg.includes('Unauthorized')) {
