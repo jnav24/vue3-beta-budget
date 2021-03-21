@@ -4,8 +4,6 @@ import useEncrypt from '@/hooks/useEncrypt';
 import useSession from '@/hooks/useSession';
 import { useUserStore } from '@/store';
 
-axios.defaults.withCredentials = true;
-
 enum URLMethods {
 	GET = 'get',
 	POST = 'post',
@@ -62,6 +60,7 @@ export default function useHttp() {
 				)}`,
 				headers,
 				...responseData,
+				withCredentials: true,
 			});
 
 			if (response.status >= 200 && response.status < 300) {
