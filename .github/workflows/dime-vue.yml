@@ -29,6 +29,8 @@ jobs:
     - name: Set Environment
       run: |
         touch .env.production
+        echo VUE_APP_HOST=${{ secrets.VUE_APP_HOST }} >> .env.production
+        echo VUE_APP_NAME=${{ secrets.VUE_APP_NAME }} >> .env.production
         echo VUE_APP_TOKEN=${{ secrets.VUE_APP_TOKEN }} >> .env.production
         echo VUE_APP_API_DOMAIN=${{ secrets.VUE_APP_API_DOMAIN }} >> .env.production
         echo VUE_APP_VERIFY=${{ secrets.VUE_APP_VERIFY }} >> .env.production
