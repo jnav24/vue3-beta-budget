@@ -1,5 +1,10 @@
 module.exports = {
-	purge: ['./src/**/*.vue'],
+	purge: {
+		content: ['./src/**/*.vue'],
+		options: {
+			safelist: [/^(sm:|md:)?grid-cols-/],
+		},
+	},
 	theme: {
 		fontFamily: {
 			body: ['Nunito', 'sans-serif'],
