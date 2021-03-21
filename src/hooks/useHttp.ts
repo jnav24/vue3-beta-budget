@@ -58,13 +58,7 @@ export default function useHttp() {
 					/^\/|\/$/g,
 					''
 				)}`,
-				headers: { 
-					...headers, 
-					'Content-Type': 'application/json',
-          			//'Access-Control-Allow-Origin': '*',
-          			//'Access-Control-Allow-Headers': '*',
-          			'Accept': 'application/json, text/plain'
-				},
+				headers,
 				...responseData,
 				withCredentials: true,
 			});
