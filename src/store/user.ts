@@ -79,7 +79,7 @@ export const useUserStore = createStore({
 			const cookie = getCookie(cookieName);
 
 			if (cookie) {
-				const response = await getAuth({ path: 'api/user' });
+				const response = await getAuth({ path: 'api/user-profile' });
 
 				if (response.success) {
 					const { user, vehicles, verify } = response.data.data;
