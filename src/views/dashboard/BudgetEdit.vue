@@ -285,7 +285,7 @@ export default defineComponent({
 			v-model:value="selectedCategory"
 		/>
 
-		<div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+		<div class="grid grid-cols-1 md:grid-cols-5 gap-3 sm:min-h-256">
 			<SideBar
 				title="Categories"
 				:items="categories"
