@@ -58,7 +58,7 @@ export default function useHttp() {
 					/^\/|\/$/g,
 					''
 				)}`,
-				{ ...headers, 'Access-Control-Allow-Origin': '*' },
+				headers: { ...headers, 'Access-Control-Allow-Origin': '*' },
 				...responseData,
 				withCredentials: true,
 			});
