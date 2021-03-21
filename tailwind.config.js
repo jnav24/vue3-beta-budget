@@ -2,7 +2,7 @@ module.exports = {
 	purge: {
 		content: ['./src/**/*.vue'],
 		options: {
-			safelist: [/^(sm:|md:)?grid-cols-/],
+			whitelist: [/^(sm:|md:)?grid-cols-/],
 		},
 	},
 	theme: {
