@@ -164,11 +164,6 @@ export default defineComponent({
 				<WarningIcon class="w-8 h-8" />
 				<span>{{ ucFirst(category) }} is empty.</span>
 			</div>
-			
-			<div class="grid-cols-4 sm:grid-cols-4 md:grid-cols-4" style="visibility: hidden;"></div>
-			<div class="grid-cols-5 sm:grid-cols-5 md:grid-cols-5" style="visibility: hidden;"></div>
-			<div class="grid-cols-6 sm:grid-cols-6 md:grid-cols-6" style="visibility: hidden;"></div>
-			<div class="grid-cols-7 sm:grid-cols-7 md:grid-cols-7" style="visibility: hidden;"></div>
 
 			<div
 				:class="
