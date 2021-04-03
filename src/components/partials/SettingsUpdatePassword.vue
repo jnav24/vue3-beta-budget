@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
 import Button from '@/components/ui-elements/form/Button.vue';
+import CardFooter from '@/components/ui-elements/card/CardFooter.vue';
 import { Form } from '@/components/ui-elements';
 import Input from '@/components/ui-elements/form/Input.vue';
 import SettingsLayout from '@/components/layouts/SettingsLayout.vue';
@@ -8,6 +9,7 @@ import SettingsLayout from '@/components/layouts/SettingsLayout.vue';
 export default defineComponent({
 	components: {
 		Button,
+		CardFooter,
 		Form,
 		Input,
 		SettingsLayout,
@@ -15,21 +17,25 @@ export default defineComponent({
 	setup() {
 		const form = reactive({
 			current_password: {
-				rules: [],
+				rules: ['required'],
 				value: '',
 			},
 			confirm_password: {
-				rules: [],
+				rules: ['required', 'match:new-password'],
 				value: '',
 			},
 			new_password: {
-				rules: [],
+				rules: ['required', 'min:8', 'alpha-numeric'],
 				value: '',
 			},
 		});
 		const valid = ref(false);
 
-		return { form, valid };
+		const handleSave = () => {
+			// ...
+		};
+
+		return { form, handleSave, valid };
 	},
 });
 </script>
@@ -61,11 +67,18 @@ export default defineComponent({
 				:rules="form.confirm_password.rules"
 			/>
 
-			<Button
-				color="secondary"
+			<CardFooter
+				class="flex flex-row justify-end align-center"
+				style="padding-right: 0;"
 			>
-				Save
-			</Button>
+				<Button
+					color="secondary"
+					:is-disabled="!valid"
+					@click="handleSave()"
+				>
+					Save
+				</Button>
+			</CardFooter>
 		</Form>
 	</SettingsLayout>
 </template>
