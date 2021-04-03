@@ -128,6 +128,11 @@ const routes: Array<RouteRecordRaw> = [
 				component: () => import('@/views/dashboard/Report.vue'),
 			},
 			{
+				path: 'settings',
+				name: 'settings',
+				component: () => import('@/views/dashboard/Settings.vue'),
+			},
+			{
 				path: 'logout',
 				name: 'logout',
 				component: () =>
