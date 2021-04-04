@@ -9,6 +9,7 @@ import useUtils from '@/hooks/useUtils';
 import {
 	useAggregationStore,
 	useTypesStore,
+	useUserStore,
 	CommonExpenseTypeInterface,
 } from '@/store';
 
@@ -23,6 +24,7 @@ export default defineComponent({
 		const { camelCase } = useUtils();
 		const { getAllMonths } = useTimestamp();
 		const aggregationStore = useAggregationStore();
+		const userStore = useUserStore();
 		const typesStore = useTypesStore();
 
 		const form = reactive({
@@ -63,7 +65,7 @@ export default defineComponent({
 			() => !['miscellaneous'].includes(form.bill_type.value)
 		);
 		const billTypes = computed(() => typesStore.bills);
-		const vehicles: any[] = [];
+		const vehicles = computed(() => userStore.vehicleList);
 		const years = computed(() => aggregationStore.allYears);
 
 		const billName = computed(() => {
