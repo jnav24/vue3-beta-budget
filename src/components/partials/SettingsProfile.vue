@@ -3,18 +3,22 @@ import { defineComponent, reactive, ref } from 'vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import CardFooter from '@/components/ui-elements/card/CardFooter.vue';
 import { Form } from '@/components/ui-elements';
+import InlineAlert from '@/components/ui-elements/InlineAlert.vue';
 import Input from '@/components/ui-elements/form/Input.vue';
 import SettingsLayout from '@/components/layouts/SettingsLayout.vue';
+import { useUserStore } from '@/store';
 
 export default defineComponent({
 	components: {
 		Button,
 		CardFooter,
 		Form,
+		InlineAlert,
 		Input,
 		SettingsLayout,
 	},
 	setup() {
+		const userStore = useUserStore();
 		const form = reactive({
 			email: {
 				rules: ['required', 'email'],
@@ -29,13 +33,23 @@ export default defineComponent({
 				value: '',
 			},
 		});
+		const isSuccess = ref(false);
+		const showAlert = ref(false);
 		const valid = ref(false);
 
-		const handleSave = () => {
-			// ...
+		const handleSave = async () => {
+			const { success } = await userStore.updateProfile({
+				email: form.email.value,
+				first_name: form.first_name.value,
+				last_name: form.last_name.value,
+			});
+			if (success) {
+				valid.value = false;
+			}
+			showAlert.value = true;
 		};
 
-		return { form, handleSave, valid };
+		return { form, handleSave, isSuccess, showAlert, valid };
 	},
 });
 </script>
@@ -69,6 +83,7 @@ export default defineComponent({
 					class="flex flex-row justify-end align-center"
 					style="padding-right: 0;"
 				>
+					<InlineAlert v-model:show="showAlert" :is-success="isSuccess" />
 					<Button
 						@click="handleSave()"
 						color="secondary"

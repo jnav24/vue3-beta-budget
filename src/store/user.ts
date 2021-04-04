@@ -136,5 +136,35 @@ export const useUserStore = createStore({
 		getVehicleName(id: number) {
 			return this.vehicles.find(obj => obj.id === id);
 		},
+
+		async updateProfile({
+			first_name,
+			last_name,
+			email,
+		}: {
+			first_name: string;
+			last_name: string;
+			email: string;
+		}) {
+			const { putAuth } = useHttp();
+			const response = await putAuth({
+				path: 'user/profile-information',
+				params: {
+					email,
+					first_name,
+					last_name,
+				},
+			});
+
+			if (response.success) {
+				this.user.email = email;
+				this.user.first_name = first_name;
+				this.user.last_name = last_name;
+			}
+
+			return {
+				success: response.success ?? false,
+			};
+		},
 	},
 });
