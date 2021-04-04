@@ -3,6 +3,7 @@ import { computed, defineComponent, ref } from 'vue';
 import ChartIcon from '@/components/ui-elements/icons/ChartIcon.vue';
 import ChevronDownIcon from '@/components/ui-elements/icons/ChevronDownIcon.vue';
 import CloseIcon from '@/components/ui-elements/icons/CloseIcon.vue';
+import CogIcon from '@/components/ui-elements/icons/CogIcon.vue';
 import HomeIcon from '@/components/ui-elements/icons/HomeIcon.vue';
 import MenuIcon from '@/components/ui-elements/icons/MenuIcon.vue';
 import ReportsIcon from '@/components/ui-elements/icons/ReportsIcon.vue';
@@ -17,6 +18,7 @@ export default defineComponent({
 		ChartIcon,
 		ChevronDownIcon,
 		CloseIcon,
+		CogIcon,
 		HomeIcon,
 		Link,
 		MenuIcon,
@@ -35,7 +37,7 @@ export default defineComponent({
 		);
 
 		const profileLinks = [
-			{ to: '', label: 'Profile', icon: 'UserIcon' },
+			{ to: { name: 'settings' }, label: 'Settings', icon: 'CogIcon' },
 			{ to: { name: 'logout' }, label: 'Logout', icon: 'LogoutIcon' },
 		];
 		const menu = [

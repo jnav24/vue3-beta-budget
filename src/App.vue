@@ -1,7 +1,7 @@
 <template>
-	<div id="app">
+	<main>
 		<router-view />
-	</div>
+	</main>
 
 	<div
 		class="grid-cols-4 sm:grid-cols-4 md:grid-cols-4"
