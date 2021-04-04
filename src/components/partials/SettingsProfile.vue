@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
+import { defineComponent, onMounted, reactive, ref } from 'vue';
 import Button from '@/components/ui-elements/form/Button.vue';
 import CardFooter from '@/components/ui-elements/card/CardFooter.vue';
 import { Form } from '@/components/ui-elements';
@@ -37,6 +37,12 @@ export default defineComponent({
 		const showAlert = ref(false);
 		const valid = ref(false);
 
+		onMounted(() => {
+			form.email.value = userStore.user.email ?? '';
+			form.first_name.value = userStore.user.first_name ?? '';
+			form.last_name.value = userStore.user.last_name ?? '';
+		});
+
 		const handleSave = async () => {
 			const { success } = await userStore.updateProfile({
 				email: form.email.value,
@@ -44,6 +50,7 @@ export default defineComponent({
 				last_name: form.last_name.value,
 			});
 			if (success) {
+				isSuccess.value = true;
 				valid.value = false;
 			}
 			showAlert.value = true;
@@ -80,7 +87,7 @@ export default defineComponent({
 				/>
 
 				<CardFooter
-					class="flex flex-row justify-end align-center"
+					class="flex flex-row justify-end items-center"
 					style="padding-right: 0;"
 				>
 					<InlineAlert v-model:show="showAlert" :is-success="isSuccess" />
