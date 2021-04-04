@@ -60,7 +60,7 @@ export const useUserStore = createStore({
 			return this.vehicles.map(vehicle => {
 				return {
 					active: vehicle.active,
-					label: `${vehicle.make} ${vehicle.model}`,
+					label: `${vehicle.make} ${vehicle.model} ${vehicle.year}`,
 					value: vehicle.id,
 				};
 			});
