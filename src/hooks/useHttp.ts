@@ -134,6 +134,19 @@ export default function useHttp() {
 		});
 	};
 
+	const putAuth = async ({ path, params }: URLInterface) => {
+		return getResponse({
+			method: URLMethods.PUT,
+			path,
+			params: params || {},
+			headers: {
+				Authorization: `Bearer ${decryptCookie(
+					getCookie(process.env.VUE_APP_TOKEN) ?? ''
+				)}`,
+			},
+		});
+	};
+
 	const deleteAuth = async ({ path, params }: URLInterface) => {
 		return getResponse({
 			method: URLMethods.DELETE,
@@ -170,6 +183,7 @@ export default function useHttp() {
 		loading,
 		post,
 		postAuth,
+		putAuth,
 		failedResponse,
 	};
 }
