@@ -44,7 +44,7 @@ export default defineComponent({
 				value: '',
 			},
 			balance: {
-				rules: ['float:2'],
+				rules: ['required', 'float:2'],
 				value: '0.00',
 			},
 			confirmation: {
