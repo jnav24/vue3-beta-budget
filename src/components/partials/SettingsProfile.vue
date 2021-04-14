@@ -90,7 +90,10 @@ export default defineComponent({
 					class="flex flex-row justify-end items-center"
 					style="padding-right: 0;"
 				>
-					<InlineAlert v-model:show="showAlert" :is-success="isSuccess" />
+					<InlineAlert
+						v-model:show="showAlert"
+						:is-success="isSuccess"
+					/>
 					<Button
 						@click="handleSave()"
 						color="secondary"
