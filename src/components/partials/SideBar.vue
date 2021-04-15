@@ -21,6 +21,10 @@ export default defineComponent({
 			default: 'value',
 			type: String,
 		},
+		notifications: {
+			default: () => ({}),
+			type: Object as () => Record<string, number>,
+		},
 		selectedItem: {
 			required: true,
 			type: String,
@@ -43,6 +47,7 @@ export default defineComponent({
 
 		<ul>
 			<li
+				class="flex flex-row items-center justify-between"
 				v-for="(item, int) in items"
 				:key="int"
 				:class="{
@@ -53,7 +58,16 @@ export default defineComponent({
 				}"
 				@click="emitSelected(item[itemValue])"
 			>
-				{{ item[itemLabel] }}
+				<span>{{ item[itemLabel] }}</span>
+				<span
+					class="bg-danger text-white text-center rounded-full w-6 h-6"
+					v-if="
+						Object.keys(notifications).length &&
+							notifications[item[itemLabel].toLowerCase()]
+					"
+				>
+					notifications[item[itemLabel].toLowerCase()]
+				</span>
 			</li>
 		</ul>
 	</div>
