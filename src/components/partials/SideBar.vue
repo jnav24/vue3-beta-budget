@@ -60,7 +60,7 @@ export default defineComponent({
 			>
 				<span>{{ item[itemLabel] }}</span>
 				<span
-					class="bg-danger text-white text-center rounded-full px-2 h-6 ml-2 min-w-6"
+					class="bg-danger text-white text-center rounded-full px-2 h-6 min-w-6"
 					v-if="
 						Object.keys(notifications).length &&
 							notifications[item[itemValue]]
