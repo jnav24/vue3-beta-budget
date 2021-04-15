@@ -26,6 +26,7 @@ import { useRoute } from 'vue-router';
 import { BudgetExpense, BudgetList } from '@/store/budget';
 import useTimestamp from '@/hooks/useTimestamp';
 import useRemoveExpense from '@/hooks/useRemoveExpense';
+import useUtils from '@/hooks/useUtils';
 
 export default defineComponent({
 	components: {
@@ -53,6 +54,7 @@ export default defineComponent({
 			resetList,
 			setItemToBeRemoved,
 		} = useRemoveExpense();
+		const { arrayColumn } = useUtils();
 
 		const alert = reactive({
 			hide: true,
@@ -74,6 +76,7 @@ export default defineComponent({
 		const categories = computed(() => typeStore.bills);
 		const showConfirmModal = ref(false);
 		const showModal = ref(false);
+		const notifications = reactive<Record<string, number>>({});
 
 		const isLatestBudget = () =>
 			budgetStore.list[0]?.id === budget.value.id;
@@ -209,6 +212,19 @@ export default defineComponent({
 			);
 		});
 
+		watchEffect(() => {
+			const slugs = arrayColumn('slug', typeStore.spendingTypes as any);
+			slugs.forEach(slug => {
+				const expenses = budget.value?.expenses
+					? budget.value?.expenses[slug]
+					: [];
+				notifications[slug] = expenses.reduce(
+					(acc: any, cur: any) => (!cur.confirmation ? acc + 1 : acc),
+					0
+				);
+			});
+		});
+
 		return {
 			alert,
 			categories,
@@ -216,6 +232,7 @@ export default defineComponent({
 			confirmRemoveExpense,
 			disableSave,
 			expenseData,
+			notifications,
 			saveBudget,
 			selectedCategory,
 			setDeleteAndShowConfirmation,
@@ -287,6 +304,7 @@ export default defineComponent({
 
 		<div class="grid grid-cols-1 md:grid-cols-5 gap-3 sm:min-h-256">
 			<SideBar
+				:notifications="notifications"
 				title="Categories"
 				:items="categories"
 				item-value="slug"

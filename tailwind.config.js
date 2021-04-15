@@ -45,6 +45,9 @@ module.exports = {
 			maxWidth: {
 				'32': '8rem',
 			},
+			minWidth: {
+				'6': '1.5rem',
+			},
 			opacity: {
 				'85': '0.85',
 				'95': '0.95',
