@@ -63,10 +63,10 @@ export default defineComponent({
 					class="bg-danger text-white text-center rounded-full w-6 h-6"
 					v-if="
 						Object.keys(notifications).length &&
-							notifications[item[itemLabel].toLowerCase()]
+							notifications[item[itemValue]]
 					"
 				>
-					notifications[item[itemLabel].toLowerCase()]
+					notifications[item[itemValue]]
 				</span>
 			</li>
 		</ul>
