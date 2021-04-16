@@ -8,22 +8,28 @@ export default defineComponent({
 		SettingsLayout,
 	},
 	setup() {
-		const { postAuth, getAuth } = useHttp();
+		const { postAuth, getAuth, deleteAuth } = useHttp();
+
+		const disableTwoFactor = async () => {
+			const { success, data } = await deleteAuth({
+				path: '/user/two-factor-authentication',
+			});
+		};
 
 		const enableTwoFactor = async () => {
-			const { state, data } = await postAuth({
+			const { success, data } = await postAuth({
 				path: '/user/two-factor-authentication',
 			});
 		};
 
 		const getQRCode = async () => {
-			const { state, data } = await getAuth({
+			const { success, data } = await getAuth({
 				path: '/user/two-factor-qr-code',
 			});
 		};
 
 		const getRecoveryCodes = async () => {
-			const { state, data } = await getAuth({
+			const { success, data } = await getAuth({
 				path: '/user/two-factor-recovery-codes',
 			});
 		};
@@ -39,7 +45,13 @@ export default defineComponent({
 			title="Two Factor Authentication"
 			description="Add additional security to your account by using two factor authentication"
 		>
-			hello
+			<div class="flex flex-row justify-between text-gray-700">
+				<span>Enabled</span>
+			</div>
+			<p class="text-sm text-gray-500">
+				*You will need an authenticator app like Authy or Google
+				Authenticator to use two factor.
+			</p>
 		</SettingsLayout>
 	</section>
 </template>
