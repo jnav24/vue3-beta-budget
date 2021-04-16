@@ -19,7 +19,7 @@ export default defineComponent({
 				if (newValue) {
 					setTimeout(() => emit('update:show', false), 5000);
 				}
-			},
+			}
 		);
 	},
 });

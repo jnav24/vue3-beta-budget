@@ -38,6 +38,24 @@ export const useTypesStore = createStore({
 		vehicles: [],
 	}),
 
+	getters: {
+		saveTypes() {
+			if (!this.bills.length) {
+				return [];
+			}
+
+			return this.bills.filter(bill => bill.save_type);
+		},
+
+		spendingTypes() {
+			if (!this.bills.length) {
+				return [];
+			}
+
+			return this.bills.filter(bill => !bill.save_type);
+		},
+	},
+
 	actions: {
 		async getAllBillTypes() {
 			const { getAuth } = useHttp();
