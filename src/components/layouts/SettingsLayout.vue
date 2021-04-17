@@ -28,7 +28,7 @@ export default defineComponent({
 			<p class="text-gray-600 text-sm">{{ description }}</p>
 		</div>
 		<div class="w-1/2">
-			<Card class="shadow-md">
+			<Card class="shadow-md" style="margin-top: 0">
 				<slot></slot>
 			</Card>
 		</div>

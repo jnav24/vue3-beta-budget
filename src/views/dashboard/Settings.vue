@@ -14,7 +14,7 @@ export default defineComponent({
 </script>
 
 <template>
-	<section class="container mx-auto">
+	<section class="container mx-auto pt-12">
 		<SettingsProfile />
 		<SettingsUpdatePassword />
 		<SettingsTwoFactor />
