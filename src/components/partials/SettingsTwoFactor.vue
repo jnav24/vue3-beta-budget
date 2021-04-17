@@ -109,7 +109,7 @@ export default defineComponent({
 			*You will need an authenticator app like Authy or Google
 			Authenticator to use two factor.
 		</p>
-		<div class="border-t border-gray-300 mt-4">
+		<div class="border-t border-gray-300 mt-4" v-if="qrCode.length">
 			<p class="text-danger mt-4 text-sm">
 				Note: The information below will only be shown once.
 			</p>
@@ -129,26 +129,28 @@ export default defineComponent({
 				</div>
 				<div v-html="qrCode"></div>
 			</div>
-			<p class="text-gray-700 text-sm mb-2">
-				Store these recovery codes in a secure password manager. They
-				can be used to recover access to your account if your two factor
-				authentication device is lost.
-			</p>
-			<div
-				class="flex flex-row justify-between text-gray-700 bg-gray-200 border border-gray-300 py-2 pl-8 pr-4"
-			>
-				<ul v-for="(v, i) in [1, 2]" :key="i">
-					<li
-						class="list-disc mb-2 text-sm"
-						v-for="(code, index) in [...recoveryCodes].splice(
-							i * 4,
-							v * 4
-						)"
-						:key="index"
-					>
-						{{ code }}
-					</li>
-				</ul>
+			<div v-if="recoveryCodes.length">
+				<p class="text-gray-700 text-sm mb-2">
+					Store these recovery codes in a secure password manager.
+					They can be used to recover access to your account if your
+					two factor authentication device is lost.
+				</p>
+				<div
+					class="flex flex-row justify-between text-gray-700 bg-gray-200 border border-gray-300 py-2 pl-8 pr-4"
+				>
+					<ul v-for="(v, i) in [1, 2]" :key="i">
+						<li
+							class="list-disc mb-2 text-sm"
+							v-for="(code, index) in [...recoveryCodes].splice(
+								i * 4,
+								v * 4
+							)"
+							:key="index"
+						>
+							{{ code }}
+						</li>
+					</ul>
+				</div>
 			</div>
 		</div>
 	</SettingsLayout>
