@@ -15,6 +15,8 @@ export default defineComponent({
 	setup() {
 		const { postAuth, getAuth, deleteAuth } = useHttp();
 		const userStore = useUserStore();
+		const qrCode = ref('');
+		const recoveryCodes = ref<string[]>([]);
 		const showConfirmPasswordModal = ref(false);
 		const toggleState = ref(false);
 
@@ -23,29 +25,14 @@ export default defineComponent({
 		});
 
 		const disableTwoFactor = async () => {
-			const { success, data } = await deleteAuth({
+			const { success } = await deleteAuth({
 				path: '/user/two-factor-authentication',
 			});
-			console.log(success);
-			console.log(data);
+
 			if (success) {
 				toggleState.value = false;
-			}
-		};
-
-		const enableTwoFactor = async () => {
-			const { success, data, error } = await postAuth({
-				path: '/user/two-factor-authentication',
-			});
-			console.log(success);
-			console.log(data);
-			console.log(error);
-			if (success) {
-				toggleState.value = true;
-			}
-
-			if (error === 'Password confirmation required.') {
-				showConfirmPasswordModal.value = true;
+				qrCode.value = '';
+				recoveryCodes.value = [];
 			}
 		};
 
@@ -53,12 +40,36 @@ export default defineComponent({
 			const { success, data } = await getAuth({
 				path: '/user/two-factor-qr-code',
 			});
+
+			if (success) {
+				qrCode.value = data?.svg;
+			}
 		};
 
 		const getRecoveryCodes = async () => {
 			const { success, data } = await getAuth({
 				path: '/user/two-factor-recovery-codes',
 			});
+
+			if (success) {
+				recoveryCodes.value = data;
+			}
+		};
+
+		const enableTwoFactor = async () => {
+			const { success, data, error } = await postAuth({
+				path: '/user/two-factor-authentication',
+			});
+
+			if (success) {
+				toggleState.value = true;
+				getQRCode();
+				getRecoveryCodes();
+			}
+
+			if (error === 'Password confirmation required.') {
+				showConfirmPasswordModal.value = true;
+			}
 		};
 
 		const handleToggleClick = (e: boolean) => {
@@ -69,7 +80,13 @@ export default defineComponent({
 			}
 		};
 
-		return { showConfirmPasswordModal, handleToggleClick, toggleState };
+		return {
+			showConfirmPasswordModal,
+			handleToggleClick,
+			qrCode,
+			recoveryCodes,
+			toggleState,
+		};
 	},
 });
 </script>
@@ -97,6 +114,8 @@ export default defineComponent({
 				*You will need an authenticator app like Authy or Google
 				Authenticator to use two factor.
 			</p>
+			<div v-html="qrCode"></div>
+			<pre>{{ recoveryCodes }}</pre>
 		</SettingsLayout>
 	</section>
 </template>
