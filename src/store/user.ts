@@ -23,6 +23,7 @@ type UserState = {
 		user_id?: string;
 		email?: string;
 		token?: string;
+		mfa_enabled: boolean;
 	};
 	vehicles: Array<{
 		id: number;
@@ -51,7 +52,9 @@ export const useUserStore = createStore({
 				expires_at: '',
 			},
 		},
-		user: {},
+		user: {
+			mfa_enabled: false,
+		},
 		vehicles: [],
 	}),
 
