@@ -1,11 +1,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import SettingsLayout from '@/components/layouts/SettingsLayout.vue';
+import Toggle from '@/components/ui-elements/form/Toggle.vue';
 import useHttp from '@/hooks/useHttp';
 
 export default defineComponent({
 	components: {
 		SettingsLayout,
+		Toggle,
 	},
 	setup() {
 		const { postAuth, getAuth, deleteAuth } = useHttp();
@@ -45,8 +47,11 @@ export default defineComponent({
 			title="Two Factor Authentication"
 			description="Add additional security to your account by using two factor authentication"
 		>
-			<div class="flex flex-row justify-between text-gray-700">
+			<div
+				class="flex flex-row justify-between items-center text-gray-700 mb-2"
+			>
 				<span>Enabled</span>
+				<Toggle />
 			</div>
 			<p class="text-sm text-gray-500">
 				*You will need an authenticator app like Authy or Google
