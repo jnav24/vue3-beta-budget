@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import ConfirmPasswordModal from '@/components/modals/ConfirmPasswordModal.vue';
 import SettingsLayout from '@/components/layouts/SettingsLayout.vue';
 import Toggle from '@/components/ui-elements/form/Toggle.vue';
@@ -18,11 +18,7 @@ export default defineComponent({
 		const qrCode = ref('');
 		const recoveryCodes = ref<string[]>([]);
 		const showConfirmPasswordModal = ref(false);
-		const toggleState = ref(false);
-
-		onMounted(() => {
-			toggleState.value = userStore.user.mfa_enabled;
-		});
+		const toggleState = computed(() => userStore.user.mfa_enabled);
 
 		const disableTwoFactor = async () => {
 			const { success } = await deleteAuth({
@@ -30,9 +26,9 @@ export default defineComponent({
 			});
 
 			if (success) {
-				toggleState.value = false;
 				qrCode.value = '';
 				recoveryCodes.value = [];
+				userStore.setMfa(false);
 			}
 		};
 
@@ -57,12 +53,12 @@ export default defineComponent({
 		};
 
 		const enableTwoFactor = async () => {
-			const { success, data, error } = await postAuth({
+			const { success, error } = await postAuth({
 				path: '/user/two-factor-authentication',
 			});
 
 			if (success) {
-				toggleState.value = true;
+				userStore.setMfa(true);
 				getQRCode();
 				getRecoveryCodes();
 			}

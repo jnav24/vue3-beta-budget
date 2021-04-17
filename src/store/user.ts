@@ -140,6 +140,10 @@ export const useUserStore = createStore({
 			return this.vehicles.find(obj => obj.id === id);
 		},
 
+		setMfa(value: boolean) {
+			this.user.mfa_enabled = value;
+		},
+
 		async updateProfile({
 			first_name,
 			last_name,
