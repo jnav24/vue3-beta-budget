@@ -31,7 +31,7 @@ export default defineComponent({
 			setTimeout(() => {
 				setClose.value = false;
 				showModal.value = false;
-			}, 1000);
+			}, 250);
 		};
 
 		const handleConfirmPassword = async () => {
@@ -44,9 +44,8 @@ export default defineComponent({
 			console.log(data);
 			console.log(error);
 			console.log(success);
-			// if success, emit an event to call enableTwoFactor() and close modal
 			if (success) {
-				emit('handle-confirm');
+				emit('handle-confirm', true);
 				setCloseModal();
 			}
 			// if error, show the alert and keep modal open
@@ -90,11 +89,13 @@ export default defineComponent({
 						label="Password"
 						v-model:value="passwordField"
 						:rules="['required']"
+						type="password"
 					/>
 				</Form>
 			</div>
 
 			<div class="flex flex-row justify-end px-2 py-4">
+				<Button @click="setCloseModal(false)">Cancel</Button>
 				<Button
 					color="secondary"
 					:is-disabled="!isValid"

@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
+import ConfirmPasswordModal from '@/components/modals/ConfirmPasswordModal.vue';
 import SettingsLayout from '@/components/layouts/SettingsLayout.vue';
 import Toggle from '@/components/ui-elements/form/Toggle.vue';
 import useHttp from '@/hooks/useHttp';
@@ -7,12 +8,14 @@ import { useUserStore } from '@/store';
 
 export default defineComponent({
 	components: {
+		ConfirmPasswordModal,
 		SettingsLayout,
 		Toggle,
 	},
 	setup() {
 		const { postAuth, getAuth, deleteAuth } = useHttp();
 		const userStore = useUserStore();
+		const showConfirmPasswordModal = ref(false);
 		const toggleState = ref(false);
 
 		onMounted(() => {
@@ -40,6 +43,10 @@ export default defineComponent({
 			if (success) {
 				toggleState.value = true;
 			}
+
+			if (error === 'Password confirmation required.') {
+				showConfirmPasswordModal.value = true;
+			}
 		};
 
 		const getQRCode = async () => {
@@ -62,12 +69,16 @@ export default defineComponent({
 			}
 		};
 
-		return { handleToggleClick, toggleState };
+		return { showConfirmPasswordModal, handleToggleClick, toggleState };
 	},
 });
 </script>
 
 <template>
+	<ConfirmPasswordModal
+		v-model:show="showConfirmPasswordModal"
+		@handle-confirm="handleToggleClick($event)"
+	/>
 	<section class="pt-12">
 		<SettingsLayout
 			title="Two Factor Authentication"
