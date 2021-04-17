@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import SettingsLayout from '@/components/layouts/SettingsLayout.vue';
 import Toggle from '@/components/ui-elements/form/Toggle.vue';
 import useHttp from '@/hooks/useHttp';
@@ -11,6 +11,7 @@ export default defineComponent({
 	},
 	setup() {
 		const { postAuth, getAuth, deleteAuth } = useHttp();
+		const toggleState = ref(false);
 
 		const disableTwoFactor = async () => {
 			const { success, data } = await deleteAuth({
@@ -36,7 +37,7 @@ export default defineComponent({
 			});
 		};
 
-		return {};
+		return { toggleState };
 	},
 });
 </script>
@@ -50,8 +51,8 @@ export default defineComponent({
 			<div
 				class="flex flex-row justify-between items-center text-gray-700 mb-2"
 			>
-				<span>Enabled</span>
-				<Toggle />
+				<span>{{ toggleState ? 'Enabled' : 'Disabled' }}</span>
+				<Toggle v-model:value="toggleState" />
 			</div>
 			<p class="text-sm text-gray-500">
 				*You will need an authenticator app like Authy or Google
