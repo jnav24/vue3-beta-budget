@@ -1,8 +1,9 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import SettingsLayout from '@/components/layouts/SettingsLayout.vue';
 import Toggle from '@/components/ui-elements/form/Toggle.vue';
 import useHttp from '@/hooks/useHttp';
+import { useUserStore } from '@/store';
 
 export default defineComponent({
 	components: {
@@ -11,18 +12,34 @@ export default defineComponent({
 	},
 	setup() {
 		const { postAuth, getAuth, deleteAuth } = useHttp();
+		const userStore = useUserStore();
 		const toggleState = ref(false);
+
+		onMounted(() => {
+			toggleState.value = userStore.user.mfa_enabled;
+		});
 
 		const disableTwoFactor = async () => {
 			const { success, data } = await deleteAuth({
 				path: '/user/two-factor-authentication',
 			});
+			console.log(success);
+			console.log(data);
+			if (success) {
+				toggleState.value = false;
+			}
 		};
 
 		const enableTwoFactor = async () => {
-			const { success, data } = await postAuth({
+			const { success, data, error } = await postAuth({
 				path: '/user/two-factor-authentication',
 			});
+			console.log(success);
+			console.log(data);
+			console.log(error);
+			if (success) {
+				toggleState.value = true;
+			}
 		};
 
 		const getQRCode = async () => {
@@ -37,7 +54,15 @@ export default defineComponent({
 			});
 		};
 
-		return { toggleState };
+		const handleToggleClick = (e: boolean) => {
+			if (e) {
+				enableTwoFactor();
+			} else {
+				disableTwoFactor();
+			}
+		};
+
+		return { handleToggleClick, toggleState };
 	},
 });
 </script>
@@ -52,7 +77,10 @@ export default defineComponent({
 				class="flex flex-row justify-between items-center text-gray-700 mb-2"
 			>
 				<span>{{ toggleState ? 'Enabled' : 'Disabled' }}</span>
-				<Toggle v-model:value="toggleState" />
+				<Toggle
+					:value="toggleState"
+					@handle-click="handleToggleClick($event)"
+				/>
 			</div>
 			<p class="text-sm text-gray-500">
 				*You will need an authenticator app like Authy or Google
