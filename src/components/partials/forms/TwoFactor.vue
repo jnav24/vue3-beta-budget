@@ -27,6 +27,7 @@ export default defineComponent({
 		const isValid = ref(false);
 
 		const handleClick = async () => {
+			disableSubmit.value = true;
 			const { post } = useHttp();
 			const { success, error } = await post({
 				path: 'two-factor-challenge',
@@ -34,11 +35,11 @@ export default defineComponent({
 					code: totp.value,
 				},
 			});
-			console.log(error);
-			console.log(success);
+
 			if (!success) {
 				alert.display = true;
 				alert.message = error;
+				disableSubmit.value = false;
 			} else {
 				await userStore.getToken();
 				push({ name: 'home' });
