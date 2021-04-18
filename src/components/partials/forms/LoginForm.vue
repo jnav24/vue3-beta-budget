@@ -25,11 +25,11 @@ export default defineComponent({
 		const form = reactive({
 			email: {
 				rules: [],
-				value: 'red2433021@yahoo.com',
+				value: '',
 			},
 			password: {
 				rules: {},
-				value: 'password',
+				value: '',
 			},
 		});
 		const valid = ref(false);
