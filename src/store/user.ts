@@ -126,7 +126,7 @@ export const useUserStore = createStore({
 			});
 
 			if (response.success && !response.data.two_factor) {
-				this.getToken();
+				await this.getToken();
 			}
 
 			return response;
