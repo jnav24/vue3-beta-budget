@@ -2,12 +2,14 @@ import { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
 import { useUserStore } from '@/store';
 import { HttpResponse } from '@/hooks/useHttp';
 
+type ContextType = {
+	to: RouteLocationNormalized;
+	next: NavigationGuardNext;
+	from: RouteLocationNormalized;
+};
+
 export default function useRouteMiddleware() {
-	const auth = async (context: {
-		to: RouteLocationNormalized;
-		next: NavigationGuardNext;
-		from: RouteLocationNormalized;
-	}) => {
+	const auth = async (context: ContextType) => {
 		try {
 			const { isLoggedIn } = useUserStore();
 			const response: HttpResponse = await isLoggedIn();
@@ -26,11 +28,7 @@ export default function useRouteMiddleware() {
 		}
 	};
 
-	const autoLogin = async (context: {
-		to: RouteLocationNormalized;
-		next: NavigationGuardNext;
-		from: RouteLocationNormalized;
-	}) => {
+	const autoLogin = async (context: ContextType) => {
 		try {
 			const { isLoggedIn } = useUserStore();
 			const response: HttpResponse = await isLoggedIn();
@@ -45,13 +43,11 @@ export default function useRouteMiddleware() {
 		}
 	};
 
-	const runMiddleware = (context: {
-		to: RouteLocationNormalized;
-		next: NavigationGuardNext;
-		from: RouteLocationNormalized;
-	}) => {
+	const runMiddleware = (context: ContextType) => {
 		if (context.to.meta && context.to.meta.middleware) {
-			context.to.meta.middleware.map((mw: (context: any) => void) => {
+			(context.to.meta.middleware as Array<{
+				(context: ContextType): void;
+			}>).map(mw => {
 				if (typeof mw === 'function') {
 					mw(context);
 				}
