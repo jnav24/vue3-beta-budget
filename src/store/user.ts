@@ -116,7 +116,7 @@ export const useUserStore = createStore({
 				params: { ...params, email: params.username },
 			});
 
-			if (response.success) {
+			if (response.success && !response.data.two_factor) {
 				const resp = await get({ path: 'user/token' });
 				const { token, exp } = resp.data.data;
 				// @todo not sure if I need this yet
@@ -125,6 +125,14 @@ export const useUserStore = createStore({
 			}
 
 			return response;
+		},
+
+		async twoFactorChallenge(params: { code: string }) {
+			const { post } = useHttp();
+			await post({
+				path: 'two-factor-challenge',
+				params,
+			});
 		},
 
 		setVerifyExpiration(payload: string) {
