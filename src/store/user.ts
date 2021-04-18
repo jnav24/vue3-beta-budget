@@ -71,6 +71,16 @@ export const useUserStore = createStore({
 	},
 
 	actions: {
+		async getToken() {
+			const { get } = useHttp();
+			const { setCookie } = useSession();
+			const resp = await get({ path: 'user/token' });
+			const { token, exp } = resp.data.data;
+			// @todo not sure if I need this yet
+			// this.setTokenExpired(false);
+			setCookie(cookieName, token, exp);
+		},
+
 		setTokenExpired(payload: boolean) {
 			this.login.timeout = payload;
 		},
@@ -107,7 +117,6 @@ export const useUserStore = createStore({
 
 		async logUserIn(params: { username: string; password: string }) {
 			const { get, post } = useHttp();
-			const { setCookie } = useSession();
 
 			await get({ path: 'sanctum/csrf-cookie' });
 
@@ -117,22 +126,10 @@ export const useUserStore = createStore({
 			});
 
 			if (response.success && !response.data.two_factor) {
-				const resp = await get({ path: 'user/token' });
-				const { token, exp } = resp.data.data;
-				// @todo not sure if I need this yet
-				// this.setTokenExpired(false);
-				setCookie(cookieName, token, exp);
+				this.getToken();
 			}
 
 			return response;
-		},
-
-		async twoFactorChallenge(params: { code: string }) {
-			const { post } = useHttp();
-			await post({
-				path: 'two-factor-challenge',
-				params,
-			});
 		},
 
 		setVerifyExpiration(payload: string) {

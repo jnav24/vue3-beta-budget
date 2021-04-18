@@ -1,9 +1,12 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import Alert from '@/components/ui-elements/Alert.vue';
 import { Form } from '@/components/ui-elements';
 import Input from '@/components/ui-elements/form/Input.vue';
 import LoaderIcon from '@/components/ui-elements/icons/LoaderIcon.vue';
+import useHttp from '@/hooks/useHttp';
+import { useUserStore } from '@/store';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
 	components: {
@@ -13,15 +16,36 @@ export default defineComponent({
 		LoaderIcon,
 	},
 	setup() {
+		const userStore = useUserStore();
+		const { push } = useRouter();
+		const alert = reactive({
+			display: false,
+			message: '',
+		});
 		const totp = ref('');
 		const disableSubmit = ref(false);
 		const isValid = ref(false);
 
-		const handleClick = () => {
-			console.log('blah');
+		const handleClick = async () => {
+			const { post } = useHttp();
+			const { success, error } = await post({
+				path: 'two-factor-challenge',
+				params: {
+					code: totp.value,
+				},
+			});
+			console.log(error);
+			console.log(success);
+			if (!success) {
+				alert.display = true;
+				alert.message = error;
+			} else {
+				await userStore.getToken();
+				push({ name: 'home' });
+			}
 		};
 
-		return { disableSubmit, handleClick, isValid, totp };
+		return { alert, disableSubmit, handleClick, isValid, totp };
 	},
 });
 </script>
@@ -34,7 +58,7 @@ export default defineComponent({
 			2-Step Auth
 		</h1>
 
-		<Alert type="error" message="testing..." />
+		<Alert type="error" :message="alert.message" v-if="alert.display" />
 
 		<Form v-model:valid="isValid">
 			<Input
@@ -47,10 +71,10 @@ export default defineComponent({
 				@click="handleClick()"
 				class="w-full py-2 rounded flex flex-row items-center justify-center"
 				type="button"
-				:disabled="!valid || disableSubmit"
+				:disabled="!isValid || disableSubmit"
 				:class="{
-					'bg-secondary shadow-md': valid && !disableSubmit,
-					'bg-gray-300 text-gray-600': !valid || disableSubmit,
+					'bg-secondary shadow-md': isValid && !disableSubmit,
+					'bg-gray-300 text-gray-600': !isValid || disableSubmit,
 				}"
 			>
 				<LoaderIcon
