@@ -94,7 +94,7 @@ export default defineComponent({
 <template>
 	<ConfirmPasswordModal
 		v-model:show="showConfirmPasswordModal"
-		@handle-confirm="handleToggleClick($event)"
+		@handle-confirm="handleToggleClick(!toggleState)"
 	/>
 	<SettingsLayout
 		title="Two Factor Authentication"
