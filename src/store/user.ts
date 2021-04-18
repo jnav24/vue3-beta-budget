@@ -23,6 +23,7 @@ type UserState = {
 		user_id?: string;
 		email?: string;
 		token?: string;
+		mfa_enabled: boolean;
 	};
 	vehicles: Array<{
 		id: number;
@@ -51,7 +52,9 @@ export const useUserStore = createStore({
 				expires_at: '',
 			},
 		},
-		user: {},
+		user: {
+			mfa_enabled: false,
+		},
 		vehicles: [],
 	}),
 
@@ -68,6 +71,16 @@ export const useUserStore = createStore({
 	},
 
 	actions: {
+		async getToken() {
+			const { get } = useHttp();
+			const { setCookie } = useSession();
+			const resp = await get({ path: 'user/token' });
+			const { token, exp } = resp.data.data;
+			// @todo not sure if I need this yet
+			// this.setTokenExpired(false);
+			setCookie(cookieName, token, exp);
+		},
+
 		setTokenExpired(payload: boolean) {
 			this.login.timeout = payload;
 		},
@@ -104,7 +117,6 @@ export const useUserStore = createStore({
 
 		async logUserIn(params: { username: string; password: string }) {
 			const { get, post } = useHttp();
-			const { setCookie } = useSession();
 
 			await get({ path: 'sanctum/csrf-cookie' });
 
@@ -113,12 +125,8 @@ export const useUserStore = createStore({
 				params: { ...params, email: params.username },
 			});
 
-			if (response.success) {
-				const resp = await get({ path: 'user/token' });
-				const { token, exp } = resp.data.data;
-				// @todo not sure if I need this yet
-				// this.setTokenExpired(false);
-				setCookie(cookieName, token, exp);
+			if (response.success && !response.data.two_factor) {
+				await this.getToken();
 			}
 
 			return response;
@@ -135,6 +143,10 @@ export const useUserStore = createStore({
 
 		getVehicleName(id: number) {
 			return this.vehicles.find(obj => obj.id === id);
+		},
+
+		setMfa(value: boolean) {
+			this.user.mfa_enabled = value;
 		},
 
 		async updateProfile({
