@@ -21,7 +21,7 @@ export default defineComponent({
 		const toggleState = computed(() => userStore.user.mfa_enabled);
 
 		const disableTwoFactor = async () => {
-			const { success } = await deleteAuth({
+			const { error, success } = await deleteAuth({
 				path: '/user/two-factor-authentication',
 			});
 
@@ -29,6 +29,10 @@ export default defineComponent({
 				qrCode.value = '';
 				recoveryCodes.value = [];
 				userStore.setMfa(false);
+			}
+
+			if (!success && error === 'Password confirmation required.') {
+				showConfirmPasswordModal.value = true;
 			}
 		};
 
@@ -63,7 +67,7 @@ export default defineComponent({
 				getRecoveryCodes();
 			}
 
-			if (error === 'Password confirmation required.') {
+			if (!success && error === 'Password confirmation required.') {
 				showConfirmPasswordModal.value = true;
 			}
 		};
