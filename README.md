@@ -1,4 +1,10 @@
-# Vue 3 Budget
+# Dime Budget
+
+## Screenshots
+
+![screenshot: dashboard page](https://dimebudget.app/images/budget_dashboard_home.png)
+![screenshot: budget edit page](https://dimebudget.app/images/budget_dashboard_edit.png)
+![screenshot: settings page](https://dimebudget.app/images/budget_dashboard_settings.png)
 
 ## Project setup
 ```
