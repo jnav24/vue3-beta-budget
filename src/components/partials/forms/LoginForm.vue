@@ -24,11 +24,11 @@ export default defineComponent({
 		});
 		const form = reactive({
 			email: {
-				rules: [],
+				rules: ['required', 'email'],
 				value: '',
 			},
 			password: {
-				rules: {},
+				rules: ['required'],
 				value: '',
 			},
 		});
