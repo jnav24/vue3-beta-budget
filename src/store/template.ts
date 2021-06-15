@@ -70,7 +70,7 @@ export const useTemplateStore = createStore({
 			const { deleteAuth } = useHttp();
 
 			const data = {
-				path: 'api/budget-templates',
+				path: `api/budget-templates/${this.templates.id}`,
 				params: expenses,
 			};
 

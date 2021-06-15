@@ -41,7 +41,7 @@ export default defineComponent({
 		const form = reactive({
 			amount: {
 				rules: ['required', 'float:2'],
-				value: '',
+				value: '0.00',
 			},
 			balance: {
 				rules: ['required', 'float:2'],
