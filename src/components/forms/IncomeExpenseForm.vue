@@ -94,7 +94,6 @@ export default defineComponent({
 				/>
 
 				<Select
-					v-if="!editMode"
 					label="Account Type"
 					:items="types"
 					item-label="name"
