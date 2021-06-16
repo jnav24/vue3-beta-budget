@@ -108,14 +108,6 @@ export default defineComponent({
 				result.paid_date = result.paid_date || formatDate('yyyy-MM-dd');
 			}
 
-			if (
-				// eslint-disable-next-line no-prototype-builtins
-				result.hasOwnProperty('paid_date') &&
-				!result.confirmation?.length
-			) {
-				result.paid_date = null;
-			}
-
 			return result;
 		};
 

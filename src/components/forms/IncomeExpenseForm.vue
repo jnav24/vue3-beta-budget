@@ -32,7 +32,7 @@ export default defineComponent({
 				rules: ['required'],
 				value: '',
 			},
-			paid_date: {
+			initial_pay_date: {
 				rules: [],
 				value: '',
 			},
@@ -44,13 +44,13 @@ export default defineComponent({
 		const valid = ref(false);
 
 		onBeforeMount(() => {
-			form.paid_date.value = ExpenseContext.budgetCycle.value;
+			form.initial_pay_date.value = ExpenseContext.budgetCycle.value;
 
 			if (ExpenseContext && Object.keys(ExpenseContext.data).length) {
 				form.amount.value = ExpenseContext.data.amount;
 				form.name.value = ExpenseContext.data.name;
-				form.paid_date.value =
-					ExpenseContext.data.paid_date ||
+				form.initial_pay_date.value =
+					ExpenseContext.data.initial_pay_date ||
 					ExpenseContext.budgetCycle.value;
 				form.type.value = ExpenseContext.getTypeId();
 			}
@@ -105,8 +105,8 @@ export default defineComponent({
 				<DatePicker
 					v-if="editMode"
 					label="Paid Date"
-					:rules="form.paid_date.rules"
-					v-model:value="form.paid_date.value"
+					:rules="form.initial_pay_date.rules"
+					v-model:value="form.initial_pay_date.value"
 				/>
 			</div>
 		</div>
