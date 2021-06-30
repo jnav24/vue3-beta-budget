@@ -2,6 +2,7 @@
 import { defineComponent, reactive, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Button from '@/components/ui-elements/form/Button.vue';
+import Checkbox from '@/components/ui-elements/form/Checkbox.vue';
 import Form from '@/components/ui-elements/form/Form';
 import Input from '@/components/ui-elements/form/Input.vue';
 import Modal from '@/components/modals/Modal.vue';
@@ -11,6 +12,7 @@ import useStates from '@/hooks/useStates';
 export default defineComponent({
 	components: {
 		Button,
+		Checkbox,
 		Form,
 		Input,
 		Modal,
@@ -37,6 +39,10 @@ export default defineComponent({
 				},
 				value: '',
 			},
+			rememberMe: {
+				rules: [],
+				value: false,
+			},
 		});
 		const isValid = ref(false);
 		const setClose = ref(false);
@@ -46,6 +52,7 @@ export default defineComponent({
 			const response = await userStore.logUserIn({
 				username: form.email.value,
 				password: form.password.value,
+				remember: form.rememberMe.value,
 			});
 
 			if (response.success && form.email.value !== userStore.user.email) {
@@ -112,6 +119,12 @@ export default defineComponent({
 						v-model:value="form.password.value"
 						:rules="form.password.rules"
 					/>
+					<div class="my-4">
+						<Checkbox
+							label="Remember Me"
+							v-model:value="form.rememberMe.value"
+						/>
+					</div>
 				</Form>
 			</div>
 
