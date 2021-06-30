@@ -90,10 +90,12 @@ export default defineComponent({
 				v-model:value="form.password.value"
 				:rules="form.password.rules"
 			/>
-			<Checkbox
-				label="Remember Me"
-				v-model:value="form.rememberMe.value"
-			/>
+			<div class="my-4">
+				<Checkbox
+					label="Remember Me"
+					v-model:value="form.rememberMe.value"
+				/>
+			</div>
 			<button
 				@click="login()"
 				class="w-full py-2 rounded flex flex-row items-center justify-center"
