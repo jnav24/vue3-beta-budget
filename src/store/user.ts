@@ -115,7 +115,11 @@ export const useUserStore = createStore({
 			return failedResponse();
 		},
 
-		async logUserIn(params: { username: string; password: string }) {
+		async logUserIn(params: {
+			username: string;
+			password: string;
+			remember: boolean;
+		}) {
 			const { get, post } = useHttp();
 
 			await get({ path: 'sanctum/csrf-cookie' });

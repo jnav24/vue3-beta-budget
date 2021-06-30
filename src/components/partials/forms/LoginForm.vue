@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
 import Alert from '@/components/ui-elements/Alert.vue';
+import Checkbox from '@/components/ui-elements/form/Checkbox.vue';
 import { Form } from '@/components/ui-elements';
 import Input from '@/components/ui-elements/form/Input.vue';
 import LoaderIcon from '@/components/ui-elements/icons/LoaderIcon.vue';
@@ -10,6 +11,7 @@ import { useRouter } from 'vue-router';
 export default defineComponent({
 	components: {
 		Alert,
+		Checkbox,
 		Form,
 		Input,
 		LoaderIcon,
@@ -31,6 +33,10 @@ export default defineComponent({
 				rules: ['required'],
 				value: '',
 			},
+			rememberMe: {
+				rules: [],
+				value: false,
+			},
 		});
 		const valid = ref(false);
 
@@ -39,6 +45,7 @@ export default defineComponent({
 			const response = await logUserIn({
 				username: form.email.value,
 				password: form.password.value,
+				remember: form.rememberMe.value,
 			});
 
 			if (response.success) {
@@ -83,6 +90,12 @@ export default defineComponent({
 				v-model:value="form.password.value"
 				:rules="form.password.rules"
 			/>
+			<div class="my-4">
+				<Checkbox
+					label="Remember Me"
+					v-model:value="form.rememberMe.value"
+				/>
+			</div>
 			<button
 				@click="login()"
 				class="w-full py-2 rounded flex flex-row items-center justify-center"
