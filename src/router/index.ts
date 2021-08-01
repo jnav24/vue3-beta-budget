@@ -35,7 +35,7 @@ const routes: Array<RouteRecordRaw> = [
 				},
 			},
 			{
-				path: '/forgot-password',
+				path: 'forgot-password',
 				name: 'forgot-password',
 				component: () => import('@/views/onboard/ForgotPassword.vue'),
 			},
