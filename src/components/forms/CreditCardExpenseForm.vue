@@ -30,15 +30,15 @@ export default defineComponent({
 		const form = reactive({
 			amount: {
 				rules: ['required', 'float:2'],
-				value: '',
+				value: '0.00',
 			},
 			apr: {
 				rules: [],
-				value: '',
+				value: '0',
 			},
 			balance: {
 				rules: [],
-				value: '',
+				value: '0.00',
 			},
 			confirmation: {
 				rules: [],
@@ -49,23 +49,23 @@ export default defineComponent({
 				value: false,
 			},
 			due_date: {
-				rules: [],
+				rules: ['required'],
 				value: '1',
 			},
 			exp_month: {
 				rules: [],
-				value: '',
+				value: '0',
 			},
 			exp_year: {
 				rules: [],
-				value: '',
+				value: '0',
 			},
 			last_4: {
 				rules: [],
 				value: '',
 			},
 			limit: {
-				rules: [],
+				rules: ['required', 'numeric'],
 				value: '',
 			},
 			name: {
@@ -102,15 +102,17 @@ export default defineComponent({
 
 			if (Object.keys(ExpenseContext.data).length) {
 				form.amount.value = ExpenseContext.data.amount;
-				form.apr.value = ExpenseContext.data.apr || '';
+				form.apr.value = ExpenseContext.data.apr || form.apr.value;
 				form.balance.value = ExpenseContext.data.balance || '';
 				form.confirmation.value =
 					ExpenseContext.data.confirmation || '';
 				form.not_track_amount.value =
 					!!ExpenseContext.data.not_track_amount || false;
 				form.due_date.value = ExpenseContext.data.due_date || '';
-				form.exp_month.value = ExpenseContext.data.exp_month || '';
-				form.exp_year.value = ExpenseContext.data.exp_year || '';
+				form.exp_month.value =
+					ExpenseContext.data.exp_month || form.exp_month.value;
+				form.exp_year.value =
+					ExpenseContext.data.exp_year || form.exp_year.value;
 				form.last_4.value = ExpenseContext.data.last_4 || '';
 				form.limit.value = ExpenseContext.data.limit || '';
 				form.name.value = ExpenseContext.data.name;
