@@ -107,6 +107,7 @@ export default defineComponent({
 		};
 
 		const saveBudget = async () => {
+			const tempBudget = JSON.parse(JSON.stringify(budget.value));
 			const removeList = getRemoveExpenseList();
 
 			if (removeList.length) {
@@ -116,7 +117,7 @@ export default defineComponent({
 				);
 			}
 
-			const res = await budgetStore.updateBudget(budget.value);
+			const res = await budgetStore.updateBudget(tempBudget);
 			disableSave.value = true;
 
 			if (res.success) {
