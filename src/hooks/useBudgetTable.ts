@@ -44,8 +44,8 @@ export default function useBudgetTable() {
 		}
 
 		if (item[header]) {
-			if (header === 'paid_date') {
-				return formatDate('yyyy-MM-dd', item['paid_date']);
+			if (['initial_pay_date', 'paid_date'].includes(header)) {
+				return formatDate('yyyy-MM-dd', item[header]);
 			}
 			return item[header];
 		}

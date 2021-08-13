@@ -103,7 +103,6 @@ export default defineComponent({
 				/>
 
 				<DatePicker
-					v-if="editMode"
 					label="Paid Date"
 					:rules="form.initial_pay_date.rules"
 					v-model:value="form.initial_pay_date.value"
