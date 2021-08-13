@@ -8,6 +8,10 @@ export default defineComponent({
 		Label,
 	},
 	props: {
+		autocomplete: {
+			required: false,
+			default: false,
+		},
 		label: {
 			required: true,
 			type: String,
@@ -73,7 +77,7 @@ export default defineComponent({
 			}"
 			:type="type"
 			:value="value"
-			:autocomplete="type !== 'password' ? 'on' : 'off'"
+			:autocomplete="autocomplete || type !== 'password' ? 'on' : 'off'"
 			@blur="updateValue($event.target.value)"
 			@input="updateValue($event.target.value)"
 			:aria-labelledby="labelId"

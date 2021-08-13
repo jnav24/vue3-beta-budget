@@ -63,6 +63,7 @@ export default defineComponent({
 
 		<Form v-model:valid="isValid">
 			<Input
+				autocomplete
 				label="Enter 6 digit code"
 				v-model:value="totp"
 				:rules="['required', 'numeric', 'max:6', 'min:6']"
