@@ -19,6 +19,7 @@ import Input from '@/components/ui-elements/form/Input.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
 import Textarea from '@/components/ui-elements/form/Textarea.vue';
 import { useUserStore, useTypesStore } from '@/store';
+import { getPaidDate } from '@/utils/expense-form';
 
 export default defineComponent({
 	components: {
@@ -99,9 +100,7 @@ export default defineComponent({
 				form.vehicle.value = ExpenseContext.data.user_vehicle_id || 0;
 				form.mileage.value = ExpenseContext.data.mileage || '';
 				form.notes.value = ExpenseContext.data.notes || '';
-				form.paid_date.value =
-					ExpenseContext.data.paid_date ||
-					ExpenseContext.budgetCycle.value;
+				form.paid_date.value = getPaidDate(ExpenseContext);
 				form.type.value = ExpenseContext.getTypeId();
 			}
 		});

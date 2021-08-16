@@ -9,6 +9,7 @@ import {
 import Form from '@/components/ui-elements/form/Form';
 import Input from '@/components/ui-elements/form/Input.vue';
 import Select from '@/components/ui-elements/form/Select.vue';
+import { getPaidDate } from '@/utils/expense-form';
 
 export default defineComponent({
 	components: {
@@ -49,9 +50,7 @@ export default defineComponent({
 			if (ExpenseContext && Object.keys(ExpenseContext.data).length) {
 				form.amount.value = ExpenseContext.data.amount;
 				form.name.value = ExpenseContext.data.name;
-				form.initial_pay_date.value =
-					ExpenseContext.data.initial_pay_date ||
-					ExpenseContext.budgetCycle.value;
+				form.initial_pay_date.value = getPaidDate(ExpenseContext);
 				form.type.value = ExpenseContext.getTypeId();
 			}
 		});
