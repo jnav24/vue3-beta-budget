@@ -5,7 +5,7 @@ export const getPaidDate = (expenseContext: ExpenseFormContextType) => {
 	const { formatDate, getEndDayOfMonth, unix } = useTimestamp();
 	const budgetCycle = expenseContext.budgetCycle.value;
 	const endBudgetCycle = getEndDayOfMonth(budgetCycle).toISOString();
-	const todayDate = formatDate();
+	const todayDate = formatDate('yyyy-MM-dd hh:mm:ss');
 	const todayDateUnix = unix(todayDate);
 
 	if (expenseContext.data.initial_pay_date) {
