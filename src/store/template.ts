@@ -106,8 +106,8 @@ export const useTemplateStore = createStore({
 				this.templates = {
 					id,
 					expenses: {
-						expenses,
 						...this.templates.expenses,
+						expenses,
 					},
 				};
 			}
