@@ -102,7 +102,14 @@ export const useTemplateStore = createStore({
 			const response = await postAuth(data);
 
 			if (response.success) {
-				this.templates = getDataFromResponse(response);
+				const { id, expenses } = getDataFromResponse(response);
+				this.templates = {
+					id,
+					expenses: {
+						expenses,
+						...this.templates.expenses,
+					},
+				};
 			}
 
 			return { success: response.success, error: response.error };
