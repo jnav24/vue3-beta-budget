@@ -124,6 +124,7 @@ export default defineComponent({
 				if (isLatestBudget()) {
 					await aggregationStore.getUnpaidBillTotals();
 					await updateBudgetTemplate();
+					await templateStore.getTemplates();
 				}
 
 				await aggregationStore.getYearlyAggregations();
